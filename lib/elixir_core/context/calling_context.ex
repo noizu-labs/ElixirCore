@@ -225,11 +225,17 @@ defmodule Noizu.ElixirCore.CallingContext do
   def admin(options), do: new(default_admin_user(), default_admin_auth(), options)
   def admin(%Plug.Conn{} = conn, options), do: new_conn(default_admin_user(), default_admin_auth(), conn, options)
 
+  def metadata(nil) do
+    [context_token: :none, context_time: 0, context_caller: :none]
+  end
+
+  def metadata(context) do
+    [context_token: context.token, context_time: context.time, context_caller: context.caller]
+  end
+
   def meta_update(context) do
     (Logger.metadata() || [])
-    |> Keyword.put(:context_token,  context.token)
-    |> Keyword.put(:context_time,   context.time)
-    |> Keyword.put(:context_caller, context.caller)
+    |> Keyword.merge(metadata(context))
     |> Logger.metadata()
   end
 end # end defmodule Noizu.Scaffolding.CallingContext
