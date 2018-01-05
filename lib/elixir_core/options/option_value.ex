@@ -45,4 +45,41 @@ defmodule Noizu.ElixirCore.OptionValue do
     end # end def extract
 
   end # end defimple
+
+
+  if Application.get_env(:noizu_scaffolding, :inspect_option_value, true) do
+    #-----------------------------------------------------------------------------
+    # Inspect Protocol
+    #-----------------------------------------------------------------------------
+    defimpl Inspect, for: Noizu.ElixirCore.OptionValue do
+      import Inspect.Algebra
+      def inspect(entity, opts) do
+        req = entity.required && ",required" || ""
+        heading = "#OptionList(#{entity.option}#{req})"
+        {seperator, end_seperator} = if opts.pretty, do: {"\n   ", "\n"}, else: {" ", " "}
+        inner = cond do
+          opts.limit == :infinity ->
+            concat(["<#{seperator}", to_doc(Map.from_struct(entity), opts), "#{end_seperator}>"])
+
+          opts.limit >= 200 ->
+            bare = %{
+              lookup_key: entity.lookup_key,
+              default: entity.default,
+              valid_values: entity.valid_values
+            }
+            concat(["<#{seperator}", to_doc(bare, opts), "#{end_seperator}>"])
+
+          opts.limit >= 100 ->
+            bare = %{
+              default: entity.default
+            }
+            concat(["<#{seperator}", to_doc(bare, opts), "#{end_seperator}>"])
+
+          true -> "<>"
+        end
+        concat [heading, inner]
+      end # end inspect/2
+    end # end defimpl
+  end
+
 end # end defmodule

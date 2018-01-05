@@ -86,4 +86,25 @@ defmodule Noizu.ElixirCore.OptionList do
     end # end extract/2
   end # end  defimpl
 
+
+  if Application.get_env(:noizu_scaffolding, :inspect_option_list, true) do
+    #-----------------------------------------------------------------------------
+    # Inspect Protocol
+    #-----------------------------------------------------------------------------
+    defimpl Inspect, for: Noizu.ElixirCore.OptionList do
+      import Inspect.Algebra
+      def inspect(entity, opts) do
+      req = entity.required && ",required" || ""
+        heading = "#OptionList(#{entity.option}#{req})"
+        {seperator, end_seperator} = if opts.pretty, do: {"\n   ", "\n"}, else: {" ", " "}
+        inner = cond do
+          opts.limit == :infinity ->
+            concat(["<#{seperator}", to_doc(Map.from_struct(entity), opts), "#{end_seperator}>"])
+          true -> "<>"
+        end
+        concat [heading, inner]
+      end # end inspect/2
+    end # end defimpl
+  end
+
 end # end defmodule

@@ -203,25 +203,28 @@ defmodule Noizu.ElixirCore.CallingContext do
   #-----------------------------------------------------------------------------
   # Internal CallingContext
   #-----------------------------------------------------------------------------
-
+  def internal(), do: new(default_internal_user(), default_internal_auth(), %{})
   def internal(options), do: new(default_internal_user(), default_internal_auth(), options)
   def internal(%Plug.Conn{} = conn, options), do: new_conn(default_internal_user(), default_internal_auth(), conn, options)
 
   #-----------------------------------------------------------------------------
   # System CallingContext
   #-----------------------------------------------------------------------------
+  def system(), do: new(default_system_user(), default_system_auth(), %{})
   def system(options), do: new(default_system_user(), default_system_auth(), options)
   def system(%Plug.Conn{} = conn, options), do: new_conn(default_system_user(), default_system_auth(), conn, options)
 
   #-----------------------------------------------------------------------------
   # Restricted CallingContext
   #-----------------------------------------------------------------------------
+  def restricted(), do: new(default_restricted_user(), default_restricted_auth(), %{})
   def restricted(options), do: new(default_restricted_user(), default_restricted_auth(), options)
   def restricted(%Plug.Conn{} = conn, options), do: new_conn(default_restricted_user(), default_restricted_auth(), conn, options)
 
   #-----------------------------------------------------------------------------
   # Admin CallingContext
   #-----------------------------------------------------------------------------
+  def admin(), do: new(default_admin_user(), default_admin_auth(), %{})
   def admin(options), do: new(default_admin_user(), default_admin_auth(), options)
   def admin(%Plug.Conn{} = conn, options), do: new_conn(default_admin_user(), default_admin_auth(), conn, options)
 
