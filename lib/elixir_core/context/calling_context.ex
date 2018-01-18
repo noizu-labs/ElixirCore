@@ -67,19 +67,19 @@ defmodule Noizu.ElixirCore.CallingContext do
   end
 
   defp default_restricted_auth() do
-    Application.get_env(:noizu_core, :default_internal_auth, %{permission: %{restricted: true}})
+    Application.get_env(:noizu_core, :default_internal_auth, %{permissions: %{restricted: true}})
   end
 
   defp default_internal_auth() do
-    Application.get_env(:noizu_core, :default_internal_auth, %{permission: %{internal: true}})
+    Application.get_env(:noizu_core, :default_internal_auth, %{permissions: %{internal: true}})
   end
 
   defp default_system_auth() do
-    Application.get_env(:noizu_core, :default_system_auth, %{permission: %{system: true, internal: true}})
+    Application.get_env(:noizu_core, :default_system_auth, %{permissions: %{system: true, internal: true}})
   end
 
   defp default_admin_auth() do
-    Application.get_env(:noizu_core, :default_admin_auth, %{permission: %{admin: true, system: true, internal: true}})
+    Application.get_env(:noizu_core, :default_admin_auth, %{permissions: %{admin: true, system: true, internal: true}})
   end
 
   defp get_ip(conn) do

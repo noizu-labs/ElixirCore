@@ -3,7 +3,7 @@ defmodule Noizu.ElixirCore.Mixfile do
 
   def project do
     [app: :noizu_core,
-     version: "1.0.1",
+     version: "1.0.2",
      elixir: "~> 1.4",
      package: package(),
      deps: deps(),

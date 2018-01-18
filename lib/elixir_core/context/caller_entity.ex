@@ -14,41 +14,44 @@ defmodule Noizu.ElixirCore.CallerEntity do
     identifier: nil
   ]
 
-
   def id(%__MODULE__{} = e), do: e.identifier
   def id({:ref, __MODULE__, identifier}), do: identifier
   def id("ref.noizu-caller." <> identifier), do: to_atom(identifier)
-
+  def id(identifier) when is_atom(identifier), do: identifier
 
   def ref(%__MODULE__{} = e), do: {:ref, __MODULE__, e.identifier}
   def ref({:ref, __MODULE__, identifier}), do: {:ref, __MODULE__, identifier}
   def ref("ref.noizu-caller." <> identifier), do: {:ref, __MODULE__, to_atom(identifier)}
-
+  def ref(identifier) when is_atom(identifier), do: {:ref, __MODULE__, identifier}
 
   def sref(%__MODULE__{} = e), do: "ref.noizu-caller.#{e.identifier}"
   def sref({:ref, __MODULE__, identifier}), do: "ref.noizu-caller.#{identifier}"
   def sref("ref.noizu-caller." <> _identifier = sref), do: sref
-
+  def sref(identifier) when is_atom(identifier), do: "ref.noizu-caller.#{identifier}"
 
   def entity(ref, options \\ %{})
   def entity({:ref, __MODULE__, identifier}, _options), do: %__MODULE__{identifier: identifier}
   def entity(%__MODULE__{} = e, _options), do: e
   def entity("ref.noizu-caller." <> identifier, _options), do: %__MODULE__{identifier: to_atom(identifier)}
+  def entity(identifier, _options) when is_atom(identifier), do: %__MODULE__{identifier: identifier}
 
   def entity!(ref, options \\ %{})
   def entity!({:ref, __MODULE__, identifier}, _options), do: %__MODULE__{identifier: identifier}
   def entity!(%__MODULE__{} = e, _options), do: e
   def entity!("ref.noizu-caller." <> identifier, _options), do: %__MODULE__{identifier: to_atom(identifier)}
+  def entity!(identifier, _options) when is_atom(identifier), do: %__MODULE__{identifier: identifier}
 
   def record(ref, options \\ %{})
   def record({:ref, __MODULE__, identifier}, _options), do: %__MODULE__{identifier: identifier}
   def record(%__MODULE__{} = e, _options), do: e
   def record("ref.noizu-caller." <> identifier, _options), do: %__MODULE__{identifier: to_atom(identifier)}
+  def record(identifier, _options) when is_atom(identifier), do: %__MODULE__{identifier: identifier}
 
   def record!(ref, options \\ %{})
   def record!({:ref, __MODULE__, identifier}, _options), do: %__MODULE__{identifier: identifier}
   def record!(%__MODULE__{} = e, _options), do: e
   def record!("ref.noizu-caller." <> identifier, _options), do: %__MODULE__{identifier: to_atom(identifier)}
+  def record!(identifier, _options) when is_atom(identifier), do: %__MODULE__{identifier: identifier}
 
   def to_atom("internal"), do: :internal
   def to_atom("restricted"), do: :restricted
