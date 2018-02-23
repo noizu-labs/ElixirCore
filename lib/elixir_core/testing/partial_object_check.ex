@@ -110,12 +110,15 @@ defmodule Noizu.ElixirCore.PartialObjectCheck do
     Noizu.ElixirCore.PartialObjectCheck.ValueConstraint.check(c, sut)
   end
 
-  def check(%__MODULE__{} = this, sut) when is_map(sut) do
+  def check(%__MODULE__{} = this, sut) do
     t = Noizu.ElixirCore.PartialObjectCheck.TypeConstraint.check(this.type_constraint, sut)
     t_c = t && t.assert || :not_applicable
     {f_c, f} = if this.field_constraints do
       Enum.reduce(this.field_constraints, {:not_applicable, %{}}, fn({k,c}, {a,acc}) ->
-        input = is_map(sut) && Map.get(sut, k, {Noizu.ElixirCore.PartialObjectCheck, :no_value}) || {Noizu.ElixirCore.PartialObjectCheck, :no_value}
+        input = cond do
+          is_map(sut) -> Map.get(sut, k, {Noizu.ElixirCore.PartialObjectCheck, :no_value})
+          true -> {Noizu.ElixirCore.PartialObjectCheck, :no_value}
+        end
         {ua, uc} = case c do
           checks when is_list(checks) ->
             Enum.reduce(checks, {a, []}, fn(c2, {a2, acc2}) ->
