@@ -200,4 +200,26 @@ defmodule Noizu.ElixirCore.PartialObjectCheckTest do
     sut = POC.check(poc, %{a: 1, b: %{not_required: %{}, required: 6}, c: :apple})
     assert sut.assert == :met
   end
+
+
+  @tag :testing
+  test "basic functionality - validation - required field with out constraints" do
+    poc = POC.prepare(%{a: 1, b: %{any_value: {POC, [:any_value], %{a: 5}}, required: 6}})
+
+    sut = POC.check(poc, %{a: 1, b: %{any_value: %{}, required: 6}, c: :apple})
+    assert sut.assert == :met
+    sut = POC.check(poc, %{a: 1, b: %{any_value: %{b: 1}, required: 6}, c: :apple})
+    assert sut.assert == :met
+
+    # required
+    sut = POC.check(poc, %{a: 1, b: %{any_value: nil, required: 6}, c: :apple})
+    assert sut.assert == :unmet
+
+    # type fail
+    sut = POC.check(poc, %{a: 1, b: %{any_value: 7, required: 6}, c: :apple})
+    assert sut.assert == :unmet
+  end
+
+
+
 end

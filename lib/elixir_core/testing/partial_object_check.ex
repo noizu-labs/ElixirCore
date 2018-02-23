@@ -4,6 +4,7 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore.PartialObjectCheck do
+  alias Noizu.ElixirCore.PartialObjectCheck.FieldConstraint
   @type t :: %__MODULE__{
                 assert: :pending | :met | :unmet | :not_applicable,
                 type_constraint: Noizu.ElixirCore.PartialObjectCheck.TypeConstraint.t,
@@ -38,14 +39,23 @@ defmodule Noizu.ElixirCore.PartialObjectCheck do
     }
   end
 
-
-    def prepare_field({__MODULE__, :not_required}) do
-      %Noizu.ElixirCore.PartialObjectCheck.FieldConstraint{
-        required: false,
-        type_constraint: nil,
-        value_constraint: nil
-      }
+  def prepare_field({__MODULE__, opt, v}) when is_list(opt) do
+    case prepare_field(v) do
+      f = %Noizu.ElixirCore.PartialObjectCheck.FieldConstraint{} ->
+        f = Enum.member?(opt, :not_required) && %FieldConstraint{f| required: false} || f
+        f = Enum.member?(opt, :any_value) && %FieldConstraint{f| value_constraint: nil} || f
+        f = Enum.member?(opt, :any_type) && %FieldConstraint{f| type_constraint: nil} || f
+      v -> v
     end
+  end
+
+  def prepare_field({__MODULE__, :not_required}) do
+    %Noizu.ElixirCore.PartialObjectCheck.FieldConstraint{
+      required: false,
+      type_constraint: nil,
+      value_constraint: nil
+    }
+  end
 
     def prepare_field({__MODULE__, :not_required, v}) do
       case prepare_field(v) do
