@@ -22,10 +22,10 @@ defmodule Noizu.ElixirCore.PartialObjectCheck.ValueConstraint do
         {(uv && uv.assert || :unmet), uv}
 
       {:value, v} ->
-        {(v == sut && :met || :unmet), v}
+        {(v == sut && :met || :unmet), constraint}
 
       {:exact, v} ->
-        {(v === sut && :met || :unmet), v}
+        {(v === sut && :met || :unmet), constraint}
 
       v when is_function(v, 1) ->
         c = case v.(sut) do
@@ -34,7 +34,7 @@ defmodule Noizu.ElixirCore.PartialObjectCheck.ValueConstraint do
           nil -> :unmet
           v -> v
         end
-        {c, v}
+        {c, constraint}
       v when is_list(v) ->
         Enum.reduce(v, {:not_applicable, []}, fn(c, {c_acc, v_acc}) ->
            {a, c} = perform_check(c, sut)
@@ -56,5 +56,36 @@ defmodule Noizu.ElixirCore.PartialObjectCheck.ValueConstraint do
     {a, c} = perform_check(this.constraint, sut)
     %__MODULE__{this| assert: a, constraint: c}
   end
+end
 
+
+
+if Application.get_env(:noizu_scaffolding, :inspect_partial_object, true) do
+  #-----------------------------------------------------------------------------
+  # Inspect Protocol
+  #-----------------------------------------------------------------------------
+  defimpl Inspect, for: Noizu.ElixirCore.PartialObjectCheck.ValueConstraint do
+    import Inspect.Algebra
+    @dont_expand MapSet.new([:met, :pending, :not_applicable])
+
+    def inspect(entity, opts) do
+      {seperator, end_seperator} = cond do
+        opts.pretty && (opts.limit == :infinity || opts.limit > 200) -> {"#Noizu.ElixirCore.PartialObjectCheck.ValueConstraint<\n", "\n>"}
+        opts.pretty -> {"#ValueConstraint<\n", "\n>"}
+        (opts.limit == :infinity || opts.limit > 200) -> {"#Noizu.ElixirCore.PartialObjectCheck.ValueConstraint<", ">"}
+        true -> {"#ValueConstraint<", ">"}
+      end
+
+      obj = cond do
+        opts.limit == :infinity -> entity |> Map.from_struct()
+        opts.limit > 100 -> entity |> Map.from_struct()
+        true ->
+          cond do
+            MapSet.member?(@dont_expand, entity.assert) -> %{assert: entity.assert}
+            true -> entity |> Map.from_struct()
+          end
+      end
+      concat(["#{seperator}", to_doc(obj, opts), "#{end_seperator}"])
+    end # end inspect/2
+  end # end defimpl
 end

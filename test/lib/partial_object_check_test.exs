@@ -7,6 +7,30 @@ defmodule Noizu.ElixirCore.PartialObjectCheckTest do
   require Logger
 
   @tag :testing
+  test "IO.inspect check - pass" do
+    poc = POC.prepare(%{a: 1, b: 2})
+    sut = POC.check(poc, %{a: 1, b: 2})
+    sut_str = "#{inspect sut}"
+    assert sut_str == "#PartialObjectCheck<%{assert: :met}>"
+  end
+
+  @tag :testing
+  test "IO.inspect check - field constraint fail" do
+    poc = POC.prepare(%{a: 1, b: 2})
+    sut = POC.check(poc, %{a: 2, b: 2})
+    sut_str = "#{inspect sut, limit: 50}"
+    assert sut_str == "#PartialObjectCheck<%{assert: :unmet, field_constraints: %{a: #FieldConstraint<%{assert: :unmet, required: true, value_constraint: #ValueConstraint<%{assert: :unmet, constraint: {:value, 1}}>}>}}>"
+  end
+
+  @tag :testing
+  test "IO.inspect check - type constraint fail" do
+    poc = POC.prepare(%{a: 1, b: 2})
+    sut = POC.check(poc, 1)
+    sut_str = "#{inspect sut, limit: 50}"
+    assert sut_str == "#PartialObjectCheck<%{assert: :unmet, field_constraints: %{a: #FieldConstraint<%{assert: :unmet, required: true}>, b: #FieldConstraint<%{assert: :unmet, required: true}>}, type_constraint: #TypeConstraint<%{assert: :unmet, constraint: {:basic, :map}}>}>"
+  end
+
+  @tag :testing
   test "basic functionality - prep for map - 1" do
     sut = POC.prepare(%{a: 1, b: 2})
     assert sut === %POC{

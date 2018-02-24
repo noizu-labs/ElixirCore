@@ -41,5 +41,35 @@ defmodule Noizu.ElixirCore.PartialObjectCheck.TypeConstraint do
   def check(%__MODULE__{} = this, sut) do
     %__MODULE__{this| assert: perform_check(this.constraint, sut)}
   end
+end
 
+
+if Application.get_env(:noizu_scaffolding, :inspect_partial_object, true) do
+  #-----------------------------------------------------------------------------
+  # Inspect Protocol
+  #-----------------------------------------------------------------------------
+  defimpl Inspect, for: Noizu.ElixirCore.PartialObjectCheck.TypeConstraint do
+    import Inspect.Algebra
+    @dont_expand MapSet.new([:met, :pending, :not_applicable])
+
+    def inspect(entity, opts) do
+      {seperator, end_seperator} = cond do
+        opts.pretty && (opts.limit == :infinity || opts.limit > 200) -> {"#Noizu.ElixirCore.PartialObjectCheck.TypeConstraint<\n", "\n>"}
+        opts.pretty -> {"#TypeConstraint<\n", "\n>"}
+        (opts.limit == :infinity || opts.limit > 200) -> {"#Noizu.ElixirCore.PartialObjectCheck.TypeConstraint<", ">"}
+        true -> {"#TypeConstraint<", ">"}
+      end
+
+      obj = cond do
+        opts.limit == :infinity -> entity |> Map.from_struct()
+        opts.limit > 100 -> entity |> Map.from_struct()
+        true ->
+          cond do
+            MapSet.member?(@dont_expand, entity.assert) -> %{assert: entity.assert}
+            true -> entity |> Map.from_struct()
+          end
+      end
+      concat(["#{seperator}", to_doc(obj, opts), "#{end_seperator}"])
+    end # end inspect/2
+  end # end defimpl
 end

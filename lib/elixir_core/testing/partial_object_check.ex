@@ -159,3 +159,58 @@ defmodule Noizu.ElixirCore.PartialObjectCheck do
   end
 
 end
+
+
+
+if Application.get_env(:noizu_scaffolding, :inspect_partial_object, true) do
+  #-----------------------------------------------------------------------------
+  # Inspect Protocol
+  #-----------------------------------------------------------------------------
+  defimpl Inspect, for: Noizu.ElixirCore.PartialObjectCheck do
+    import Inspect.Algebra
+    @dont_expand MapSet.new([:met, :pending, :not_applicable])
+
+    def inspect(entity, opts) do
+      {seperator, end_seperator} = cond do
+        opts.pretty && (opts.limit == :infinity || opts.limit > 200) -> {"#Noizu.ElixirCore.PartialObjectCheck<\n", "\n>"}
+        opts.pretty -> {"#PartialObjectCheck<\n", "\n>"}
+        (opts.limit == :infinity || opts.limit > 200) -> {"#Noizu.ElixirCore.PartialObjectCheck<", ">"}
+        true -> {"#PartialObjectCheck<", ">"}
+      end
+
+      assert = entity.assert
+      t_c = entity.type_constraint
+      f_c = entity.field_constraints
+
+      obj = cond do
+        opts.limit == :infinity -> entity |> Map.from_struct()
+        opts.limit > 100 ->
+          cond do
+            is_map(f_c) && f_c != %{} && t_c -> %{assert: assert, type_constraint: t_c, field_constraints: f_c}
+            is_map(f_c) && f_c != %{} -> %{assert: assert, field_constraints: f_c}
+            t_c -> %{assert: assert, type_constraint: t_c}
+            true -> %{assert: assert}
+          end
+        true ->
+          cond do
+            MapSet.member?(@dont_expand, assert) -> %{assert: assert}
+            is_map(f_c) ->
+              f_c = Enum.reduce(f_c, %{}, fn({k,v}, a) -> ((v && !MapSet.member?(@dont_expand, v.assert)) && put_in(a, [k], v) || a) end)
+              cond do
+                f_c == %{} && (t_c == nil || MapSet.member?(@dont_expand, t_c.assert)) -> %{assert: assert}  # this should never happen.
+                f_c == %{} -> %{assert: assert, type_constraint: t_c}
+                t_c == nil || MapSet.member?(@dont_expand, t_c.assert) -> %{assert: assert, field_constraints: f_c}
+                true -> %{assert: assert, type_constraint: t_c, field_constraints: f_c}
+              end
+            true ->
+              cond do
+                t_c == nil || MapSet.member?(@dont_expand, t_c.assert) -> %{assert: assert} # this should never happen
+                true -> %{assert: assert, type_constraint: t_c}
+              end
+          end
+      end
+
+      concat(["#{seperator}", to_doc(obj, opts), "#{end_seperator}"])
+    end # end inspect/2
+  end # end defimpl
+end

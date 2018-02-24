@@ -204,6 +204,7 @@ defmodule Noizu.ElixirCore.CallingContext do
   # Internal CallingContext
   #-----------------------------------------------------------------------------
   def internal(), do: new(default_internal_user(), default_internal_auth(), %{})
+  def internal(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_internal_auth(), outer_context: this}
   def internal(options), do: new(default_internal_user(), default_internal_auth(), options)
   def internal(%Plug.Conn{} = conn, options), do: new_conn(default_internal_user(), default_internal_auth(), conn, options)
 
@@ -211,6 +212,7 @@ defmodule Noizu.ElixirCore.CallingContext do
   # System CallingContext
   #-----------------------------------------------------------------------------
   def system(), do: new(default_system_user(), default_system_auth(), %{})
+  def system(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_system_auth(), outer_context: this}
   def system(options), do: new(default_system_user(), default_system_auth(), options)
   def system(%Plug.Conn{} = conn, options), do: new_conn(default_system_user(), default_system_auth(), conn, options)
 
@@ -218,6 +220,7 @@ defmodule Noizu.ElixirCore.CallingContext do
   # Restricted CallingContext
   #-----------------------------------------------------------------------------
   def restricted(), do: new(default_restricted_user(), default_restricted_auth(), %{})
+  def restricted(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_restricted_auth(), outer_context: this}
   def restricted(options), do: new(default_restricted_user(), default_restricted_auth(), options)
   def restricted(%Plug.Conn{} = conn, options), do: new_conn(default_restricted_user(), default_restricted_auth(), conn, options)
 
@@ -225,6 +228,7 @@ defmodule Noizu.ElixirCore.CallingContext do
   # Admin CallingContext
   #-----------------------------------------------------------------------------
   def admin(), do: new(default_admin_user(), default_admin_auth(), %{})
+  def admin(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_admin_auth(), outer_context: this}
   def admin(options), do: new(default_admin_user(), default_admin_auth(), options)
   def admin(%Plug.Conn{} = conn, options), do: new_conn(default_admin_user(), default_admin_auth(), conn, options)
 
