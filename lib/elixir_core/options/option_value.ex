@@ -1,3 +1,8 @@
+#-------------------------------------------------------------------------------
+# Author: Keith Brings
+# Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
+#-------------------------------------------------------------------------------
+
 defmodule Noizu.ElixirCore.OptionValue do
 
   @type t :: %__MODULE__{
