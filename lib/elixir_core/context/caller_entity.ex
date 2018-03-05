@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Author: Keith Brings
-# Copyright (C) 2017 Noizu Labs, Inc.. All rights reserved.
+# Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore.CallerEntity do
