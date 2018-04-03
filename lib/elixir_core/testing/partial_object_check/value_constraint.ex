@@ -51,7 +51,7 @@ defmodule Noizu.ElixirCore.PartialObjectCheck.ValueConstraint do
     end
   end
 
-  def check(nil, sut), do: nil
+  def check(nil, _sut), do: nil
   def check(%__MODULE__{} = this, sut) do
     {a, c} = perform_check(this.constraint, sut)
     %__MODULE__{this| assert: a, constraint: c}

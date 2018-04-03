@@ -74,7 +74,7 @@ if Application.get_env(:noizu_scaffolding, :inspect_partial_object, true) do
               inject_t_c = (t_c && !MapSet.member?(@dont_expand, t_c.assert))
               obj = %{assert: entity.assert, required: entity.required}
               obj = inject_v_c && put_in(obj, [:value_constraint], v_c) || obj
-              obj = inject_t_c && put_in(obj, [:type_constraint], t_c) || obj
+              inject_t_c && put_in(obj, [:type_constraint], t_c) || obj
           end
       end
       concat(["#{seperator}", to_doc(obj, opts), "#{end_seperator}"])

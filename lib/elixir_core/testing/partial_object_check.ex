@@ -22,9 +22,9 @@ defmodule Noizu.ElixirCore.PartialObjectCheck do
   def prepare(scaffolding = %{}) do
     t_c = cond do
       is_map(scaffolding) && !Map.has_key?(scaffolding, :__struct__)  ->
-        type_constraint = %Noizu.ElixirCore.PartialObjectCheck.TypeConstraint{constraint: {:basic, :map}}
+        %Noizu.ElixirCore.PartialObjectCheck.TypeConstraint{constraint: {:basic, :map}}
       is_map(scaffolding) && Map.has_key?(scaffolding, :__struct__)  ->
-        type_constraint = %Noizu.ElixirCore.PartialObjectCheck.TypeConstraint{constraint: {:module, scaffolding.__struct__}}
+        %Noizu.ElixirCore.PartialObjectCheck.TypeConstraint{constraint: {:module, scaffolding.__struct__}}
     end
 
 
@@ -44,7 +44,7 @@ defmodule Noizu.ElixirCore.PartialObjectCheck do
       f = %Noizu.ElixirCore.PartialObjectCheck.FieldConstraint{} ->
         f = Enum.member?(opt, :not_required) && %FieldConstraint{f| required: false} || f
         f = Enum.member?(opt, :any_value) && %FieldConstraint{f| value_constraint: nil} || f
-        f = Enum.member?(opt, :any_type) && %FieldConstraint{f| type_constraint: nil} || f
+        Enum.member?(opt, :any_type) && %FieldConstraint{f| type_constraint: nil} || f
       v -> v
     end
   end
@@ -132,7 +132,7 @@ defmodule Noizu.ElixirCore.PartialObjectCheck do
               end
               {ua2, acc2 ++ [u]}
             end)
-           check ->
+           _check ->
              uc = Noizu.ElixirCore.PartialObjectCheck.FieldConstraint.check(c, input)
              o = uc && uc.assert || :not_applicable
              ua = cond do
