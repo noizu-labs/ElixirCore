@@ -1,6 +1,6 @@
 #-------------------------------------------------------------------------------
 # Author: Keith Brings
-# Copyright (C) 2017 Noizu Labs, Inc. All rights reserved.
+# Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
 defprotocol Noizu.ERP do
@@ -85,7 +85,7 @@ defimpl Noizu.ERP, for: Tuple do
         manager.id(identifier)
     end
   end # end sref/1
-    
+
   def ref(obj) do
     case obj do
       {:ref, manager, _identifier} when is_atom(manager)-> obj
