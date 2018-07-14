@@ -33,7 +33,7 @@ defmodule Noizu.ElixirCore.PartialObjectCheck.TypeConstraint do
           _ -> acc
         end
       end)
-      _ -> raise "#{__MODULE__}.perform_check #{inspect check} not supported"
+      _ -> throw "#{__MODULE__}.perform_check #{inspect check} not supported"
     end
   end
 
