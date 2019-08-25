@@ -37,8 +37,7 @@ defmodule Noizu.ElixirCore.OptionSettings do
     defimpl Inspect, for: Noizu.ElixirCore.OptionSettings do
       import Inspect.Algebra
       def inspect(entity, opts) do
-        req = entity.required && ",required" || ""
-        heading = "#OptionSettings(#{entity.module}#{req})"
+        heading = "#OptionSettings(#{entity.module})"
         {seperator, end_seperator} = if opts.pretty, do: {"\n   ", "\n"}, else: {" ", " "}
         inner = cond do
           opts.limit == :infinity ->
