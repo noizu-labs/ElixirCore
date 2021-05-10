@@ -240,12 +240,21 @@ defmodule Noizu.ElixirCore.CallingContext do
   def admin(%Plug.Conn{} = conn, options), do: new_conn(default_admin_user(), default_admin_auth(), conn, options)
   def admin(%{} = options), do: new(default_admin_user(), default_admin_auth(), options)
 
-  def metadata(nil) do
+  def metadata(%__MODULE__{} = context) do
+    filter = case context.options[:log_filter] do
+      v when is_list(v) ->  v
+      _ -> []
+    end
+    [context_token: context.token, context_time: context.time, context_caller: context.caller] ++ filter
+  end
+
+  def metadata(_) do
     [context_token: :none, context_time: 0, context_caller: :none]
   end
 
-  def metadata(context) do
-    [context_token: context.token, context_time: context.time, context_caller: context.caller]
+  def meta_strip(context) do
+    m = Keyword.delete(Logger.metadata() || [], Keyword.keys(metadata(context)))
+    Logger.metadata(m)
   end
 
   def meta_update(context) do
@@ -254,7 +263,6 @@ defmodule Noizu.ElixirCore.CallingContext do
     |> Logger.metadata()
   end
 end # end defmodule Noizu.Scaffolding.CallingContext
-
 
 if Application.get_env(:noizu_scaffolding, :inspect_calling_context, true) do
   #-----------------------------------------------------------------------------
