@@ -2,7 +2,6 @@
 # Author: Keith Brings
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
-
 defprotocol Noizu.ERP do
   @doc "Get underlying id for ref"
   def id(obj)

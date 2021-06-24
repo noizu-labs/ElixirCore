@@ -6,9 +6,9 @@
 defmodule Noizu.ElixirCore.PartialObjectCheckTest do
   use ExUnit.Case, async: false
   alias Noizu.ElixirCore.PartialObjectCheck, as: POC
-  alias Noizu.ElixirCore.PartialObjectCheck.FieldConstraint
-  alias Noizu.ElixirCore.PartialObjectCheck.TypeConstraint
-  alias Noizu.ElixirCore.PartialObjectCheck.ValueConstraint
+  #alias Noizu.ElixirCore.PartialObjectCheck.FieldConstraint
+  #alias Noizu.ElixirCore.PartialObjectCheck.TypeConstraint
+  #alias Noizu.ElixirCore.PartialObjectCheck.ValueConstraint
   require Logger
 
   @tag :testing
