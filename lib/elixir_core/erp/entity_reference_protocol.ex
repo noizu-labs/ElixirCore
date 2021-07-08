@@ -3,6 +3,7 @@
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 defprotocol Noizu.ERP do
+  @fallback_to_any true
   @doc "Get underlying id for ref"
   def id(obj)
 
