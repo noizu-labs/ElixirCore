@@ -8,7 +8,7 @@ defmodule Noizu.ElixirCore.Mixfile do
 
   def project do
     [app: :noizu_core,
-     version: "1.0.10",
+     version: "1.0.11",
      elixir: "~> 1.4",
      package: package(),
      deps: deps(),
@@ -32,7 +32,7 @@ defmodule Noizu.ElixirCore.Mixfile do
   defp deps do
     [
       {:plug, "~> 1.3.3 or ~> 1.4"},
-      {:uuid, "~> 1.1"},
+      {:elixir_uuid, "~> 1.2"},
       {:ex_doc, "~> 0.16.2", only: [:dev, :test], optional: true, runtime: false}, # Documentation Provider
       {:markdown, github: "devinus/markdown", only: [:dev], optional: true}, # Markdown processor for ex_doc
     ]
