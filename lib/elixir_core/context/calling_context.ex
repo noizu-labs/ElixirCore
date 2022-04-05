@@ -96,7 +96,7 @@ defmodule Noizu.ElixirCore.CallingContext do
     {:module, _} ->
       def extract_token(nil, default) do
         if default == :generate do
-          apply(UUID, :uuid, [:hex])
+          apply(UUID, :uuid4, [:hex])
         else
           default
         end
