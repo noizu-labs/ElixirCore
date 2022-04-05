@@ -92,46 +92,24 @@ defmodule Noizu.ElixirCore.CallingContext do
 
 
 
-  case Code.ensure_compiled(UUID) do
-    {:module, _} ->
-      def extract_token(nil, default) do
-        if default == :generate do
-          apply(UUID, :uuid4, [:hex])
-        else
-          default
-        end
-      end
-      def extract_token(conn, default) do
-        conn.body_params["request-id"] || case apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
-                                            [] ->
-                                              if default == :generate do
-                                                apply(UUID, :uuid4, [:hex])
-                                              else
-                                                default
-                                              end
-                                            [h|_t] -> h
-                                          end
-      end # end extract_token/0
-    {:error, _} ->
-      def extract_token(nil, default) do
-        if default == :generate do
-          :crypto.hash(:md5 , "#{:os.system_time(:millisecond)}:#{inspect self()}")
-        else
-          default
-        end
-      end
-      def extract_token(conn, default) do
-        conn.body_params["request-id"] || case apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
-                                            [] ->
-                                              if default == :generate do
-                                                :crypto.hash(:md5 , "#{:os.system_time(:millisecond)}:#{inspect self()}")
-                                              else
-                                                default
-                                              end
-                                            [h|_t] -> h
-                                          end
-      end # end extract_token/0
+  def extract_token(nil, default) do
+    if default == :generate do
+      apply(UUID, :uuid4, [:hex])
+    else
+      default
+    end
   end
+  def extract_token(conn, default) do
+    conn.body_params["request-id"] || case apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
+                                        [] ->
+                                          if default == :generate do
+                                            apply(UUID, :uuid4, [:hex])
+                                          else
+                                            default
+                                          end
+                                        [h|_t] -> h
+                                      end
+  end # end extract_token/0
 
 
 

@@ -33,6 +33,7 @@ defmodule Noizu.ElixirCore.Mixfile do
     [
       {:ex_doc, "~> 0.28.3", only: [:dev, :test], optional: true, runtime: false}, # Documentation Provider
       {:markdown, github: "devinus/markdown", only: [:dev], optional: true}, # Markdown processor for ex_doc
+      {:elixir_uuid, "~> 1.2", only: :test, optional: true}
     ]
   end
 
