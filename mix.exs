@@ -8,8 +8,8 @@ defmodule Noizu.ElixirCore.Mixfile do
 
   def project do
     [app: :noizu_core,
-     version: "1.0.11",
-     elixir: "~> 1.4",
+     version: "1.0.12",
+     elixir: "~> 1.13.1",
      package: package(),
      deps: deps(),
      description: "Request Context Helper",
@@ -26,14 +26,12 @@ defmodule Noizu.ElixirCore.Mixfile do
   end
 
   def application do
-    [ applications: [:logger] ]
+    [ applications: [:logger, :crypto] ]
   end
 
   defp deps do
     [
-      {:plug, "~> 1.3.3 or ~> 1.4"},
-      {:elixir_uuid, "~> 1.2"},
-      {:ex_doc, "~> 0.16.2", only: [:dev, :test], optional: true, runtime: false}, # Documentation Provider
+      {:ex_doc, "~> 0.28.3", only: [:dev, :test], optional: true, runtime: false}, # Documentation Provider
       {:markdown, github: "devinus/markdown", only: [:dev], optional: true}, # Markdown processor for ex_doc
     ]
   end

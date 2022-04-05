@@ -13,8 +13,12 @@ defmodule Noizu.ElixirCore.GuardTest do
     ]
   end
 
+
+
   require Logger
   import Noizu.ElixirCore.Guards
+
+  def obscure_hint(value), do: Application.get_env(:invalid_scope_noizu, :nnnn, value)
 
   @tag :guards
   test "is_ref guard" do
@@ -34,18 +38,18 @@ defmodule Noizu.ElixirCore.GuardTest do
   @tag :guards
   test "entity_ref guard" do
 
-    assert entity_ref({:ref, :module, 1234})
-    assert entity_ref("ref.henry.1234")
-    assert entity_ref(%Foo{})
-    assert !entity_ref("apple")
-    assert !entity_ref(1234)
+    assert entity_ref(obscure_hint({:ref, :module, 1234}))
+    assert entity_ref(obscure_hint("ref.henry.1234"))
+    assert entity_ref(obscure_hint(%Foo{}))
+    assert !entity_ref(obscure_hint("apple"))
+    assert !entity_ref(obscure_hint(1234))
   end
 
   @tag :guards
   test "is_admin_caller guard" do
     assert is_admin_caller(Noizu.ElixirCore.CallingContext.admin())
     assert !is_admin_caller(Noizu.ElixirCore.CallingContext.system())
-    assert !is_admin_caller(nil)
+    assert !is_admin_caller(obscure_hint(nil))
   end
 
   @tag :guards
@@ -53,7 +57,7 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert is_system_caller(Noizu.ElixirCore.CallingContext.admin())
     assert is_system_caller(Noizu.ElixirCore.CallingContext.system())
     assert !is_system_caller(Noizu.ElixirCore.CallingContext.internal())
-    assert !is_system_caller(nil)
+    assert !is_system_caller(obscure_hint(nil))
   end
 
   @tag :guards
@@ -61,8 +65,8 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert is_internal_caller(Noizu.ElixirCore.CallingContext.admin())
     assert is_internal_caller(Noizu.ElixirCore.CallingContext.system())
     assert is_internal_caller(Noizu.ElixirCore.CallingContext.internal())
-    assert !is_internal_caller(%Noizu.ElixirCore.CallingContext{})
-    assert !is_internal_caller(nil)
+    assert !is_internal_caller(obscure_hint(%Noizu.ElixirCore.CallingContext{}))
+    assert !is_internal_caller(obscure_hint(nil))
   end
 
 
@@ -72,8 +76,8 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert !is_restricted_caller(Noizu.ElixirCore.CallingContext.system())
     assert !is_restricted_caller(Noizu.ElixirCore.CallingContext.internal())
     assert is_restricted_caller(Noizu.ElixirCore.CallingContext.restricted())
-    assert is_restricted_caller(%Noizu.ElixirCore.CallingContext{})
-    assert is_restricted_caller(nil)
+    assert is_restricted_caller(obscure_hint(%Noizu.ElixirCore.CallingContext{}))
+    assert is_restricted_caller(obscure_hint(nil))
   end
 
 
@@ -93,7 +97,7 @@ defmodule Noizu.ElixirCore.GuardTest do
   test "caller_set_reason? guard" do
     assert has_call_reason?(%Noizu.ElixirCore.CallingContext{reason: "Hello"})
     assert !has_call_reason?(%Noizu.ElixirCore.CallingContext{reason: nil})
-    assert !has_call_reason?(nil)
+    assert !has_call_reason?(obscure_hint(nil))
   end
 
 

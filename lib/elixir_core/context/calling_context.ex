@@ -83,41 +83,68 @@ defmodule Noizu.ElixirCore.CallingContext do
   end
 
   defp get_ip(conn) do
-    case Plug.Conn.get_req_header(conn, "x-forwarded-for") do
+    case apply(Plug.Conn, :get_req_header, [conn, "x-forwarded-for"]) do
       [h|_] -> h
       [] -> conn.remote_ip |> Tuple.to_list |> Enum.join(".")
       nil ->  conn.remote_ip |> Tuple.to_list |> Enum.join(".")
     end
   end # end get_ip/1
 
-  def extract_token(nil, default) do
-    if default == :generate do
-      UUID.uuid4(:hex)
-    else
-      default
-    end
-  end
 
-  def extract_token(conn, default) do
-    conn.body_params["request-id"] || case (Plug.Conn.get_resp_header(conn, "x-request-id")) do
-      [] ->
+
+  case Code.ensure_compiled(UUID) do
+    {:module, _} ->
+      def extract_token(nil, default) do
         if default == :generate do
-          UUID.uuid4(:hex)
+          apply(UUID, :uuid, [:hex])
         else
           default
         end
-      [h|_t] -> h
-    end
-  end # end extract_token/0
+      end
+      def extract_token(conn, default) do
+        conn.body_params["request-id"] || case apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
+                                            [] ->
+                                              if default == :generate do
+                                                apply(UUID, :uuid4, [:hex])
+                                              else
+                                                default
+                                              end
+                                            [h|_t] -> h
+                                          end
+      end # end extract_token/0
+    {:error, _} ->
+      def extract_token(nil, default) do
+        if default == :generate do
+          :crypto.hash(:md5 , "#{:os.system_time(:millisecond)}:#{inspect self()}")
+        else
+          default
+        end
+      end
+      def extract_token(conn, default) do
+        conn.body_params["request-id"] || case apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
+                                            [] ->
+                                              if default == :generate do
+                                                :crypto.hash(:md5 , "#{:os.system_time(:millisecond)}:#{inspect self()}")
+                                              else
+                                                default
+                                              end
+                                            [h|_t] -> h
+                                          end
+      end # end extract_token/0
+  end
+
+
+
+
 
   def extract_reason(conn, default) do
-    conn.body_params["call-reason"] || case (Plug.Conn.get_resp_header(conn, "x-call-reason")) do
+    conn.body_params["call-reason"] || case apply(Plug.Conn, :get_resp_header, [conn, "x-call-reason"])  do
       [] -> default || empty_reason()
       [h|_t] -> h
     end
   end
 
-  def extract_caller(%Plug.Conn{} = conn, default) do
+  def extract_caller(%{__struct__: Plug.Conn} = conn, default) do
     case default do
       :restricted -> default_restricted_user()
       :internal -> default_restricted_user()
@@ -147,7 +174,7 @@ defmodule Noizu.ElixirCore.CallingContext do
     default_reason(conn, default)
   end
 
-  def get_caller(%Plug.Conn{} = conn, default \\ :unauthenticated) do
+  def get_caller(%{__struct__: Plug.Conn} = conn, default \\ :unauthenticated) do
     case Application.get_env(:noizu_core, :get_plug_caller, {__MODULE__, :extract_caller}) do
       v when is_function(v) -> v.(conn, default)
       {m, f} -> apply(m, f, [conn, default])
@@ -166,7 +193,7 @@ defmodule Noizu.ElixirCore.CallingContext do
   #-----------------------------------------------------------------------------
   # Helper CallingContext
   #-----------------------------------------------------------------------------
-  def new_conn(caller, auth, %Plug.Conn{} = conn, options \\ %{logger_init: true}) do
+  def new_conn(caller, auth, %{__struct__: Plug.Conn} = conn, options \\ %{logger_init: true}) do
     reason = get_reason(conn, options[:default][:reason])
     token = get_token(conn, options[:default][:token] || :generate)
     time = options[:time] || DateTime.utc_now()
@@ -178,7 +205,7 @@ defmodule Noizu.ElixirCore.CallingContext do
     context
   end
 
-  def new_conn(%Plug.Conn{} = conn, options \\ %{logger_init: true}) do
+  def new_conn(%{__struct__: Plug.Conn} = conn, options \\ %{logger_init: true}) do
     caller = get_caller(conn, options)
     auth = get_auth(caller, options)
     reason = get_reason(conn, options[:default][:reason])
@@ -206,8 +233,9 @@ defmodule Noizu.ElixirCore.CallingContext do
   def internal(), do: new(default_internal_user(), default_internal_auth(), %{})
   def internal(nil), do: new(default_internal_user(), default_internal_auth(), %{})
   def internal(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_internal_auth(), outer_context: this}
-  def internal(%Plug.Conn{} = conn, options), do: new_conn(default_internal_user(), default_internal_auth(), conn, options)
   def internal(%{} = options), do: new(default_internal_user(), default_internal_auth(), options)
+  def internal(%{__struct__: Plug.Conn} = conn, options), do: new_conn(default_internal_user(), default_internal_auth(), conn, options)
+
 
 
   #-----------------------------------------------------------------------------
@@ -216,8 +244,9 @@ defmodule Noizu.ElixirCore.CallingContext do
   def system(), do: new(default_system_user(), default_system_auth(), %{})
   def system(nil), do: new(default_system_user(), default_system_auth(), %{})
   def system(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_system_auth(), outer_context: this}
-  def system(%Plug.Conn{} = conn, options), do: new_conn(default_system_user(), default_system_auth(), conn, options)
   def system(%{} = options), do: new(default_system_user(), default_system_auth(), options)
+  def system(%{__struct__: Plug.Conn} = conn, options), do: new_conn(default_system_user(), default_system_auth(), conn, options)
+
 
 
   #-----------------------------------------------------------------------------
@@ -226,8 +255,9 @@ defmodule Noizu.ElixirCore.CallingContext do
   def restricted(), do: new(default_restricted_user(), default_restricted_auth(), %{})
   def restricted(nil), do: new(default_restricted_user(), default_restricted_auth(), %{})
   def restricted(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_restricted_auth(), outer_context: this}
-  def restricted(%Plug.Conn{} = conn, options), do: new_conn(default_restricted_user(), default_restricted_auth(), conn, options)
   def restricted(%{} = options), do: new(default_restricted_user(), default_restricted_auth(), options)
+  def restricted(%{__struct__: Plug.Conn} = conn, options), do: new_conn(default_restricted_user(), default_restricted_auth(), conn, options)
+
 
 
 
@@ -237,8 +267,8 @@ defmodule Noizu.ElixirCore.CallingContext do
   def admin(), do: new(default_admin_user(), default_admin_auth(), %{})
   def admin(nil), do: new(default_admin_user(), default_admin_auth(), %{})
   def admin(%__MODULE__{} = this), do: %__MODULE__{this| auth: default_admin_auth(), outer_context: this}
-  def admin(%Plug.Conn{} = conn, options), do: new_conn(default_admin_user(), default_admin_auth(), conn, options)
   def admin(%{} = options), do: new(default_admin_user(), default_admin_auth(), options)
+  def admin(%{__struct__: Plug.Conn} = conn, options), do: new_conn(default_admin_user(), default_admin_auth(), conn, options)
 
   def metadata(%__MODULE__{} = context) do
     filter = case context.options[:log_filter] do
