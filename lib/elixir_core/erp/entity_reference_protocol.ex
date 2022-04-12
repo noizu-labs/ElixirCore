@@ -6,14 +6,17 @@ defprotocol Noizu.ERP do
   @fallback_to_any true
   @doc "Get underlying id for ref"
   def id(obj)
+  @doc "Get underlying id for ref, return as {:ok, value} or {:error, error}"
   def id_ok(obj)
 
   @doc "Cast to noizu reference object"
   def ref(obj)
+  @doc "Cast to noizu reference object, return as {:ok, value} or {:error, error}"
   def ref_ok(obj)
 
   @doc "Cast to noizu string reference object"
   def sref(obj)
+  @doc "Cast to noizu string reference object, return as {:ok, value} or {:error, error}"
   def sref_ok(obj)
 
   @doc "Convert to persistence object. Options may be passed to coordinate actions like expanding embedded references."
@@ -24,10 +27,12 @@ defprotocol Noizu.ERP do
 
   @doc "Convert to scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references."
   def entity(obj, options \\ %{})
+  @doc "Convert to scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references, return as {:ok, value} or {:error, error}"
   def entity_ok(obj, options \\ %{})
 
   @doc "Convert to scaffolding.struct object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)"
   def entity!(obj, options \\ %{})
+  @doc "Convert to scaffolding.struct object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required), return as {:ok, value} or {:error, error}"
   def entity_ok!(obj, options \\ %{})
 end # end defprotocol Noizu.ERP
 

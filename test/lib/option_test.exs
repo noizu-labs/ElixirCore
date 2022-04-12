@@ -28,8 +28,6 @@ defmodule Noizu.ElixirCore.OptionTest do
   @tag :options
   test "basic functionality - expansion" do
     sut = prepare_options([])
-
-
     assert sut.effective_options.not_memberset == [:one, :two]
     assert sut.effective_options.member_set == %{one: true, two: true, three: false}
     assert sut.effective_options.single_value == :default_value

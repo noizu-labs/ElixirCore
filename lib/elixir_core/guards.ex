@@ -85,7 +85,7 @@ defmodule Noizu.ElixirCore.Guards do
   defguard permission?(context, permission) when caller_permission?(context, permission)
   defguard permission?(context, permission, value) when caller_permission_value?(context, permission, value)
 
-  defguard has_call_reason?(value) when is_map(value) and is_map_key(value, :reason) and is_bitstring(value.reason)
+  defguard has_call_reason?(value) when is_map(value) and is_map_key(value, :reason) and value.reason != :none and value.reason != nil
 
   #-----------------------
   # Ref Guard
