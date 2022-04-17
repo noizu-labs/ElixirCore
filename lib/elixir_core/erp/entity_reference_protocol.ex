@@ -45,7 +45,7 @@ defimpl Noizu.ERP, for: List do
       Noizu.ERP.id(obj)
     end
   end # end reference/1
-  def id(entities) do
+  def id_ok(entities) do
     results = for obj <- entities do
       Noizu.ERP.id(obj)
     end |> Enum.filter(&(&1))
