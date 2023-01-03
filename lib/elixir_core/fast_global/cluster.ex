@@ -6,18 +6,29 @@
 defmodule Noizu.FastGlobal.Cluster do
   @vsn 1.0
   alias Noizu.FastGlobal.Record
+  require Logger
 
   def get_settings() do
     get(:fast_global_settings,
       fn() ->
         try do
-          if :ok == Noizu.FastGlobal.Database.Settings.wait(100) do
+          with :ok <- Noizu.FastGlobal.Database.Settings.wait(100) do
             case Noizu.FastGlobal.Database.Settings.read!(:fast_global_settings) do
               %Noizu.FastGlobal.Database.Settings{value: v} -> v
-              _ -> {:fast_global, :no_cache, %{}}
+              _ ->
+                Logger.warn("""
+                [Noizu.FastGlobal.Cluster]: setting value not set or readable. Try
+                ```Elixir
+                 %Noizu.FastGlobal.Database.Settings{identifier: :fast_global_settings, value: %{}}
+                 |> Noizu.FastGlobal.Database.Settings.write!()
+                ```
+                """)
+                {:fast_global, :no_cache, %{}}
             end
           else
-            {:fast_global, :no_cache, %{}}
+            error ->
+              Logger.warn("[Noizu.FastGlobal.Cluster]: Not Loaded #{inspect error}")
+              {:fast_global, :no_cache, %{}}
           end
         rescue _e -> {:fast_global, :no_cache, %{}}
         catch _e -> {:fast_global, :no_cache, %{}}
@@ -27,53 +38,119 @@ defmodule Noizu.FastGlobal.Cluster do
   end
 
   #-------------------
-  # sync_record
+  # sync_record__write
   #-------------------
-  def sync_record(identifier, default, options) do
-    value = if is_function(default, 0) do
-      default.()
-    else
-      default
-    end
-
-    if Semaphore.acquire({:fg_write_record, identifier}, 1) do
-      spawn fn ->
-        try do
-          settings = cond do
-            identifier == :fast_global_settings -> %{}
-            true -> get_settings()
-          end
-          origin = options[:origin] || settings[:origin]
-          record = try do
-            origin && :rpc.call(origin, __MODULE__, :get_record, [identifier], 15_000)
-          rescue _e -> nil
-          catch _e -> nil
-          end
-
-          case record do
-            %Record{} ->
-              put(identifier, record)
-            _ ->
-              case value do
-                {:fast_global, :no_cache, _} -> :bypass
-                _ ->
-                  pool = ((options[:pool] || Node.list() ++ [node()])) |> Enum.uniq()
-                  update = %Record{identifier: identifier, origin: origin || node(), pool: pool, value: value, revision: 1, ts: :os.system_time(:millisecond)}
-                  Enum.map(update.pool, &(&1 == node() && FastGlobal.put(identifier, update) ||  :rpc.cast(&1, FastGlobal, :put, [identifier, update])))
-                  :ok
-              end
-          end
-        rescue _e -> nil
-        catch _e -> nil
-        end
-        Semaphore.release({:fg_write_record, identifier})
+  def sync_record__write(identifier, value, options, _tsup) do
+    settings = cond do
+                 identifier == :fast_global_settings -> %{}
+                 :else -> get_settings()
+               end
+    origin = options[:origin] || settings[:origin]
+    try do
+      cond do
+        origin == node() -> get_record(identifier)
+        :else ->
+          timeout = options[:timeout][:get_record] || 5_000
+          :rpc.call(origin, __MODULE__, :get_record, [identifier], timeout )
       end
+    rescue _e -> nil
+    catch _e -> nil
     end
+    |> case do
+         record = %Record{} -> put(identifier, record)
+         _ ->
+           pool = [node() | (options[:pool] || Node.list())]
+                  |> Enum.uniq()
+           record = %Record{
+             identifier: identifier,
+             origin: origin || node(),
+             pool: pool,
+             value: value,
+             revision: 1,
+             ts: :os.system_time(:millisecond)
+           }
+           [local|remote] = Enum.map(record.pool,
+             fn (target) ->
+               cond do
+                 target == node() ->
+                   Task.async(fn -> FastGlobal.put(identifier, record) end)
+                 :else ->
+                   Task.async(fn -> :rpc.call(target, FastGlobal, :put, [identifier, record], :infinity) end)
+               end
+             end
+           )
+      
+           timeout = options[:timeout][:put_record] || 15_000
+           shutdown_after = cond do
+                              v = options[:timeout][:wait_record] -> v
+                              is_integer(timeout) -> timeout * 2
+                              :else -> timeout
+                            end
+      
+           [local|remote]
+           |> Task.yield_many(timeout)
+           |> Enum.map(
+                fn({task, res}) ->
+                  cond do
+                    res -> {task, res}
+                    task == local -> {task, Task.await(task, :infinity)}
+                    :else -> {task, Task.shutdown(task, shutdown_after)}
+                  end
+                end)
+       end
+  rescue _e -> nil
+  catch _e -> nil
+  end
 
-    case value do
-      {:fast_global, :no_cache, v} -> v
-      _ ->
-        value
+  def sync_record(identifier, default, options, tsup \\ nil) do
+    if Semaphore.acquire({:fg_write_record, identifier}, 1) do
+      cond do
+        is_function(default, 1) -> default.(:has_lock)
+        is_function(default, 0) -> default.()
+        :else -> default
+      end
+      |> case do
+           {:fast_global, :no_cache, value} ->
+             # todo deal with back pressure to avoid hitting ets to heard here.
+             Semaphore.release({:fg_write_record, identifier})
+             value
+           value ->
+             cond do
+               tsup == false ->
+                 spawn fn -> sync_record__write(identifier, value, options, tsup) end
+               :else ->
+                 tsup = tsup || Noizu.FastGlobal.Cluster
+                 Task.Supervisor.async_nolink(tsup,
+                   fn ->
+                     task = Task.Supervisor.async_nolink(tsup,
+                       fn ->
+                         sync_record__write(identifier, value, options, tsup)
+                       end
+                     )
+                     timeout = options[:timeout][:fg] || 60_000
+                     shutdown = cond do
+                                  v = options[:timeout][:fg_halt] -> v
+                                  is_integer(timeout) -> timeout * 5
+                                  :else -> timeout
+                                end
+                     o = Task.yield(task, timeout)
+                     o = o || Task.shutdown(task, shutdown)
+                     Semaphore.release({:fg_write_record, identifier})
+                   end
+                 )
+             end
+             value
+         end
+    else
+      cond do
+        is_function(default, 1) -> default.(false)
+        is_function(default, 0) -> default.()
+        :else -> default
+      end
+      |> case do
+           {:fast_global, :no_cache, value} -> value
+           value -> value
+         end
     end
   end
 
@@ -85,7 +162,84 @@ defmodule Noizu.FastGlobal.Cluster do
   def get(identifier, default, options) do
     case FastGlobal.get(identifier, :no_match) do
       %Record{value: v} -> v
-      :no_match -> sync_record(identifier, default, options)
+      :no_match ->
+        cond do
+          Semaphore.acquire({:fg_write_record, identifier}, 1) ->
+            Semaphore.release({:fg_write_record, identifier})
+            sync_record(identifier, default, options)
+          !is_function(default) ->
+            # dummy response no need to pool here, but disable cache overwrite until lock available.
+            default = case default do
+                        v = {:fast_global, :no_cache, _} -> v
+                        v -> {:fast_global, :no_cache, v}
+                      end
+            sync_record(identifier, default, options)
+          is_function(default,1) ->
+            # lock state aware default value provider proceed.
+            sync_record(identifier, default, options)
+  
+          Semaphore.acquire({:fg_write_record, identifier}, options[:back_pressure][:fg_get_queue] || 500) ->
+            # force request to pool briefly while we wait for the write operation to complete
+            # to avoid additional db overhead.
+            # @todo improve Back pressure handling here.
+            Process.sleep(10 + :rand.uniform(25))
+            Semaphore.release({:fg_write_record, identifier})
+            wait = options[:back_pressure][:fg_get_queue_wait] || 100
+            wait = wait + :rand.uniform(div(wait,3))
+            cond do
+              wait > 50 ->
+                Enum.reduce_while(0.. div(wait,25) , false, fn(_,_) ->
+                  cond do
+                    Semaphore.acquire({:fg_write_record, identifier}, 1) -> {:halt, true}
+                    :else ->
+                      Process.sleep(25)
+                      {:cont, false}
+                  end
+                end)
+              :else ->
+                Process.sleep(wait)
+                Semaphore.acquire({:fg_write_record, identifier}, 1)
+            end
+            |> then(fn(mutex) ->
+              if mutex || Semaphore.acquire({:fg_write_record, identifier}, 1) do
+                Semaphore.release({:fg_write_record, identifier})
+                case FastGlobal.get(identifier, :no_match) do
+                  %Record{value: v} -> v
+                  :no_match -> sync_record(identifier, default, options)
+                  error -> error
+                end
+              else
+                # in case the semaphore is released before we reach fg_write insure response here is not cached
+                # / does not overwrite existing update.
+                default = case default.() do
+                            v = {:fast_global, :no_cache, _} -> v
+                            v -> {:fast_global, :no_cache, v}
+                          end
+                sync_record(identifier, default, options)
+              end
+            end)
+            
+            
+            
+            
+            wait = options[:back_pressure][:fg_get_queue_wait] || 500
+            # todo use a wait for here instead of sleeping for a possibly long period.
+            Process.sleep(wait + :rand.uniform(div(wait, 3)))
+            case FastGlobal.get(identifier, :no_match) do
+              %Record{value: v} -> v
+              :no_match -> sync_record(identifier, default, options)
+              error -> error
+            end
+          :else ->
+            if Semaphore.acquire({:fg_write_record_timeout, :global}, 1) do
+              spawn(fn ->
+                Logger.error("[Noizu.FastGlobal.Cluster] Pool Overflowing on FG write #{inspect identifier}")
+                Process.sleep(100)
+                Semaphore.release({:fg_write_record_timeout, :global})
+              end)
+            end
+            sync_record(identifier, default, options)
+        end
       error -> error
     end
   end
@@ -126,19 +280,43 @@ defmodule Noizu.FastGlobal.Cluster do
         pool = ([node()] ++ pool) |> Enum.uniq()
         %Record{identifier: identifier, origin: node(), pool: pool, value: value, revision: 1, ts: :os.system_time(:millisecond)}
     end
-
-    # @TODO we actually need to wait until recieved, this will fail immedietly if semaphore not acquired.
+    
+    # @TODO we actually need to wait until received, this will fail immedietly if semaphore not acquired.
     Semaphore.call({:fg_update_record, identifier}, 1,
       fn() ->
-        Enum.map(update.pool,
-          fn(n) ->
-            if n == node() do
-              put(identifier, update, options)
-            else
-              :rpc.cast(n, Noizu.FastGlobal.Cluster, :put, [identifier, update, options])
-            end
+        Semaphore.call({:fg_write_record, identifier}, 2,
+          fn() ->
+            Enum.reduce_while(0..600, false, fn(_,_) ->
+              cond do
+                Semaphore.acquire({:fg_write_record, identifier}, 1) -> {:halt, true}
+                :else ->
+                  Process.sleep(100)
+                  {:cont, false}
+              end
+            end)
+            |> then(fn(mutex) ->
+              with true <- mutex || {:error, :max} do
+                Enum.map(update.pool,
+                  fn(n) ->
+                    try do
+                      cond do
+                        n == node() -> put(identifier, update, options)
+                        :else -> :rpc.cast(n, Noizu.FastGlobal.Cluster, :put, [identifier, update, options])
+                      end
+                    rescue _ -> {n,:swallow}
+                    catch
+                      :exit, _ -> {n,:swallow}
+                      _ -> {n,:swallow}
+                    end
+                  end)
+                else
+                error ->
+                  Logger.error("[Noizu.FastGlobal.Cluster]: Unable to obtain write for requested update.")
+                error
+              end
+            end)
           end)
       end)
-    :ok
+    
   end
 end
