@@ -41,6 +41,7 @@ defmodule Noizu.FastGlobal.Cluster do
   # sync_record__write
   #-------------------
   def sync_record__write(identifier, value, options, _tsup) do
+    Logger.warn("[Noizu.FastGlobal.Cluster] Write: #{identifier}")
     settings = cond do
                  identifier == :fast_global_settings -> %{}
                  :else -> get_settings()
@@ -73,9 +74,12 @@ defmodule Noizu.FastGlobal.Cluster do
              fn (target) ->
                cond do
                  target == node() ->
-                   Task.async(fn -> FastGlobal.put(identifier, record) end)
+                   Task.async(fn -> put(identifier, record) end)
                  :else ->
-                   Task.async(fn -> :rpc.call(target, FastGlobal, :put, [identifier, record], :infinity) end)
+                   Task.async(fn ->
+                     #:rpc.call(target, Noizu.FastGlobal.Cluster, :put, [identifier, record], :infinity)
+                     :rpc.cast(target, Noizu.FastGlobal.Cluster, :put, [identifier, record])
+                   end)
                end
              end
            )
@@ -94,7 +98,9 @@ defmodule Noizu.FastGlobal.Cluster do
                   cond do
                     res -> {task, res}
                     task == local -> {task, Task.await(task, :infinity)}
-                    :else -> {task, Task.shutdown(task, shutdown_after)}
+                    :else ->
+                      # {task, Task.shutdown(task, shutdown_after)}
+                      :ignore
                   end
                 end)
        end
@@ -111,13 +117,21 @@ defmodule Noizu.FastGlobal.Cluster do
       end
       |> case do
            {:fast_global, :no_cache, value} ->
-             # todo deal with back pressure to avoid hitting ets to heard here.
+             # todo deal with back pressure to avoid hitting ets to hard here.
              Semaphore.release({:fg_write_record, identifier})
              value
            value ->
              cond do
                tsup == false ->
-                 spawn fn -> sync_record__write(identifier, value, options, tsup) end
+                 spawn fn ->
+                   try do
+                     sync_record__write(identifier, value, options, tsup)
+                   rescue _ -> :swallow
+                   catch :exit, _ -> :swallow
+                     _ -> :swallow
+                   end
+                   Semaphore.release({:fg_write_record, identifier})
+                 end
                :else ->
                  tsup = tsup || Noizu.FastGlobal.Cluster
                  Task.Supervisor.async_nolink(tsup,
@@ -134,7 +148,9 @@ defmodule Noizu.FastGlobal.Cluster do
                                   :else -> timeout
                                 end
                      o = Task.yield(task, timeout)
-                     o = o || Task.shutdown(task, shutdown)
+                     o = o || Task.yield(task, shutdown)
+                     o = o || Logger.error("[Noizu.FastGlobal.Cluster] Timeout on write: #{identifier}")
+                     # No shutdown just let it proceed so it is eventually populated.
                      Semaphore.release({:fg_write_record, identifier})
                    end
                  )

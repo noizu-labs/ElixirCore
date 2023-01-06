@@ -9,13 +9,29 @@ defmodule Noizu.FastGlobalTest do
   end
   
   describe "FastGlobal Core" do
+    test "coordinate put| race condition" do
+      case = :test_coordinate_put_two
+      
+      Task.async_stream(0..100, fn(_) ->
+           Noizu.FastGlobal.Cluster.put(case, :hello, %{})
+           Noizu.FastGlobal.Cluster.get(case, :hello, :apple)
+      end, max_concurrency: 64, timeout: 60_000) |> Enum.map(&(&1))
+      
+      r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
+      assert r == :hello
+    
+      Noizu.FastGlobal.Cluster.put(case, :hello2, %{})
+      r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
+      assert r == :hello2
+    end
+  
     test "coordinate put" do
       case = :test_coordinate_put_one
       Noizu.FastGlobal.Cluster.put(case, :hello, %{})
-
+  
       r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
       assert r == :hello
-      
+  
       Noizu.FastGlobal.Cluster.put(case, :hello2, %{})
       r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
       assert r == :hello2
