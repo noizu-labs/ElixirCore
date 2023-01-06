@@ -2,7 +2,7 @@
 
 > ![Noizu Labs][logo]
 
-Elixir Core 
+Elixir Core [![CircleCI](https://dl.circleci.com/status-badge/img/gh/noizu/ElixirCore/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/noizu/ElixirCore/tree/master)
 ===============================================================================
 
 Common protocols and convenience methods leveraged by other Noizu Labs, Inc. frameworks. 
