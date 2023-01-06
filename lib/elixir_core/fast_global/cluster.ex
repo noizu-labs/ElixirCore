@@ -288,7 +288,7 @@ defmodule Noizu.FastGlobal.Cluster do
           fn() ->
             Enum.reduce_while(0..2400, false, fn(_,_) ->
               cond do
-                Semaphore.acquire({:fg_write_record, identifier}, 1) -> {:halt, true}
+                Semaphore.acquire({:fg_write_record, identifier}, 2) -> {:halt, true}
                 :else ->
                   Process.sleep(25)
                   {:cont, false}

@@ -9,6 +9,18 @@ defmodule Noizu.FastGlobalTest do
   end
   
   describe "FastGlobal Core" do
+    test "coordinate put" do
+      case = :test_coordinate_put_one
+      Noizu.FastGlobal.Cluster.put(case, :hello, %{})
+
+      r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
+      assert r == :hello
+      
+      Noizu.FastGlobal.Cluster.put(case, :hello2, %{})
+      r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
+      assert r == :hello2
+    end
+    
     test "lock_conditional_default_value: lock not obtained" do
       case = :im_a_little_tea_pot
       assert Semaphore.acquire({:fg_write_record, case}, 1) == true
