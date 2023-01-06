@@ -77,8 +77,11 @@ defmodule Noizu.FastGlobal.Cluster do
                    Task.async(fn -> put(identifier, record) end)
                  :else ->
                    Task.async(fn ->
-                     #:rpc.call(target, Noizu.FastGlobal.Cluster, :put, [identifier, record], :infinity)
-                     :rpc.cast(target, Noizu.FastGlobal.Cluster, :put, [identifier, record])
+                     cond do
+                       options[:fg][:local_only] -> :skip
+                       options[:fg][:sync] -> :rpc.call(target, Noizu.FastGlobal.Cluster, :put, [identifier, record], :infinity)
+                       :else -> :rpc.cast(target, Noizu.FastGlobal.Cluster, :put, [identifier, record])
+                     end
                    end)
                end
              end
@@ -182,17 +185,17 @@ defmodule Noizu.FastGlobal.Cluster do
         cond do
           Semaphore.acquire({:fg_write_record, identifier}, 1) ->
             Semaphore.release({:fg_write_record, identifier})
-            sync_record(identifier, default, options)
+            sync_record(identifier, default, options, options[:tsup])
           !is_function(default) ->
             # dummy response no need to pool here, but disable cache overwrite until lock available.
             default = case default do
                         v = {:fast_global, :no_cache, _} -> v
                         v -> {:fast_global, :no_cache, v}
                       end
-            sync_record(identifier, default, options)
+            sync_record(identifier, default, options, options[:tsup])
           is_function(default,1) ->
             # lock state aware default value provider proceed.
-            sync_record(identifier, default, options)
+            sync_record(identifier, default, options, options[:tsup])
   
           Semaphore.acquire({:fg_write_record, identifier}, options[:back_pressure][:fg_get_queue] || 500) ->
             # force request to pool briefly while we wait for the write operation to complete
@@ -234,18 +237,6 @@ defmodule Noizu.FastGlobal.Cluster do
                 sync_record(identifier, default, options)
               end
             end)
-            
-            
-            
-            
-            wait = options[:back_pressure][:fg_get_queue_wait] || 500
-            # todo use a wait for here instead of sleeping for a possibly long period.
-            Process.sleep(wait + :rand.uniform(div(wait, 3)))
-            case FastGlobal.get(identifier, :no_match) do
-              %Record{value: v} -> v
-              :no_match -> sync_record(identifier, default, options)
-              error -> error
-            end
           :else ->
             if Semaphore.acquire({:fg_write_record_timeout, :global}, 1) do
               spawn(fn ->
@@ -254,6 +245,12 @@ defmodule Noizu.FastGlobal.Cluster do
                 Semaphore.release({:fg_write_record_timeout, :global})
               end)
             end
+            # in case the semaphore is released before we reach fg_write insure response here is not cached
+            # / does not overwrite existing update.
+            default = case default.() do
+                        v = {:fast_global, :no_cache, _} -> v
+                        v -> {:fast_global, :no_cache, v}
+                      end
             sync_record(identifier, default, options)
         end
       error -> error

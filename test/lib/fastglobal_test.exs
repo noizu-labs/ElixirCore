@@ -14,7 +14,7 @@ defmodule Noizu.FastGlobalTest do
       
       Task.async_stream(0..100, fn(_) ->
            Noizu.FastGlobal.Cluster.put(case, :hello, %{})
-           Noizu.FastGlobal.Cluster.get(case, :hello, :apple)
+           Noizu.FastGlobal.Cluster.get(case, :apple, %{})
       end, max_concurrency: 64, timeout: 60_000) |> Enum.map(&(&1))
       
       r = Noizu.FastGlobal.Cluster.get(case, fn() -> :wait end)
