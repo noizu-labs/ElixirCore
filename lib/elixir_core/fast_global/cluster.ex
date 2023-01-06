@@ -286,11 +286,11 @@ defmodule Noizu.FastGlobal.Cluster do
       fn() ->
         Semaphore.call({:fg_write_record, identifier}, 2,
           fn() ->
-            Enum.reduce_while(0..600, false, fn(_,_) ->
+            Enum.reduce_while(0..2400, false, fn(_,_) ->
               cond do
                 Semaphore.acquire({:fg_write_record, identifier}, 1) -> {:halt, true}
                 :else ->
-                  Process.sleep(100)
+                  Process.sleep(25)
                   {:cont, false}
               end
             end)
@@ -309,10 +309,11 @@ defmodule Noizu.FastGlobal.Cluster do
                       _ -> {n,:swallow}
                     end
                   end)
+                  Semaphore.release({:fg_write_record, identifier})
                 else
                 error ->
                   Logger.error("[Noizu.FastGlobal.Cluster]: Unable to obtain write for requested update.")
-                error
+                  error
               end
             end)
           end)
