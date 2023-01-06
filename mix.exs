@@ -13,7 +13,14 @@ defmodule Noizu.ElixirCore.Mixfile do
      package: package(),
      deps: deps(),
      description: "Request Context Helper",
-     docs: docs()
+     docs: docs(),
+      test_coverage: [
+        summary: [
+          threshold: 10
+        ],
+        ignore_modules: [
+        ]
+      ]
    ]
   end
 
@@ -31,6 +38,7 @@ defmodule Noizu.ElixirCore.Mixfile do
 
   defp deps do
     [
+      {:junit_formatter, "~> 3.3", only: [:test]},
       {:ex_doc, "~> 0.28.3", only: [:dev, :test], optional: true, runtime: false}, # Documentation Provider
       {:markdown, github: "devinus/markdown", only: [:dev], optional: true}, # Markdown processor for ex_doc
       {:fastglobal, "~> 1.0"}, # https://github.com/discordapp/fastglobal

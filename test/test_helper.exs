@@ -3,6 +3,8 @@
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
+ExUnit.configure formatters: [JUnitFormatter, ExUnit.CLIFormatter]
+
 Application.ensure_started(:semaphore)
 Application.ensure_started(:fast_global)
 
