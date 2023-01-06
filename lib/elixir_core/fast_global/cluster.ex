@@ -345,13 +345,13 @@ defmodule Noizu.FastGlobal.Cluster do
 
                 r = cond do
                   options[:fg][:write_wait] == nil ->
-                    [{local_task, Task.await(local_task)}]
+                    [{local_task, Task.await(local_task, :infinity)}]
                   w = options[:fg][:write_wait] ->
                     timeout = cond do
                                 w == true -> :infinity
                                 :else -> w
                               end
-                    [{local_task, Task.await(local_task)}| Task.yield_many([tasks], timeout)]
+                    [{local_task, Task.await(local_task, :infinity)}| Task.yield_many([tasks], timeout)]
                   :else ->
                     :ok
                 end
