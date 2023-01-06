@@ -126,7 +126,7 @@ defmodule Noizu.FastGlobal.Cluster do
            value ->
              cond do
                tsup == false ->
-                 spawn fn ->
+                 if w = options[:fg][:write_wait] do
                    try do
                      sync_record__write(identifier, value, options, tsup)
                    rescue _ -> :swallow
@@ -134,10 +134,20 @@ defmodule Noizu.FastGlobal.Cluster do
                      _ -> :swallow
                    end
                    Semaphore.release({:fg_write_record, identifier})
+                 else
+                   spawn fn ->
+                     try do
+                       sync_record__write(identifier, value, options, tsup)
+                     rescue _ -> :swallow
+                     catch :exit, _ -> :swallow
+                       _ -> :swallow
+                     end
+                     Semaphore.release({:fg_write_record, identifier})
+                   end
                  end
                :else ->
                  tsup = tsup || Noizu.FastGlobal.Cluster
-                 Task.Supervisor.async_nolink(tsup,
+                 t = Task.Supervisor.async_nolink(tsup,
                    fn ->
                      task = Task.Supervisor.async_nolink(tsup,
                        fn ->
@@ -157,6 +167,13 @@ defmodule Noizu.FastGlobal.Cluster do
                      Semaphore.release({:fg_write_record, identifier})
                    end
                  )
+                 if w = options[:fg][:write_wait] do
+                   timeout = cond do
+                               w == true -> :infinity
+                               :else -> w
+                             end
+                   Task.yield(t, timeout)
+                 end
              end
              value
          end
@@ -309,20 +326,38 @@ defmodule Noizu.FastGlobal.Cluster do
             end)
             |> then(fn(mutex) ->
               with true <- mutex || {:error, :max} do
-                Enum.map(update.pool,
-                  fn(n) ->
-                    try do
-                      cond do
-                        n == node() -> put(identifier, update, options)
-                        :else -> :rpc.cast(n, Noizu.FastGlobal.Cluster, :put, [identifier, update, options])
-                      end
-                    rescue _ -> {n,:swallow}
-                    catch
-                      :exit, _ -> {n,:swallow}
-                      _ -> {n,:swallow}
+                tsup = options[:fg][:tsup] || Noizu.FastGlobal.Cluster
+                [local_task|tasks] = Enum.map(update.pool,
+                  fn(target) ->
+                    cond do
+                      target == node() ->
+                        Task.Supervisor.async_nolink(tsup,fn -> put(identifier, update, options) end)
+                      :else ->
+                        Task.Supervisor.async_nolink(tsup,fn ->
+                          cond do
+                            options[:fg][:local_only] -> :skip
+                            options[:fg][:sync] -> :rpc.call(target, Noizu.FastGlobal.Cluster, :put, [identifier, update, options], :infinity)
+                            :else -> :rpc.cast(target, Noizu.FastGlobal.Cluster, :put, [identifier, update, options])
+                          end
+                        end)
                     end
                   end)
-                  Semaphore.release({:fg_write_record, identifier})
+
+                r = cond do
+                  options[:fg][:write_wait] == nil ->
+                    [{local_task, Task.await(local_task)}]
+                  w = options[:fg][:write_wait] ->
+                    timeout = cond do
+                                w == true -> :infinity
+                                :else -> w
+                              end
+                    [{local_task, Task.await(local_task)}| Task.yield_many([tasks], timeout)]
+                  :else ->
+                    :ok
+                end
+                Semaphore.release({:fg_write_record, identifier})
+                r
+                
                 else
                 error ->
                   Logger.error("[Noizu.FastGlobal.Cluster]: Unable to obtain write for requested update.")

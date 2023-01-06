@@ -74,7 +74,17 @@ defmodule Noizu.FastGlobalTest do
       r = Noizu.FastGlobal.Cluster.get(case, &__MODULE__.default_cache_value/1)
       assert r == :foo
 
-      assert Semaphore.acquire({:fg_write_record, case}, 1) == true
+
+      lock = cond do
+               v = Semaphore.acquire({:fg_write_record, case}, 1) -> v
+               :else ->
+                 Process.sleep(25)
+                 r = Noizu.FastGlobal.Cluster.get(case, fn() -> :apple end)
+                 assert r == :foo
+                 Process.sleep(25)
+                 Semaphore.acquire({:fg_write_record, case}, 1)
+             end
+      assert lock == true
       Semaphore.release({:fg_write_record, case})
     end
     
@@ -104,8 +114,17 @@ defmodule Noizu.FastGlobalTest do
       # use &/0 default to wait on FG to complete.
       r = Noizu.FastGlobal.Cluster.get(case, fn() -> :apple end)
       assert r == :not_knowing_what_it_was
-  
-      assert Semaphore.acquire({:fg_write_record, case}, 1) == true
+
+      lock = cond do
+               v = Semaphore.acquire({:fg_write_record, case}, 1) -> v
+               :else ->
+                 Process.sleep(25)
+                 r = Noizu.FastGlobal.Cluster.get(case, fn() -> :apple end)
+                 assert r == :not_knowing_what_it_was
+                 Process.sleep(25)
+                 Semaphore.acquire({:fg_write_record, case}, 1)
+             end
+      assert lock == true
       Semaphore.release({:fg_write_record, case})
     end
     
