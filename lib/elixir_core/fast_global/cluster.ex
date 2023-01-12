@@ -221,12 +221,12 @@ defmodule Noizu.FastGlobal.Cluster do
               v -> v
             end
 
-          Semaphore.acquire({:fg_write_record, identifier}, options[:back_pressure][:fg_get_queue] || 500) ->
+          Semaphore.acquire({:fg_write_record_wait, identifier}, options[:back_pressure][:fg_get_queue] || 500) ->
             # force request to pool briefly while we wait for the write operation to complete
             # to avoid additional db overhead.
             # @todo improve Back pressure handling here.
             Process.sleep(10 + :rand.uniform(25))
-            Semaphore.release({:fg_write_record, identifier})
+            Semaphore.release({:fg_write_record_wait, identifier})
             wait = options[:back_pressure][:fg_get_queue_wait] || 100
             wait = wait + :rand.uniform(div(wait,3))
             cond do
