@@ -93,19 +93,22 @@ defmodule Noizu.FastGlobal.Cluster do
                               is_integer(timeout) -> timeout * 2
                               :else -> timeout
                             end
-      
-           [local|remote]
-           |> Task.yield_many(timeout)
-           |> Enum.map(
-                fn({task, res}) ->
-                  cond do
-                    res -> {task, res}
-                    task == local -> {task, Task.await(task, :infinity)}
-                    :else ->
-                      # {task, Task.shutdown(task, shutdown_after)}
-                      :ignore
-                  end
-                end)
+
+           r = [local|remote]
+               |> Task.yield_many(timeout)
+               |> Enum.map(
+                    fn({task, res}) ->
+                      cond do
+                        res -> {task, res}
+                        task == local -> {task, Task.await(task, :infinity)}
+                        :else ->
+                          # {task, Task.shutdown(task, shutdown_after)}
+                          :ignore
+                      end
+                    end)
+           Logger.warn("[Noizu.FastGlobal.Cluster] Write Complete: #{identifier}")
+
+
        end
   rescue _e -> nil
   catch _e -> nil
@@ -203,17 +206,21 @@ defmodule Noizu.FastGlobal.Cluster do
           Semaphore.acquire({:fg_write_record, identifier}, 1) ->
             Semaphore.release({:fg_write_record, identifier})
             sync_record(identifier, default, options, options[:tsup])
+
           !is_function(default) ->
-            # dummy response no need to pool here, but disable cache overwrite until lock available.
-            default = case default do
-                        v = {:fast_global, :no_cache, _} -> v
-                        v -> {:fast_global, :no_cache, v}
-                      end
-            sync_record(identifier, default, options, options[:tsup])
+            # Currently updating record, simply return default value to avoid multiple calls.
+            case default do
+              {:fast_global, :no_cache, v} -> v
+              v -> v
+            end
+
           is_function(default,1) ->
-            # lock state aware default value provider proceed.
-            sync_record(identifier, default, options, options[:tsup])
-  
+            # lock state aware default value provider.
+            case default.(false) do
+              {:fast_global, :no_cache, v} -> v
+              v -> v
+            end
+
           Semaphore.acquire({:fg_write_record, identifier}, options[:back_pressure][:fg_get_queue] || 500) ->
             # force request to pool briefly while we wait for the write operation to complete
             # to avoid additional db overhead.
@@ -247,11 +254,10 @@ defmodule Noizu.FastGlobal.Cluster do
               else
                 # in case the semaphore is released before we reach fg_write insure response here is not cached
                 # / does not overwrite existing update.
-                default = case default.() do
-                            v = {:fast_global, :no_cache, _} -> v
-                            v -> {:fast_global, :no_cache, v}
-                          end
-                sync_record(identifier, default, options)
+                case default.() do
+                  {:fast_global, :no_cache, v} -> v
+                  v -> v
+                end
               end
             end)
           :else ->
@@ -264,11 +270,10 @@ defmodule Noizu.FastGlobal.Cluster do
             end
             # in case the semaphore is released before we reach fg_write insure response here is not cached
             # / does not overwrite existing update.
-            default = case default.() do
-                        v = {:fast_global, :no_cache, _} -> v
-                        v -> {:fast_global, :no_cache, v}
-                      end
-            sync_record(identifier, default, options)
+            case default.() do
+              v = {:fast_global, :no_cache, _} -> v
+              v -> {:fast_global, :no_cache, v}
+            end
         end
       error -> error
     end
