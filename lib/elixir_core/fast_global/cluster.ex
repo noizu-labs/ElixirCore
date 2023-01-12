@@ -51,7 +51,7 @@ defmodule Noizu.FastGlobal.Cluster do
       cond do
         origin == node() -> get_record(identifier)
         :else ->
-          timeout = options[:timeout][:get_record] || 5_000
+          timeout = options[:timeout][:get_record] || 15_000
           :rpc.call(origin, __MODULE__, :get_record, [identifier], timeout )
       end
     rescue _e -> nil
@@ -87,7 +87,7 @@ defmodule Noizu.FastGlobal.Cluster do
              end
            )
       
-           timeout = options[:timeout][:put_record] || 15_000
+           timeout = options[:timeout][:put_record] || 600_000
            shutdown_after = cond do
                               v = options[:timeout][:wait_record] -> v
                               is_integer(timeout) -> timeout * 2
@@ -154,7 +154,7 @@ defmodule Noizu.FastGlobal.Cluster do
                          sync_record__write(identifier, value, options, tsup)
                        end
                      )
-                     timeout = options[:timeout][:fg] || 60_000
+                     timeout = options[:timeout][:fg] || 700_000
                      shutdown = cond do
                                   v = options[:timeout][:fg_halt] -> v
                                   is_integer(timeout) -> timeout * 5
