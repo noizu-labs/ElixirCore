@@ -141,11 +141,11 @@ defmodule Noizu.FastGlobal.Cluster do
                    spawn fn ->
                      try do
                        sync_record__write(identifier, value, options, tsup)
+                       Semaphore.release({:fg_write_record, identifier})
                      rescue _ -> :swallow
                      catch :exit, _ -> :swallow
                        _ -> :swallow
                      end
-                     Semaphore.release({:fg_write_record, identifier})
                    end
                  end
                :else ->
