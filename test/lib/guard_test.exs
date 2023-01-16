@@ -16,6 +16,7 @@ defmodule Noizu.ElixirCore.GuardTest do
 
 
   require Logger
+  require Noizu.RequestContext
   import Noizu.ElixirCore.Guards
 
   def obscure_hint(value), do: Application.get_env(:invalid_scope_noizu, :nnnn, value)
@@ -91,6 +92,27 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert !permission?(c, :buz)
     assert permission?(c, :orange, 2)
     assert !permission?(c, :orange, 3)
+  end
+
+  @tag :guards
+  test "has_permission? guard vnext" do
+    c = Noizu.RequestContext.request_context(permissions: MapSet.new([:foobar, :boo, {:a, :b}]))
+    assert permission?(c, :foobar)
+    assert permission?(c, {:a, :b})
+    assert !permission?(c, {:a, :c})
+    assert permission?(c, :boo)
+    assert !permission?(c, :buz)
+    
+    case c do
+      v when permission?(v, :foobar) -> true
+      _ -> assert false
+    end
+
+    case c do
+      v when not permission?(v, :buz) -> true
+      _ -> assert false
+    end
+    
   end
 
   @tag :guards

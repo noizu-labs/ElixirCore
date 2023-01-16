@@ -19,6 +19,7 @@ defmodule Noizu.ElixirCore.Guards do
           case unquote(permission) do
             permission when is_atom(permission) or is_tuple(permission) ->
               case unquote(term) do
+                {:request_context, _, _, _, permissions, _} -> Enum.member?(permissions, permission)
                 %{auth: %{permissions: p}} -> p[permission]
                 _ -> false
               end
@@ -35,6 +36,13 @@ defmodule Noizu.ElixirCore.Guards do
 
       :guard ->
         quote do
+          (
+            is_tuple(unquote(term))
+            and elem(unquote(term), 0) == :request_context
+            and :erlang.is_map(elem(unquote(term), 4))
+            and :erlang.is_map(elem(unquote(term), 4).map)
+            and :erlang.is_map_key(unquote(permission), elem(unquote(term), 4).map)
+            ) or
           is_map(unquote(term)) and
           (is_atom(unquote(permission)) or is_tuple(unquote(permission)) or :fail) and
           :erlang.is_map_key(:auth, unquote(term)) and

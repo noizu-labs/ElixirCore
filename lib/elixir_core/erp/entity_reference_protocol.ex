@@ -4,35 +4,55 @@
 #-------------------------------------------------------------------------------
 defprotocol Noizu.ERP do
   @fallback_to_any true
+  alias Noizu.Types, as: T
+
   @doc "Get underlying id for ref"
+  @spec id(any) :: list(T.erp_id()) | T.erp_id() | nil
   def id(obj)
   @doc "Get underlying id for ref, return as {:ok, value} or {:error, error}"
+  @spec id_ok(any) :: {:ok, list(T.erp_id()) | T.erp_id()} | {:error, term}
   def id_ok(obj)
 
   @doc "Cast to noizu reference object"
+  @spec ref(any) :: list(T.erp_ref()) | T.erp_ref() | nil
   def ref(obj)
   @doc "Cast to noizu reference object, return as {:ok, value} or {:error, error}"
+  @spec ref_ok(any) :: {:ok, list(T.erp_ref()) | T.erp_ref()} | {:error, term}
   def ref_ok(obj)
 
   @doc "Cast to noizu string reference object"
+  @spec sref(any) :: list(T.erp_sref()) | T.erp_sref() | nil
   def sref(obj)
   @doc "Cast to noizu string reference object, return as {:ok, value} or {:error, error}"
+  @spec sref_ok(any) :: {:ok, list(T.erp_sref()) | T.erp_sref()} | {:error, term}
   def sref_ok(obj)
 
   @doc "Convert to persistence object. Options may be passed to coordinate actions like expanding embedded references."
+  @spec record(any) :: list(T.erp_entity()) | T.erp_entity() | nil
+  @spec record(any, T.erp_options()) :: list(T.erp_entity()) | T.erp_entity() | nil
   def record(obj, options \\ %{})
 
   @doc "Convert to persistence object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)"
+  @spec record!(any) :: list(T.erp_entity()) | T.erp_entity() | nil
+  @spec record!(any, T.erp_options()) :: list(T.erp_entity()) | T.erp_entity() | nil
   def record!(obj, options \\ %{})
 
   @doc "Convert to scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references."
+  @spec entity(any) :: list(T.erp_entity()) | T.erp_entity() | nil
+  @spec entity(any, T.erp_options()) :: list(T.erp_entity()) | T.erp_entity() | nil
   def entity(obj, options \\ %{})
   @doc "Convert to scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references, return as {:ok, value} or {:error, error}"
+  @spec entity_ok(any) :: {:ok, list(T.erp_entity()) | T.erp_entity()} | {:error, term}
+  @spec entity_ok(any, T.erp_options()) :: {:ok, list(T.erp_entity()) | T.erp_entity()} | {:error, term}
   def entity_ok(obj, options \\ %{})
 
   @doc "Convert to scaffolding.struct object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required)"
+  @spec entity!(any) :: list(T.erp_entity()) | T.erp_entity() | nil
+  @spec entity!(any, T.erp_options()) :: list(T.erp_entity()) | T.erp_entity() | nil
   def entity!(obj, options \\ %{})
   @doc "Convert to scaffolding.struct object Options may be passed to coordinate actions like expanding embedded references. (With transaction wrapper if required), return as {:ok, value} or {:error, error}"
+  @spec entity_ok!(any) :: {:ok, list(T.erp_entity()) | T.erp_entity()} | {:error, term}
+  @spec entity_ok!(any, T.erp_options()) :: {:ok, list(T.erp_entity()) | T.erp_entity()} | {:error, term}
   def entity_ok!(obj, options \\ %{})
 end # end defprotocol Noizu.ERP
 
@@ -117,7 +137,6 @@ defimpl Noizu.ERP, for: List do
 end # end defimpl EntityReferenceProtocol, for: List
 
 defimpl Noizu.ERP, for: Tuple do
-
   def id(obj) do
     case obj do
       {:ref, manager, identifier} when is_atom(manager)->
