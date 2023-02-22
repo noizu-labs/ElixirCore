@@ -6,3 +6,5 @@ import Config
 
 config :junit_formatter,
        report_file: "results.xml"
+
+config :plug, :validate_header_keys_during_test, true

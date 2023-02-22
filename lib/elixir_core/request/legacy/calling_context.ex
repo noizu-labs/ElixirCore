@@ -120,7 +120,7 @@ defmodule Noizu.ElixirCore.CallingContext do
   def extract_token(nil, :generate), do: apply(UUID, :uuid4, [:hex])
   def extract_token(nil, default), do: default
   def extract_token(conn, default) do
-    case conn.body_params["request-id"] || apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
+    case conn.body_params["request-id"] || apply(Plug.Conn, :get_req_header, [conn, "x-request-id"]) do
       v when is_bitstring(v) -> v
       [] -> default == :generate && apply(UUID, :uuid4, [:hex]) || default
       [h|_] -> h
@@ -144,7 +144,7 @@ defmodule Noizu.ElixirCore.CallingContext do
     Useful for logging purposes/exception handling messaging/tracing on backend.
   """
   def extract_reason(conn, default) do
-    case conn.body_params["call-reason"] || apply(Plug.Conn, :get_resp_header, [conn, "x-call-reason"]) do
+    case conn.body_params["call-reason"] || apply(Plug.Conn, :get_req_header, [conn, "x-call-reason"]) do
       v when is_bitstring(v) -> v
       [] -> default || empty_reason()
       [h|_] -> h

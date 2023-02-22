@@ -87,7 +87,7 @@ defmodule Noizu.RequestContext do
     end
   end
 
-  def new_source(source, caller,  options) do
+  def new_source(source, caller, options) do
     with {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
       manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
       time = options[:current_time] || DateTime.utc_now()
@@ -109,8 +109,107 @@ defmodule Noizu.RequestContext do
       {:ok, context}
     end
   end
+  
+  
+  #-----------------------------------------------------------------------------
+  #
+  #-----------------------------------------------------------------------------
+  
+  #
+  #  @vsn 1.0
+  #  @type t :: %CallingContext{
+  #               caller: tuple,
+  #               token: String.t,
+  #               reason: String.t,
+  #               auth: Any,
+  #               options: Map.t,
+  #               time: DateTime.t | nil,
+  #               outer_context: CalingContext.t,
+  #               vsn: float
+  #             }
+  #
+  
+  def to_legacy(Noizu.ElixirCore.RequestContext.Types.request_context() = context, options) do
+    Noizu.ElixirCore.RequestContext.Types.request_context(
+      caller: caller,
+      auth: auth,
+      extended: details,
+      inner_context: inner_context
+    ) = context
 
+    # Auth
+    Noizu.ElixirCore.RequestContext.Types.request_authorization(
+      roles: roles,
+      permissions: permissions
+    ) = auth
+    roles = MapSet.to_list(roles || [])
+            |> Enum.map(&({&1, true}))
+            |> Map.new()
+    permissions = Map.merge(permissions || %{}, roles)
+    auth = %{permissions: permissions, roles: roles}
+    
+    # Details
+    Noizu.ElixirCore.RequestContext.Types.extended_request_context(
+      time: time,
+      token: token,
+      reason: reason,
+      options: context_options
+    ) = details
+    
+    # Nesting
+    outer_context = (with {:ok, oc} <- inner_context && to_legacy(inner_context, options) do
+                       oc
+                     else
+                       _ -> nil
+                     end)
+    
+    context = %Noizu.ElixirCore.CallingContext{
+      caller: caller,
+      token: token,
+      reason: reason,
+      auth: auth,
+      options: context_options,
+      time: time,
+      outer_context: outer_context,
+    }
+    {:ok, context}
+  end
+  
+  def from_legacy(%Noizu.ElixirCore.CallingContext{} = context, options) do
+    manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
+    details = Noizu.ElixirCore.RequestContext.Types.extended_request_context(
+      time: context.time,
+      token: context.token,
+      reason: context.reason,
+      options: context.options
+    )
 
+    # There is a bit of a mismatch with upstream ACL libraries and then new pattern here we will want to iron out.
+    roles = Enum.map(context.auth[:permissions] || [],
+              fn
+                ({k,true}) -> k
+                ({_,_}) -> nil
+              end) |> Enum.filter(&(&1)) |> MapSet.new()
+    auth = Noizu.ElixirCore.RequestContext.Types.request_authorization(
+      roles: roles,
+      permissions: %{}
+    )
+
+    inner_context = (with {:ok, inner} <- (context.outer_context && from_legacy(context.outer_context, options)) do
+                       inner
+                     else
+                       _ -> nil
+                     end)
+
+    context = Noizu.ElixirCore.RequestContext.Types.request_context(
+      caller: context.caller,
+      auth: auth,
+      manager: manager,
+      extended: details,
+      inner_context: inner_context
+    )
+    {:ok, context}
+  end
   #-----------------------------------------------------------------------------
   #
   #-----------------------------------------------------------------------------
@@ -119,12 +218,37 @@ defmodule Noizu.RequestContext do
       new(caller, options)
     end
   end
+  def default(type, %Noizu.ElixirCore.CallingContext{} = escalate, options) do
+    with {:ok, escalate} <- from_legacy(escalate, options),
+         {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(type, options),
+         {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
+      context = Noizu.ElixirCore.RequestContext.Types.request_context(
+        escalate,
+        caller: caller,
+        auth: auth,
+        inner_context: escalate
+      )
+      {:ok, context}
+    end
+  end
+  def default(type, Noizu.ElixirCore.RequestContext.Types.request_context() = escalate, options) do
+    with {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(type, options),
+         {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
+      context = Noizu.ElixirCore.RequestContext.Types.request_context(
+        escalate,
+        caller: caller,
+        auth: auth,
+        inner_context: escalate
+      )
+      {:ok, context}
+    end
+  end
   def default(type, %{__struct__: Plug.Conn} = conn, options) when type in [:admin, :restricted, :internal, :system] do
     with {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(type, options) do
       new_source(conn, caller, options)
     end
   end
-
+  
   #-----------------------------------------------------------------------------
   #
   #-----------------------------------------------------------------------------
@@ -155,24 +279,7 @@ defmodule Noizu.RequestContext do
   def admin(), do: default(:admin, nil, nil)
   def admin(source), do: default(:admin, source, nil)
   def admin(source, options), do: default(:admin, source, options)
-#  def admin(
-#        Noizu.ElixirCore.RequestContext.Types.request_context(
-#          caller: caller,
-#          auth: auth,
-#          manager: manager,
-#          extended: extended,
-#        ) = context) do
-#    options = nil
-#    caller = caller || Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(:admin, options)
-#    auth = Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options)
-#    {:ok,
-#      Noizu.ElixirCore.RequestContext.Types.request_context(context,
-#        caller: caller,
-#        auth: auth,
-#        inner_context: context
-#      )
-#    }
-#  end
+
 
 
 

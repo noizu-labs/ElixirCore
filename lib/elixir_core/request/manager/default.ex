@@ -38,9 +38,11 @@ defmodule Noizu.ElixirCore.RequestContext.Manager.Default do
   
   def token(%{__struct__: Plug.Conn} = conn, options) do
     cond do
+      token = conn.query_params["request-id"] -> token
       token = conn.body_params["request-id"] -> token
       :else ->
-        with [token|_] <- apply(Plug.Conn, :get_resp_header, [conn, "x-request-id"]) do
+        
+        with [token|_] <- apply(Plug.Conn, :get_req_header, [conn, "x-request-id"]) do
           token
         else
           _ -> Noizu.ElixirCore.RequestContext.Manager.Behaviour.generate_token(conn, options)
@@ -63,9 +65,10 @@ defmodule Noizu.ElixirCore.RequestContext.Manager.Default do
   #-------------------------------------
   def request_reason(%{__struct__: Plug.Conn} = conn, options) do
     cond do
+      reason = conn.query_params["call-reason"] -> reason
       reason = conn.body_params["call-reason"] -> reason
       :else ->
-        with [reason|_] <- apply(Plug.Conn, :get_resp_header, [conn, "x-call-reason"]) do
+        with [reason|_] <- apply(Plug.Conn, :get_req_header, [conn, "x-call-reason"]) do
           reason
         else
           _ -> Noizu.ElixirCore.RequestContext.Manager.Behaviour.generate_reason(conn, options)
@@ -80,22 +83,22 @@ defmodule Noizu.ElixirCore.RequestContext.Manager.Default do
     {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:unauthenticated, :restricted]), permissions: %{})}
   end
   def auth({:ref, Noizu.ElixirCore.CallerEntity, :unauthenticated}, _) do
-    {:ok,    Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:unauthenticated, :restricted]), permissions: %{})}
+    {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:unauthenticated, :restricted]), permissions: %{})}
   end
   def auth({:ref, Noizu.ElixirCore.CallerEntity, :restricted}, _) do
-    {:ok,      Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:restricted]), permissions: %{})}
+    {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:restricted]), permissions: %{})}
   end
   def auth({:ref, Noizu.ElixirCore.CallerEntity, :internal}, _) do
     {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:internal]), permissions: %{})}
   end
   def auth({:ref, Noizu.ElixirCore.CallerEntity, :system}, _) do
-    {:ok,      Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:system, :internal]), permissions: %{})}
+    {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:system, :internal]), permissions: %{})}
   end
   def auth({:ref, Noizu.ElixirCore.CallerEntity, :admin}, _) do
-    {:ok,      Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:admin, :system, :internal]), permissions: %{})}
+    {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:admin, :system, :internal]), permissions: %{})}
   end
   def auth(_, _) do
-    {:ok,     Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:unauthenticated, :restricted]), permissions: %{})}
+    {:ok, Noizu.ElixirCore.RequestContext.Types.request_authorization(roles: MapSet.new([:unauthenticated, :restricted]), permissions: %{})}
   end
   
   #=============================================================

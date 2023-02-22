@@ -25,7 +25,7 @@ defmodule Noizu.ERP.Dispatcher.Behaviour.Simple do
     {:ok, {:ref, mod, identifier}}
   end
   def ref_ok(mod, identifier) do
-    with Noizu.ERP.Serializer.Behaviour.erp_serializer_config(provider: c,  module: m) <- apply(mod, :__erp_serializer__, []),
+    with Noizu.ERP.Serializer.Behaviour.erp_serializer_config(provider: c, module: m) <- apply(mod, :__erp_serializer__, []),
          :ok <- apply(c, :__valid_identifier__, [m, identifier]) do
       {:ok, {:ref, mod, identifier}}
     end
