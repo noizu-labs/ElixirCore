@@ -232,10 +232,10 @@ defimpl Noizu.ERP, for: Tuple do
     case obj do
       {:ref, manager, identifier} when is_atom(manager)->
         #if function_exported?(manager, :sref, 1) do
-          manager.id(identifier)
+          manager.id(obj)
         #end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
-        manager.id(identifier)
+        manager.id(obj)
     end
   end # end id/1
   def id_ok(obj) do
@@ -260,10 +260,10 @@ defimpl Noizu.ERP, for: Tuple do
     case obj do
       {:ref, manager, identifier} when is_atom(manager)->
         #if function_exported?(manager, :sref, 1) do
-          manager.sref(identifier)
+          manager.sref(obj)
         #end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
-        manager.sref(identifier)
+        manager.sref(obj)
     end
   end # end sref/1
   def sref_ok(obj) do
@@ -276,10 +276,10 @@ defimpl Noizu.ERP, for: Tuple do
     case obj do
       {:ref, manager, identifier} when is_atom(manager)->
         #if function_exported?(manager, :entity, 2) do
-          manager.record(identifier, options)
+          manager.record(obj, options)
         #end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
-        manager.record(identifier, options)
+        manager.record(obj, options)
     end
   end # end record/2
 
@@ -287,10 +287,10 @@ defimpl Noizu.ERP, for: Tuple do
     case obj do
       {:ref, manager, identifier} when is_atom(manager)->
         #if function_exported?(manager, :entity, 2) do
-          manager.record!(identifier, options)
+          manager.record!(obj, options)
         #end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
-          manager.record!(identifier, options)
+          manager.record!(obj, options)
     end
   end # end record/2
 
@@ -325,3 +325,70 @@ defimpl Noizu.ERP, for: Tuple do
     result && {:ok, result} || {:error, obj}
   end # end entity_ok/1
 end # end defimpl EntityReferenceProtocol, for: Tuple
+
+
+
+
+defimpl Noizu.ERP, for: [Any] do
+  def id_ok(ref), do: {:error, {:erp, {:unsupported, ref}}}
+  def ref_ok(ref), do: {:error, {:erp, {:unsupported, ref}}}
+  def sref_ok(ref), do: {:error, {:erp, {:unsupported, ref}}}
+  
+  def entity_ok(ref), do: {:error, {:erp, {:unsupported, ref}}}
+  def entity_ok(ref, _), do: {:error, {:erp, {:unsupported, ref}}}
+  def entity_ok!(ref), do: {:error, {:erp, {:unsupported, ref}}}
+  def entity_ok!(ref, _), do: {:error, {:erp, {:unsupported, ref}}}
+  
+  def id(_), do: nil
+  
+  def ref(_), do: nil
+  
+  def sref(_), do: nil
+  
+  def entity(_), do: nil
+  def entity(_, _), do: nil
+  def entity!(_), do: nil
+  def entity!(_, _), do: nil
+  
+  def record(_), do: nil
+  def record(_, _), do: nil
+  def record!(_), do: nil
+  def record!(_, _), do: nil
+  
+  defmacro __deriving__(module, _, _) do
+    derive(module)
+  end
+  
+  def derive(module) do
+    quote bind_quoted: [module: module] do
+      defimpl Noizu.ERP, for: [module] do
+        @module module
+        def id_ok(ref), do: apply(@module, :id_ok, [ref])
+        def ref_ok(ref), do: apply(@module, :ref_ok, [ref])
+        def sref_ok(ref), do: apply(@module, :sref_ok, [ref])
+        
+        def entity_ok(ref), do: apply(@module, :entity_ok, [ref])
+        def entity_ok(ref, options), do: apply(@module, :entity_ok, [ref, options])
+        def entity_ok!(ref), do: apply(@module, :entity_ok, [ref])
+        def entity_ok!(ref, options), do: apply(@module, :entity_ok, [ref, options])
+        
+        
+        def id(ref), do: apply(@module, :id, [ref])
+        
+        def ref(ref), do: apply(@module, :ref, [ref])
+        
+        def sref(ref), do: apply(@module, :sref, [ref])
+        
+        def entity(ref), do: apply(@module, :entity, [ref])
+        def entity(ref, options), do: apply(@module, :entity, [ref, options])
+        def entity!(ref), do: apply(@module, :entity!, [ref])
+        def entity!(ref, options), do: apply(@module, :entity!, [ref, options])
+        
+        def record(ref), do: apply(@module, :record, [ref])
+        def record(ref, options), do: apply(@module, :record, [ref, options])
+        def record!(ref), do: apply(@module, :record!, [ref])
+        def record!(ref, options), do: apply(@module, :record!, [ref, options])
+      end
+    end
+  end
+end
