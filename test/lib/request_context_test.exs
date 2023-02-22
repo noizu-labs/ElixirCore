@@ -124,6 +124,80 @@ defmodule Noizu.ElixirCore.RequestContextTest do
       assert reason == "configuring context with headers"
       assert options == nil
     end
+  end
+  
+  describe "Logger Instrumentation" do
+    
+    test "Auto Instrument For From Conn" do
+      (Logger.metadata() || [])
+      |> Keyword.drop([:context_caller, :context_time, :context_token])
+      |> Logger.metadata()
+      
+      meta_pre = Logger.metadata()
+      conn = conn(:post, "/hello", %{"request-id" => "bop", "call-reason" => "more testing"})
+      {:ok, sut} = Noizu.RequestContext.system(conn)
+      meta_post = Logger.metadata()
+
+
+      Noizu.ElixirCore.RequestContext.Types.request_context(caller: caller, extended: details) = sut
+      Noizu.ElixirCore.RequestContext.Types.extended_request_context(
+        token: token
+      ) = details
+
+      assert meta_pre[:context_caller] == nil
+      assert meta_pre[:context_token] == nil
+      
+      assert meta_post[:context_caller] == caller
+      assert meta_post[:context_token] == token
+    end
+
+
+
+
+    test "Extended Log Filter Metadata" do
+      [context_caller: nil, context_time: nil, context_token: nil]
+      |> Logger.metadata()
+
+      test_field = :"test_#{:os.system_time(:millisecond)}_filter"
+      options = [request_context: [log_filter: [{test_field, :biz_bop}]]]
+
+      meta_pre = Logger.metadata()
+      conn = conn(:post, "/hello", %{"request-id" => "bop", "call-reason" => "more testing"})
+      {:ok, sut} = Noizu.RequestContext.system(conn, options)
+      meta_post = Logger.metadata()
+  
+  
+      Noizu.ElixirCore.RequestContext.Types.request_context(caller: caller, extended: details) = sut
+      Noizu.ElixirCore.RequestContext.Types.extended_request_context(
+        token: token
+      ) = details
+  
+      assert meta_pre[:context_caller] == nil
+      assert meta_pre[:context_token] == nil
+      assert meta_pre[test_field] == nil
+      
+      
+      assert meta_post[:context_caller] == caller
+      assert meta_post[:context_token] == token
+      assert meta_post[test_field] == :biz_bop
+
+      Noizu.RequestContext.meta_strip(sut)
+      meta_post_strip = Logger.metadata()
+      assert meta_post_strip[:context_caller] == nil
+      assert meta_post_strip[:context_token] == nil
+      assert meta_post_strip[test_field] == nil
+
+      Noizu.RequestContext.meta_update(sut)
+      meta_post = Logger.metadata()
+      assert meta_post[:context_caller] == caller
+      assert meta_post[:context_token] == token
+      assert meta_post[test_field] == :biz_bop
+
+
+
+
+    end
+    
     
   end
   
@@ -146,20 +220,9 @@ defmodule Noizu.ElixirCore.RequestContextTest do
       assert true == Enum.member?(roles, :admin)
     end
   end
-
-  
-  
   
   describe "Set Context / Fetch Context" do
 
-  end
-
-  describe "Permission Tracking" do
-  
-  end
-  
-  describe "Permission Escalation" do
-  
   end
   
   describe "Pass context across processes." do

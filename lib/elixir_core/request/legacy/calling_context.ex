@@ -325,8 +325,9 @@ defmodule Noizu.ElixirCore.CallingContext do
   Strip CallingContext meta data from Logger.
   """
   def meta_strip(context) do
-    m = Keyword.delete(Logger.metadata() || [], Keyword.keys(metadata(context)))
-    Logger.metadata(m)
+    Keyword.keys(metadata(context))
+    |> Enum.map(&({&1, nil}))
+    |> Logger.metadata()
   end
 
   @doc """

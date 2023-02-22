@@ -87,8 +87,10 @@ defmodule Noizu.RequestContext do
     end
   end
 
+  
   def new_source(source, caller, options) do
     with {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
+      context_options = options[:request_context]
       manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
       time = options[:current_time] || DateTime.utc_now()
       token = Noizu.ElixirCore.RequestContext.Manager.Behaviour.token(source, options)
@@ -97,7 +99,7 @@ defmodule Noizu.RequestContext do
         time: time,
         token: token,
         reason: reason,
-        options: options[:request_context]
+        options: context_options
       )
       context = Noizu.ElixirCore.RequestContext.Types.request_context(
         caller: caller,
@@ -106,6 +108,9 @@ defmodule Noizu.RequestContext do
         extended: details,
         inner_context: nil
       )
+
+      # possible this should reference the inner options[:request_context] options dict.
+      if options[:logger_init] != false, do: meta_update(context)
       {:ok, context}
     end
   end
@@ -136,7 +141,7 @@ defmodule Noizu.RequestContext do
       extended: details,
       inner_context: inner_context
     ) = context
-
+    
     # Auth
     Noizu.ElixirCore.RequestContext.Types.request_authorization(
       roles: roles,
@@ -281,6 +286,40 @@ defmodule Noizu.RequestContext do
   def admin(source, options), do: default(:admin, source, options)
 
 
+
+  @doc """
+  Extract CallingContext meta data for Logger
+  """
+  def metadata(Noizu.ElixirCore.RequestContext.Types.request_context() = context) do
+    Noizu.ElixirCore.RequestContext.Types.request_context(caller: caller, extended: extended) = context
+    Noizu.ElixirCore.RequestContext.Types.extended_request_context(options: options, token: token, time: time) = extended
+    filter = case options[:log_filter] do
+                v when is_list(v) -> v
+                _ -> []
+             end
+    [context_token: token, context_time: time, context_caller: caller] ++ filter
+  end
+  def metadata(_) do
+    [context_token: :none, context_time: 0, context_caller: :none]
+  end
+
+  @doc """
+  Strip CallingContext meta data from Logger.
+  """
+  def meta_strip(context) do
+    Keyword.keys(metadata(context))
+    |> Enum.map(&({&1, nil}))
+    |> Logger.metadata()
+  end
+
+  @doc """
+  Update Logger with CallingContext meta data.
+  """
+  def meta_update(context) do
+    (Logger.metadata() || [])
+    |> Keyword.merge(metadata(context))
+    |> Logger.metadata()
+  end
 
 
 end
