@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore.RequestContext.Manager.Default do
-  alias Noizu.Types, as: T
+  #alias Noizu.Types, as: T
   require Noizu.ERP.Types
   require  Noizu.ElixirCore.RequestContext.Types
   
@@ -12,7 +12,7 @@ defmodule Noizu.ElixirCore.RequestContext.Manager.Default do
   #
   #-------------------------------------
   def unauthenticated(source, _options) do
-    {:ok, Noizu.ElixirCore.UnauthenticatedCallerEntity.ref(get_ip(source))}
+    {:ok, {:ref, Noizu.ElixirCore.UnauthenticatedCallerEntity, get_ip(source)}}
   end
   
   #-------------------------------------

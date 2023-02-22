@@ -4,8 +4,8 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore do
-  require Noizu.ElixirCore.Guards
-  import Noizu.ElixirCore.Guards
+#  require Noizu.ElixirCore.Guards
+#  import Noizu.ElixirCore.Guards
 
   
 end

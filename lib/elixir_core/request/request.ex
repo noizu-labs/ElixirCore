@@ -53,7 +53,7 @@ defmodule Noizu.RequestContext do
       time: time,
       token: token,
       reason: reason,
-      options: options,
+      options: options
     )
     context = Noizu.ElixirCore.RequestContext.Types.request_context(
       caller: caller,
@@ -64,39 +64,97 @@ defmodule Noizu.RequestContext do
     )
     {:ok, context}
   end
+  def new(caller, options) do
+    with {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
+      manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
+      time = options[:current_time] || DateTime.utc_now()
+      token = Noizu.ElixirCore.RequestContext.Manager.Behaviour.generate_token(nil, options)
+      reason = Noizu.ElixirCore.RequestContext.Manager.Behaviour.generate_reason(nil, options)
+      details = Noizu.ElixirCore.RequestContext.Types.extended_request_context(
+        time: time,
+        token: token,
+        reason: reason,
+        options: options[:request_context]
+      )
+      context = Noizu.ElixirCore.RequestContext.Types.request_context(
+        caller: caller,
+        auth: auth,
+        manager: manager,
+        extended: details,
+        inner_context: nil
+      )
+      {:ok, context}
+    end
+  end
 
+  def new_source(source, caller,  options) do
+    with {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
+      manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
+      time = options[:current_time] || DateTime.utc_now()
+      token = Noizu.ElixirCore.RequestContext.Manager.Behaviour.token(source, options)
+      reason = Noizu.ElixirCore.RequestContext.Manager.Behaviour.request_reason(source, options)
+      details = Noizu.ElixirCore.RequestContext.Types.extended_request_context(
+        time: time,
+        token: token,
+        reason: reason,
+        options: options[:request_context]
+      )
+      context = Noizu.ElixirCore.RequestContext.Types.request_context(
+        caller: caller,
+        auth: auth,
+        manager: manager,
+        extended: details,
+        inner_context: nil
+      )
+      {:ok, context}
+    end
+  end
+
+
+  #-----------------------------------------------------------------------------
+  #
+  #-----------------------------------------------------------------------------
+  def default(type, nil, options) when type in [:admin, :restricted, :internal, :system] do
+    with {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(type, options) do
+      new(caller, options)
+    end
+  end
+  def default(type, %{__struct__: Plug.Conn} = conn, options) when type in [:admin, :restricted, :internal, :system] do
+    with {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(type, options) do
+      new_source(conn, caller, options)
+    end
+  end
+
+  #-----------------------------------------------------------------------------
+  #
+  #-----------------------------------------------------------------------------
+  def system(), do: default(:system, nil, nil)
+  def system(source), do: default(:system, source, nil)
+  def system(source, options), do: default(:system, source, options)
+
+  #-----------------------------------------------------------------------------
+  #
+  #-----------------------------------------------------------------------------
+  def internal(), do: default(:internal, nil, nil)
+  def internal(source), do: default(:internal, source, nil)
+  def internal(source, options), do: default(:internal, source, options)
+
+  #-----------------------------------------------------------------------------
+  #
+  #-----------------------------------------------------------------------------
+  def restricted(), do: default(:restricted, nil, nil)
+  def restricted(source), do: default(:restricted, source, nil)
+  def restricted(source, options), do: default(:restricted, source, options)
+  
   #-----------------------------------------------------------------------------
   #
   #-----------------------------------------------------------------------------
   @doc """
     Create new calling context with default admin user caller and permissions.
   """
-  def admin() do
-    options = nil
-    with {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(:admin, options),
-         {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
-      manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
-      time = DateTime.utc_now()
-      token = Noizu.ElixirCore.RequestContext.Manager.Behaviour.generate_token(nil, options)
-      reason = Noizu.ElixirCore.RequestContext.Manager.Behaviour.generate_reason(nil, options)
-      new(caller, auth, manager, time, token, reason, nil, [])
-    end
-  end
-  
-  def admin(%{__struct__: Plug.Conn} = conn), do: admin(conn, nil)
-  def admin(_), do: admin()
-  
-  def admin(%{__struct__: Plug.Conn} = conn, options) do
-    with {:ok, caller} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.caller(:admin, options),
-         {:ok, auth} <- Noizu.ElixirCore.RequestContext.Manager.Behaviour.auth(caller, options) do
-      manager = Noizu.ElixirCore.RequestContext.Manager.Behaviour.provider()
-      time = options[:current_time] || DateTime.utc_now()
-      token = Noizu.ElixirCore.RequestContext.Manager.Behaviour.token(conn, options)
-      reason = Noizu.ElixirCore.RequestContext.Manager.Behaviour.request_reason(conn, options)
-      new(caller, auth, manager, time, token, reason, nil, options[:context_options])
-    end
-  end
-  def admin(_,_), do: admin()
+  def admin(), do: default(:admin, nil, nil)
+  def admin(source), do: default(:admin, source, nil)
+  def admin(source, options), do: default(:admin, source, options)
 #  def admin(
 #        Noizu.ElixirCore.RequestContext.Types.request_context(
 #          caller: caller,
@@ -115,6 +173,7 @@ defmodule Noizu.RequestContext do
 #      )
 #    }
 #  end
+
 
 
 end

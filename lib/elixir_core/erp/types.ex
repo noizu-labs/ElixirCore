@@ -12,13 +12,13 @@ defmodule Noizu.ERP.Types do
   require Record
   Record.defrecord(:ref,
     entity: nil,
-    identifier: nil,
+    identifier: nil
   )
   @type ref :: record(:ref, entity: atom, identifier: any)
   
   Record.defrecord(:ext_ref,
     entity: nil,
-    identifier: nil,
+    identifier: nil
   )
   @type ext_ref :: record(:ext_ref, entity: atom, identifier: any)
   

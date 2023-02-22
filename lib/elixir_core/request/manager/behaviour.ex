@@ -4,7 +4,7 @@
 #-------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore.RequestContext.Manager.Behaviour do
-  alias Noizu.Types, as: T
+  #alias Noizu.Types, as: T
   alias Noizu.ERP.Types, as: T_ERP
 
   @doc """
@@ -59,7 +59,7 @@ defmodule Noizu.ElixirCore.RequestContext.Manager.Behaviour do
     apply(provider(), :auth, [source, options])
   end
 
-  defmacro __using__(options \\ nil) do
+  defmacro __using__(_ \\ nil) do
     quote do
       alias Noizu.ElixirCore.RequestContext.Manager.Default, as: Provider
       

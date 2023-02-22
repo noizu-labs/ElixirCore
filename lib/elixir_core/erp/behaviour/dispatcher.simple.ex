@@ -13,19 +13,19 @@ defmodule Noizu.ERP.Dispatcher.Behaviour.Simple do
     {:ok, identifier}
   end
   def id_ok(mod, ref) do
-    with {:ok, {:ref, ^mod, identifier}} <- apply(mod, :ref_ok, [ref]) do
+    with {:ok, {:ref, ^mod, _}} <- apply(mod, :ref_ok, [ref]) do
       apply(mod, :id_ok, [ref])
     end
   end
   
-  def ref_ok(mod, {:ref, mod, _identifier} = ref) do
+  def ref_ok(mod, {:ref, mod, _} = ref) do
     {:ok, ref}
   end
   def ref_ok(mod, %{__struct__: mod, identifier: identifier}) do
     {:ok, {:ref, mod, identifier}}
   end
   def ref_ok(mod, identifier) do
-    with Noizu.ERP.Serializer.Behaviour.erp_serializer_config(provider: c, handle: h, module: m) <- apply(mod, :__erp_serializer__, []),
+    with Noizu.ERP.Serializer.Behaviour.erp_serializer_config(provider: c,  module: m) <- apply(mod, :__erp_serializer__, []),
          :ok <- apply(c, :__valid_identifier__, [m, identifier]) do
       {:ok, {:ref, mod, identifier}}
     end

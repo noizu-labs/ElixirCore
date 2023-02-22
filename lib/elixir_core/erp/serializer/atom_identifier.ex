@@ -11,7 +11,7 @@ defmodule Noizu.ERP.Serializer.AtomIdentifier do
       cond do
         wl = c[:white_list] ->
           cond do
-            Enum.find?(wl, &(Atom.to_string(&1) == term)) -> {:ok, String.to_atom(term)}
+            Enum.find(wl, &(Atom.to_string(&1) == term)) -> {:ok, String.to_atom(term)}
             :else -> {:error, {:not_in_white_list, term}}
           end
         c[:existing] -> String.to_existing_atom(term)
@@ -39,15 +39,15 @@ defmodule Noizu.ERP.Serializer.AtomIdentifier do
     end
   end
   
-  def __valid_identifier__(mod, true), do: {:error, {:bool, :unsupported_identifier}}
-  def __valid_identifier__(mod, false), do: {:error, {:bool, :unsupported_identifier}}
-  def __valid_identifier__(mod, nil), do: {:error, {nil, :unsupported_identifier}}
+  def __valid_identifier__(_, true), do: {:error, {:bool, :unsupported_identifier}}
+  def __valid_identifier__(_, false), do: {:error, {:bool, :unsupported_identifier}}
+  def __valid_identifier__(_, nil), do: {:error, {nil, :unsupported_identifier}}
   def __valid_identifier__(mod, term) when is_bitstring(term) do
     with Noizu.ERP.Serializer.Behaviour.erp_serializer_config(constraints: c) <- __erp_serializer__(mod) do
       cond do
         wl = c[:white_list] ->
           cond do
-            Enum.find?(wl, &(Atom.to_string(&1) == term)) -> :ok
+            Enum.find(wl, &(Atom.to_string(&1) == term)) -> :ok
             :else -> {:error, {:not_in_white_list, term}}
           end
         c[:existing] -> :ok

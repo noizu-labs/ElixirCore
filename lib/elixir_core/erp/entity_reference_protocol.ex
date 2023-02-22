@@ -169,7 +169,7 @@ defimpl Noizu.ERP, for: List do
   def entity(list, options \\ nil) do
     unless list == [] do
       Enum.map(list, fn(e) ->
-        with {:ok, o} <- Noizu.ERP.entity_ok(e) do
+        with {:ok, o} <- Noizu.ERP.entity_ok(e, options) do
           o
         else
           error -> raise Noizu.ERP.Exception, ref: e, detail: error, message: "Operation Failed"
@@ -198,7 +198,7 @@ defimpl Noizu.ERP, for: List do
   def entity!(list, options \\ nil) do
     unless list == [] do
       Enum.map(list, fn(e) ->
-        with {:ok, o} <- Noizu.ERP.entity_ok!(e) do
+        with {:ok, o} <- Noizu.ERP.entity_ok!(e, options) do
           o
         else
           error -> raise Noizu.ERP.Exception, ref: e, detail: error, message: "Operation Failed"
@@ -230,11 +230,11 @@ defimpl Noizu.ERP, for: Tuple do
 
   def id(obj) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
+      {:ref, manager, _} when is_atom(manager)->
         #if function_exported?(manager, :sref, 1) do
           manager.id(obj)
         #end
-      {:ext_ref, manager, identifier} when is_atom(manager) ->
+      {:ext_ref, manager, _} when is_atom(manager) ->
         manager.id(obj)
     end
   end # end id/1
@@ -258,11 +258,11 @@ defimpl Noizu.ERP, for: Tuple do
 
   def sref(obj) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
+      {:ref, manager, _} when is_atom(manager)->
         #if function_exported?(manager, :sref, 1) do
           manager.sref(obj)
         #end
-      {:ext_ref, manager, identifier} when is_atom(manager) ->
+      {:ext_ref, manager, _} when is_atom(manager) ->
         manager.sref(obj)
     end
   end # end sref/1
@@ -274,22 +274,22 @@ defimpl Noizu.ERP, for: Tuple do
 
   def record(obj, options \\ nil) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
+      {:ref, manager, _} when is_atom(manager)->
         #if function_exported?(manager, :entity, 2) do
           manager.record(obj, options)
         #end
-      {:ext_ref, manager, identifier} when is_atom(manager) ->
+      {:ext_ref, manager, _} when is_atom(manager) ->
         manager.record(obj, options)
     end
   end # end record/2
 
   def record!(obj, options \\ nil) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
+      {:ref, manager, _} when is_atom(manager)->
         #if function_exported?(manager, :entity, 2) do
           manager.record!(obj, options)
         #end
-      {:ext_ref, manager, identifier} when is_atom(manager) ->
+      {:ext_ref, manager, _} when is_atom(manager) ->
           manager.record!(obj, options)
     end
   end # end record/2

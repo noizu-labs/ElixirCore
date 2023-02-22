@@ -13,7 +13,7 @@ defmodule  Noizu.ElixirCore.RequestContext.Types do
   Record.defrecord(:request_authorization, Noizu.Request.ExtendedContext,
     roles: nil,
     permissions: nil,
-    meta: nil,
+    meta: nil
   )
   
   Record.defrecord(:extended_request_context, Noizu.Request.ExtendedContext,
@@ -30,7 +30,7 @@ defmodule  Noizu.ElixirCore.RequestContext.Types do
     auth: nil,
     manager: nil,
     extended: nil,
-    inner_context: nil,
+    inner_context: nil
   )
   
 end

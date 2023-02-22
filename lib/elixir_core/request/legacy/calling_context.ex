@@ -165,9 +165,7 @@ defmodule Noizu.ElixirCore.CallingContext do
     end
   end
 
-  @doc """
-    Default effective auth permissions. Nested key value pairs of ContextCaller has been granted.
-  """
+  #  Default effective auth permissions. Nested key value pairs of ContextCaller has been granted.
   defp default_auth(caller, _auth) do
     case caller do
       {:ref, Noizu.ElixirCore.CallerEntity, :restricted} -> default_restricted_auth()
