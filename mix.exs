@@ -41,10 +41,6 @@ defmodule Noizu.ElixirCore.Mixfile do
       {:junit_formatter, "~> 3.3", only: [:test]},
       {:ex_doc, "~> 0.28.3", only: [:dev, :test], optional: true, runtime: false}, # Documentation Provider
       {:markdown, github: "devinus/markdown", only: [:dev], optional: true}, # Markdown processor for ex_doc
-      {:fastglobal, "~> 1.0"}, # https://github.com/discordapp/fastglobal
-      {:semaphore, "~> 1.0"}, # https://github.com/discordapp/semaphore
-      {:noizu_mnesia_versioning, github: "noizu/MnesiaVersioning", tag: "0.1.10"},
-      {:amnesia, git: "https://github.com/noizu/amnesia.git", ref: "9266002", optional: true}, # Mnesia Wrapper
       {:elixir_uuid, "~> 1.2", only: :test, optional: true}
     ]
   end
