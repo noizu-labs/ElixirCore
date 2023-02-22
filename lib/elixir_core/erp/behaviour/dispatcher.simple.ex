@@ -12,8 +12,10 @@ defmodule Noizu.ERP.Dispatcher.Behaviour.Simple do
   def id_ok(mod, %{__struct__: mod, identifier: identifier}) do
     {:ok, identifier}
   end
-  def id_ok(_mod, _ref) do
-    {:error, :nyi}
+  def id_ok(mod, ref) do
+    with {:ok, {:ref, ^mod, identifier}} <- apply(mod, :ref_ok, [ref]) do
+      apply(mod, :id_ok, [ref])
+    end
   end
   
   def ref_ok(mod, {:ref, mod, _identifier} = ref) do
@@ -22,8 +24,11 @@ defmodule Noizu.ERP.Dispatcher.Behaviour.Simple do
   def ref_ok(mod, %{__struct__: mod, identifier: identifier}) do
     {:ok, {:ref, mod, identifier}}
   end
-  def ref_ok(_mod, _ref) do
-    {:error, :nyi}
+  def ref_ok(mod, identifier) do
+    with Noizu.ERP.Serializer.Behaviour.erp_serializer_config(provider: c, handle: h, module: m) <- apply(mod, :__erp_serializer__, []),
+         :ok <- apply(c, :__valid_identifier__, [m, identifier]) do
+      {:ok, {:ref, mod, identifier}}
+    end
   end
 
   def sref_ok(mod, {:ref, mod, identifier} = _ref) do
@@ -40,22 +45,28 @@ defmodule Noizu.ERP.Dispatcher.Behaviour.Simple do
       {:ok, "ref.#{h}.#{s}"}
     end
   end
-  def sref_ok(_mod, _ref) do
-    {:error, :nyi}
+  def sref_ok(mod, ref) do
+    with {:ok, {:ref, ^mod, _} = ref} <- apply(mod, :ref_ok, [ref]) do
+      apply(mod, :sref_ok, [ref])
+    end
   end
 
   def entity_ok(mod, e = %{__struct__: mod, identifier: _}, _) do
     {:ok, e}
   end
-  def entity_ok(_mod, _ref, _) do
-    {:error, :nyi}
+  def entity_ok(mod, ref, options) do
+    with {:ok, {:ref, ^mod, _} = ref} <- apply(mod, :ref_ok, [ref]) do
+      apply(mod, :entity_ok, [ref, options])
+    end
   end
 
   def entity_ok!(mod, e = %{__struct__: mod, identifier: _}, _) do
     {:ok, e}
   end
-  def entity_ok!(_mod, _ref, _options, _) do
-    {:error, :nyi}
+  def entity_ok!(mod, ref, options) do
+    with {:ok, {:ref, ^mod, _} = ref} <- apply(mod, :ref_ok, [ref]) do
+      apply(mod, :entity_ok, [ref, options])
+    end
   end
   
   def id(mod, ref) do

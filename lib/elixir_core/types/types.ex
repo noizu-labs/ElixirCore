@@ -5,6 +5,10 @@
 
 defmodule Noizu.Types do
   
+  #=======================================
+  #
+  #=======================================
+  
   @type erp_options :: list | Map.t
   
   @typedoc "Entity identifier type, usually integer | atom, but may be a ref tuple or other."

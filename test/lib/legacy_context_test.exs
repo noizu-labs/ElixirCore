@@ -3,7 +3,7 @@
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
 #-------------------------------------------------------------------------------
 
-defmodule Noizu.ElixirCore.ContextTest do
+defmodule Noizu.ElixirCore.LegacyContextTest do
   use ExUnit.Case, async: false
 
   require Logger

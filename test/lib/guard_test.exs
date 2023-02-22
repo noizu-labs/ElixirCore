@@ -17,6 +17,7 @@ defmodule Noizu.ElixirCore.GuardTest do
 
   require Logger
   import Noizu.ElixirCore.Guards
+  
 
   def obscure_hint(value), do: Application.get_env(:invalid_scope_noizu, :nnnn, value)
 
