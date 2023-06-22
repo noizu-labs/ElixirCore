@@ -8,8 +8,8 @@ defmodule Noizu.ElixirCore.Mixfile do
 
   def project do
     [app: :noizu_core,
-     version: "1.0.25",
-     elixir: "~> 1.13.1",
+     version: "1.0.26",
+     elixir: ">= 1.13.1",
      package: package(),
      deps: deps(),
      description: "Request Context Helper",
