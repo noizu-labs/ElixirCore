@@ -6,7 +6,7 @@ Elixir Core [![CircleCI](https://dl.circleci.com/status-badge/img/gh/noizu/Elixi
 =============================================================================
 Common protocols and convenience methods leveraged by other Noizu Labs, Inc. frameworks.
 
-# Noizu.ERP Protocol
+## Noizu ERP Protocol
 
 The Noizu.ERP protocol allows ref tuples `{:ref, Entity, identifier}` to be used in place of nesting full objects in other objects. It also supports encoding/decoding those ref tuples to and from strings for use in RESTful APIs.
 
@@ -24,11 +24,11 @@ Noizu.ERP.ref("george") == nil
 
 The methods `[id/1, ref/1, sref/1, entity/1,2, entity!/1,2, record/1,2, record!/1,2]` may all be used interchangeably on ref strings, tuples, or actual entities without having to know in advance what type of object you are accessing.
 
-## New Additions
+### New Additions
 
 Recently added `id_ok/1, ref_ok/1, sref_ok/1, entity_ok/1,2, entity_ok!/1,2` mirror `id/1, ref/1, sref/1, entity/1,2, entity!/1,2` but return `{:ok, value} | {:error, details}` in their place for use in `with` and other pattern matching scenarios.
 
-# CallingContext
+## CallingContext
 
 The CallingContext is a context object used to track a caller's state and permissions, along with a unique request identifier for tracking requests as they travel through the layers of your application. It is useful for log collation, permission checks, and access auditing.
 
@@ -46,7 +46,7 @@ The basic structure of the CallingContext object is as follows:
 }
 ```
 
-## Configuration
+### Configuration
 
 If you have custom ACL/Authorization Bearer tokens that you want to extract your caller/permissions from, you can use the following configuration settings:
 
@@ -72,9 +72,9 @@ Alternatively, you can extract the caller and effective permission list map on y
 * `Noizu.ElixirCore.CallingContext.new_conn(your_caller, your_caller_auth_map, %Plug.Conn{}, options)`
 * `Noizu.ElixirCore.CallingContext.new(your_caller, your_caller_auth_map, options)`
 
-## Examples
+### Examples
 
-### Creation
+#### Creation
 
 Create a new Calling Context with the default Admin user and permissions.
 
@@ -96,7 +96,7 @@ Create a new context by pulling the request caller, auth map, token, and reason 
 
 > Noizu.ElixirCore.CallingContext.new_conn(conn, options)
 
-### Logging
+#### Logging
 
 Add context metadata to Logger. Example: `[context_token: context.token, context_time: context.time, context_caller: context.caller] ++ context.options.log_filter`
 
@@ -110,7 +110,7 @@ Get context metadata to append to Logger.
 
 > Logger.info("Your Log", Noizu.ElixirCore.CallingContext.metadata(context))
 
-### Guards Extensions
+#### Guards Extensions
 
 Check if the context has admin, internal, system, or restricted auth flags, etc.
 
@@ -126,7 +126,7 @@ cond do
 end
 ```
 
-# Custom Guards
+##### Custom Guards
 
 Some custom guards are provided to make authentication checks and code readability cleaner:
 
@@ -145,13 +145,13 @@ Some custom guards are provided to make authentication checks and code readabili
 | is_sref(value) | Check if the object is a "ref.code-name.id" string reference |
 | entity_ref(value) | Check if the object is a ref tuple or struct type with a `vsn` field |
 
-# Option Helper
+## Option Helper
 
 Option helpers make it easier to define restricted/optional requirements and default constraints for use in metaprogramming or parameter acceptance. The following test snippet provides a detailed example of how to use option helpers:
 
 [Test code example](test/lib/option_test.exs)
 
-# Testing Utility - Partial Object Check
+## Testing Utility - Partial Object Check
 
 Partial Object checks allow you to compare two objects based on specific fields, with the ability to restrict allowed values or specify optional fields. This is useful for creating custom assert methods that only check specific fields of an object. The Partial Object Check scans the whole object and reports all constraint violations at once.
 
@@ -159,7 +159,7 @@ Here are some code examples of how to use the Partial Object Check utility:
 
 [Test code example](test/lib/partial_object_check_test.exs)
 
-# Convenience Structs
+## Convenience Structs
 
 Noizu.ElixirCore.CallerEntity: Represents a caller entity with an identifier.
 
