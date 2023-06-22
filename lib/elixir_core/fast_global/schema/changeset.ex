@@ -1,7 +1,7 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Author: Keith Brings
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 defmodule Noizu.FastGlobal.ChangeSet do
   @moduledoc """
@@ -29,10 +29,9 @@ defmodule Noizu.FastGlobal.ChangeSet do
   use Noizu.FastGlobal.Database
   use Noizu.MnesiaVersioning.SchemaBehaviour
 
-
-  #-----------------------------------------------------------------------------
+  # -----------------------------------------------------------------------------
   # neighbors/0
-  #-----------------------------------------------------------------------------
+  # -----------------------------------------------------------------------------
   @doc """
   Retrieves the list of nodes in the topology. The topology provider is retrieved from the application environment
   with the key `:noizu_mnesia_versioning`. The nodes are retrieved from the topology provider with the
@@ -40,12 +39,13 @@ defmodule Noizu.FastGlobal.ChangeSet do
   """
   def neighbors() do
     topology_provider = Application.get_env(:noizu_mnesia_versioning, :topology_provider)
-    {:ok, nodes} = topology_provider.mnesia_nodes();
+    {:ok, nodes} = topology_provider.mnesia_nodes()
     nodes
   end
-  #-----------------------------------------------------------------------------
+
+  # -----------------------------------------------------------------------------
   # ChangeSets
-  #-----------------------------------------------------------------------------
+  # -----------------------------------------------------------------------------
   @doc """
   Returns a list of changesets for updating the FastGlobal related schema. Each changeset is a map that contains
   keys for the changeset description, author, note, applicable environments, an update function, and a rollback function.
@@ -53,16 +53,16 @@ defmodule Noizu.FastGlobal.ChangeSet do
   def change_sets() do
     [
       %ChangeSet{
-        changeset:  "FastGlobal Related Schema",
+        changeset: "FastGlobal Related Schema",
         author: "Keith Brings",
         note: "Y",
         environments: :all,
-        update: fn() ->
-                  neighbors = neighbors()
-                  create_table(Noizu.FastGlobal.Database.Settings, [disk: neighbors])
-                  :success
+        update: fn ->
+          neighbors = neighbors()
+          create_table(Noizu.FastGlobal.Database.Settings, disk: neighbors)
+          :success
         end,
-        rollback: fn() ->
+        rollback: fn ->
           destroy_table(Noizu.FastGlobal.Database.Settings)
           :removed
         end

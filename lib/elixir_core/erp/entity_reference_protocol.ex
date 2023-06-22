@@ -1,7 +1,7 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Author: Keith Brings
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 defprotocol Noizu.ERP do
   @moduledoc """
@@ -56,501 +56,585 @@ defprotocol Noizu.ERP do
 
   @fallback_to_any true
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # id/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Retrieves the underlying id for a given ERP reference.
   The argument can be a ERP reference, a string reference, or the actual object.
   """
   def id(erp_sref_ref_or_object)
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # id_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `id/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   def id_ok(erp_sref_ref_or_object)
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # ref/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Casts the given argument to a ERP reference.
   The argument can be a ERP reference, a string reference, or the actual object.
   """
   def ref(erp_sref_ref_or_object)
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # ref_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `ref/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   def ref_ok(erp_sref_ref_or_object)
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # sref/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Casts the given argument to a ERP string reference.
   The argument can be a ERP reference, a string reference, or the actual object.
   """
   def sref(erp_sref_ref_or_object)
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # sref_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `sref/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   def sref_ok(erp_sref_ref_or_object)
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # record/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Convert the given argument to a persistence object. Options may be passed to coordinate actions like expanding embedded references.
   """
   def record(erp_sref_ref_or_object, options \\ %{})
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # record!/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `record/1` but will execute mnesia functions immediately with out using an outer transaction wrapper.
   """
   def record!(erp_sref_ref_or_object, options \\ %{})
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Convert the given argument to a scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.
   """
   def entity(erp_sref_ref_or_object, options \\ %{})
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   def entity_ok(erp_sref_ref_or_object, options \\ %{})
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity!/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity/1` but will execute mnesia functions immediately with out using an outer transaction wrapper
   """
   def entity!(erp_sref_ref_or_object, options \\ %{})
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity_ok!/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity_ok/1` but with a transaction wrapper if required.
   """
   def entity_ok!(erp_sref_ref_or_object, options \\ %{})
-end # end defprotocol Noizu.ERP
+end
 
-#-------------------------------------------------------------------------------
+# end defprotocol Noizu.ERP
+
+# -------------------------------------------------------------------------------
 # Useful default implementations
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 defimpl Noizu.ERP, for: List do
-
   @moduledoc """
   This module provides implementations of the `Noizu.ERP` protocol for `List` and `Tuple` types.
   """
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # id/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Retrieves the underlying id for each ERP reference in the given list.
   """
   @impl true
   def id(erp_sref_ref_or_object)
+
   def id(entities) do
     for obj <- entities do
       Noizu.ERP.id(obj)
     end
-  end # end reference/1
+  end
 
+  # end reference/1
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # id_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `id/1` but returns the results in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def id_ok(erp_sref_ref_or_object)
+
   def id_ok(entities) do
-    results = for obj <- entities do
-      Noizu.ERP.id(obj)
-    end |> Enum.filter(&(&1))
-    length(results) == length(entities) && {:ok, results} || {:missing, results}
-  end # end reference/1
+    results =
+      for obj <- entities do
+        Noizu.ERP.id(obj)
+      end
+      |> Enum.filter(& &1)
 
+    (length(results) == length(entities) && {:ok, results}) || {:missing, results}
+  end
 
-  #-------------------------------------------------
+  # end reference/1
+
+  # -------------------------------------------------
   # ref/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Casts each element in the given list to a ERP reference.
   """
   @impl true
   def ref(erp_sref_ref_or_object)
+
   def ref(entities) do
     for obj <- entities do
       Noizu.ERP.ref(obj)
     end
-  end # end reference/1
+  end
 
-  #-------------------------------------------------
+  # end reference/1
+
+  # -------------------------------------------------
   # ref_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `ref/1` but returns the results in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def ref_ok(erp_sref_ref_or_object)
-  def ref_ok(entities) do
-    results = for obj <- entities do
-                Noizu.ERP.ref(obj)
-              end |> Enum.filter(&(&1))
-    length(results) == length(entities) && {:ok, results} || {:missing, results}
-  end # end reference/1
 
-  #-------------------------------------------------
+  def ref_ok(entities) do
+    results =
+      for obj <- entities do
+        Noizu.ERP.ref(obj)
+      end
+      |> Enum.filter(& &1)
+
+    (length(results) == length(entities) && {:ok, results}) || {:missing, results}
+  end
+
+  # end reference/1
+
+  # -------------------------------------------------
   # sref/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Casts each element in the given list to a ERP string reference.
   """
   @impl true
   def sref(erp_sref_ref_or_object)
+
   def sref(entities) do
     for obj <- entities do
       Noizu.ERP.sref(obj)
     end
-  end # end sref/1
+  end
 
-  #-------------------------------------------------
+  # end sref/1
+
+  # -------------------------------------------------
   # sref_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `sref/1` but returns the results in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def sref_ok(erp_sref_ref_or_object)
-  def sref_ok(entities) do
-    results = for obj <- entities do
-                Noizu.ERP.sref(obj)
-              end |> Enum.filter(&(&1))
-    length(results) == length(entities) && {:ok, results} || {:missing, results}
-  end # end reference/1
 
-  #-------------------------------------------------
+  def sref_ok(entities) do
+    results =
+      for obj <- entities do
+        Noizu.ERP.sref(obj)
+      end
+      |> Enum.filter(& &1)
+
+    (length(results) == length(entities) && {:ok, results}) || {:missing, results}
+  end
+
+  # end reference/1
+
+  # -------------------------------------------------
   # record/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Converts each element in the given list to a persistence object. Options may be passed to coordinate actions like expanding embedded references.
   """
   @impl true
   def record(erp_sref_ref_or_object, options)
+
   def record(entities, options \\ nil) do
     for obj <- entities do
       Noizu.ERP.record(obj, options)
     end
-  end # end record/2
+  end
 
-  #-------------------------------------------------
+  # end record/2
+
+  # -------------------------------------------------
   # record!/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `record/2` but with a transaction wrapper if required.
   """
   @impl true
   def record!(erp_sref_ref_or_object, options \\ nil)
+
   def record!(entities, options) do
     for obj <- entities do
       Noizu.ERP.record!(obj, options)
     end
-  end # end record!/2
+  end
 
-  #-------------------------------------------------
+  # end record!/2
+
+  # -------------------------------------------------
   # entity/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Converts each element in the given list to a scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.
   """
   @impl true
   def entity(erp_sref_ref_or_object, options \\ nil)
+
   def entity(entities, options) do
     for obj <- entities do
       Noizu.ERP.entity(obj, options)
     end
-  end # end entity/2
+  end
 
-  #-------------------------------------------------
+  # end entity/2
+
+  # -------------------------------------------------
   # entity_ok/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity/2` but returns the results in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def entity_ok(erp_sref_ref_or_object, options \\ nil)
-  def entity_ok(entities, options) do
-    results = for obj <- entities do
-                Noizu.ERP.entity(obj, options)
-              end |> Enum.filter(&(&1))
-    length(results) == length(entities) && {:ok, results} || {:missing, results}
-  end # end reference/1
 
-  #-------------------------------------------------
+  def entity_ok(entities, options) do
+    results =
+      for obj <- entities do
+        Noizu.ERP.entity(obj, options)
+      end
+      |> Enum.filter(& &1)
+
+    (length(results) == length(entities) && {:ok, results}) || {:missing, results}
+  end
+
+  # end reference/1
+
+  # -------------------------------------------------
   # entity!/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity/2` but with a transaction wrapper if required.
   """
   @impl true
   def entity!(erp_sref_ref_or_object, options \\ nil)
+
   def entity!(entities, options) do
     for obj <- entities do
       Noizu.ERP.entity!(obj, options)
     end
-  end # end entity!/2
+  end
 
-  #-------------------------------------------------
+  # end entity!/2
+
+  # -------------------------------------------------
   # entity_ok!/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity_ok/2` but with a transaction wrapper if required.
   """
   @impl true
   def entity_ok!(erp_sref_ref_or_object, options \\ nil)
-  def entity_ok!(entities, options) do
-    results = for obj <- entities do
-                Noizu.ERP.entity!(obj, options)
-              end |> Enum.filter(&(&1))
-    length(results) == length(entities) && {:ok, results} || {:missing, results}
-  end # end reference/1
 
-end # end defimpl EntityReferenceProtocol, for: List
+  def entity_ok!(entities, options) do
+    results =
+      for obj <- entities do
+        Noizu.ERP.entity!(obj, options)
+      end
+      |> Enum.filter(& &1)
+
+    (length(results) == length(entities) && {:ok, results}) || {:missing, results}
+  end
+
+  # end reference/1
+end
+
+# end defimpl EntityReferenceProtocol, for: List
 
 defimpl Noizu.ERP, for: Tuple do
   @moduledoc """
   The Tuple implementation of the Noizu.ERP protocol provides the ability to work with tuples of ERP references. It provides the same functionality as the protocol but for each element in the tuple.
   """
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # id/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Retrieves the underlying id for a given ERP reference in the tuple.
   The argument can be a ERP reference, a string reference, or the actual object.
   """
   def id(erp_sref_ref_or_object)
+
   def id(obj) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
-        #if function_exported?(manager, :sref, 1) do
-          manager.id(identifier)
-        #end
+      {:ref, manager, identifier} when is_atom(manager) ->
+        # if function_exported?(manager, :sref, 1) do
+        manager.id(identifier)
+
+      # end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
         manager.id(identifier)
     end
-  end # end id/1
+  end
 
+  # end id/1
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # id_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `id/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def id_ok(erp_sref_ref_or_object)
+
   def id_ok(obj) do
     result = id(obj)
-    result && {:ok, result} || {:error, obj}
-  end # end id/1
+    (result && {:ok, result}) || {:error, obj}
+  end
 
+  # end id/1
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # ref/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Casts the given argument in the tuple to a ERP reference.
   The argument can be a ERP reference, a string reference, or the actual object.
   """
   @impl true
   def ref(erp_sref_ref_or_object)
+
   def ref(obj) do
     case obj do
-      {:ref, manager, _identifier} when is_atom(manager)-> obj
+      {:ref, manager, _identifier} when is_atom(manager) -> obj
       {:ext_ref, manager, _identifier} when is_atom(manager) -> obj
     end
-  end # end ref/1
+  end
 
+  # end ref/1
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # ref_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `ref/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def ref_ok(erp_sref_ref_or_object)
+
   def ref_ok(obj) do
     result = ref(obj)
-    result && {:ok, result} || {:error, obj}
-  end # end ref/1
+    (result && {:ok, result}) || {:error, obj}
+  end
 
-  #-------------------------------------------------
+  # end ref/1
+
+  # -------------------------------------------------
   # sref/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Casts the given argument in the tuple to a ERP string reference.
   The argument can be a ERP reference, a string reference, or the actual object.
   """
   @impl true
   def sref(erp_sref_ref_or_object)
+
   def sref(obj) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
-        #if function_exported?(manager, :sref, 1) do
-          manager.sref(identifier)
-        #end
+      {:ref, manager, identifier} when is_atom(manager) ->
+        # if function_exported?(manager, :sref, 1) do
+        manager.sref(identifier)
+
+      # end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
         manager.sref(identifier)
     end
-  end # end sref/1
+  end
 
-  #-------------------------------------------------
+  # end sref/1
+
+  # -------------------------------------------------
   # sref_ok/1
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `sref/1` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def sref_ok(erp_sref_ref_or_object)
+
   def sref_ok(obj) do
     result = sref(obj)
-    result && {:ok, result} || {:error, obj}
-  end # end sref/1
+    (result && {:ok, result}) || {:error, obj}
+  end
 
+  # end sref/1
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # record/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Converts the given argument in the tuple to a persistence object. Options may be passed to coordinate actions like expanding embedded references.
   """
   @impl true
   def record(erp_sref_ref_or_object, options \\ nil)
+
   def record(obj, options) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
-        #if function_exported?(manager, :entity, 2) do
-          manager.record(identifier, options)
-        #end
+      {:ref, manager, identifier} when is_atom(manager) ->
+        # if function_exported?(manager, :entity, 2) do
+        manager.record(identifier, options)
+
+      # end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
         manager.record(identifier, options)
     end
-  end # end record/2
+  end
 
+  # end record/2
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # record!/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `record/2` but with a transaction wrapper if required.
   """
   @impl true
   def record!(erp_sref_ref_or_object, options \\ nil)
+
   def record!(obj, options) do
     case obj do
-      {:ref, manager, identifier} when is_atom(manager)->
-        #if function_exported?(manager, :entity, 2) do
-          manager.record!(identifier, options)
-        #end
+      {:ref, manager, identifier} when is_atom(manager) ->
+        # if function_exported?(manager, :entity, 2) do
+        manager.record!(identifier, options)
+
+      # end
       {:ext_ref, manager, identifier} when is_atom(manager) ->
-          manager.record!(identifier, options)
+        manager.record!(identifier, options)
     end
-  end # end record/2
+  end
 
+  # end record/2
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Converts the given argument in the tuple to a scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.
   """
   @impl true
   def entity(erp_sref_ref_or_object, options \\ nil)
+
   def entity(obj, options) do
     case obj do
-      {:ref, manager, _identifier} when is_atom(manager)->
-        #if function_exported?(manager, :entity, 2) do
-          manager.entity(obj, options)
-        #end
+      {:ref, manager, _identifier} when is_atom(manager) ->
+        # if function_exported?(manager, :entity, 2) do
+        manager.entity(obj, options)
+
+      # end
       {:ext_ref, manager, _identifier} when is_atom(manager) ->
-
-          manager.entity(obj, options)
+        manager.entity(obj, options)
     end
-  end # end entity/2
+  end
 
+  # end entity/2
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity_ok/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity/2` but returns the result in the form of `{:ok, value}` or `{:error, error}`.
   """
   @impl true
   def entity_ok(erp_sref_ref_or_object, options \\ nil)
+
   def entity_ok(obj, options) do
     result = entity(obj, options)
-    result && {:ok, result} || {:error, obj}
-  end # end entity_ok/1
+    (result && {:ok, result}) || {:error, obj}
+  end
 
+  # end entity_ok/1
 
-
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity!/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity/2` but with a transaction wrapper if required.
   """
   @impl true
   def entity!(erp_sref_ref_or_object, options \\ nil)
+
   def entity!(obj, options) do
     case obj do
-      {:ref, manager, _identifier} when is_atom(manager)->
-        #if function_exported?(manager, :entity, 2) do
+      {:ref, manager, _identifier} when is_atom(manager) ->
+        # if function_exported?(manager, :entity, 2) do
         manager.entity!(obj, options)
-        #end
+
+      # end
       {:ext_ref, manager, _identifier} when is_atom(manager) ->
         manager.entity!(obj, options)
     end
-  end # end entity/2
+  end
 
+  # end entity/2
 
-  #-------------------------------------------------
+  # -------------------------------------------------
   # entity_ok!/2
-  #-------------------------------------------------
+  # -------------------------------------------------
   @doc """
   Similar to `entity_ok/2` but with a transaction wrapper if required.
   """
   @impl true
   def entity_ok!(erp_sref_ref_or_object, options \\ nil)
+
   def entity_ok!(obj, options) do
     result = entity!(obj, options)
-    result && {:ok, result} || {:error, obj}
-  end # end entity_ok/1
-end # end defimpl EntityReferenceProtocol, for: Tuple
+    (result && {:ok, result}) || {:error, obj}
+  end
+
+  # end entity_ok/1
+end
+
+# end defimpl EntityReferenceProtocol, for: Tuple

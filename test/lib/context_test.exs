@@ -1,13 +1,12 @@
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Author: Keith Brings
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore.ContextTest do
   use ExUnit.Case, async: false
 
   require Logger
-
 
   @tag :lib
   @tag :context
@@ -20,6 +19,4 @@ defmodule Noizu.ElixirCore.ContextTest do
     meta = Logger.metadata()
     assert meta[:context_caller] == {:ref, Noizu.ElixirCore.CallerEntity, :system}
   end
-
-
 end

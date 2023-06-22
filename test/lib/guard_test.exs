@@ -1,19 +1,14 @@
-
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # Author: Keith Brings
 # Copyright (C) 2018 Noizu Labs, Inc. All rights reserved.
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 
 defmodule Noizu.ElixirCore.GuardTest do
   use ExUnit.Case, async: false
 
   defmodule Foo do
-    defstruct [
-      vsn: 1.0
-    ]
+    defstruct vsn: 1.0
   end
-
-
 
   require Logger
   import Noizu.ElixirCore.Guards
@@ -37,7 +32,6 @@ defmodule Noizu.ElixirCore.GuardTest do
 
   @tag :guards
   test "entity_ref guard" do
-
     assert entity_ref(obscure_hint({:ref, :module, 1234}))
     assert entity_ref(obscure_hint("ref.henry.1234"))
     assert entity_ref(obscure_hint(%Foo{}))
@@ -69,7 +63,6 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert !is_internal_caller(obscure_hint(nil))
   end
 
-
   @tag :guards
   test "is_restricted_caller guard" do
     assert !is_restricted_caller(Noizu.ElixirCore.CallingContext.admin())
@@ -80,10 +73,12 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert is_restricted_caller(obscure_hint(nil))
   end
 
-
   @tag :guards
   test "has_permission? guard" do
-    c = %Noizu.ElixirCore.CallingContext{auth: %{permissions: %{:foobar => true, :boo => true, :orange => 2, {:a, :b} => true}}}
+    c = %Noizu.ElixirCore.CallingContext{
+      auth: %{permissions: %{:foobar => true, :boo => true, :orange => 2, {:a, :b} => true}}
+    }
+
     assert permission?(c, :foobar)
     assert permission?(c, {:a, :b})
     assert !permission?(c, {:a, :c})
@@ -99,8 +94,4 @@ defmodule Noizu.ElixirCore.GuardTest do
     assert !has_call_reason?(%Noizu.ElixirCore.CallingContext{reason: nil})
     assert !has_call_reason?(obscure_hint(nil))
   end
-
-
-
 end
-
