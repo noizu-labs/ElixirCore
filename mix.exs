@@ -52,7 +52,7 @@ defmodule Noizu.ElixirCore.Mixfile do
   defp docs do
     [
       source_url_pattern: "https://github.com/noizu/ElixirCore/blob/master/%{path}#L%{line}",
-      extras: ["README.md", "markdown/config.md"]
+      extras: ["README.md"]
     ]
   end
 
