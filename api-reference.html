@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>API Reference — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="extras">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+  <span>API Reference <small class="app-vsn">noizu_core v1.0.26</small></span>
+</h1>
+
+
+  <section class="details-list">
+    <h2 id="modules" class="section-heading">
+  <a href="#modules" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">modules</p>
+  </a>
+  Modules
+</h2>
+
+    <div class="summary">
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ERP.html" translate="no">Noizu.ERP</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>The Entity Reference Protocol (ERP) is a key component in the Noizu framework, used for handling references to
+entities in a uniform and flexible manner. The protocol defines a standard set of functions that must be implemented by
+any type that adheres to the protocol. This allows for a consistent way to interact with different types of entities
+(e.g., database records, structs, etc.) without having to know their specific implementation details.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.CallerEntity.html" translate="no">Noizu.ElixirCore.CallerEntity</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>The <a href="Noizu.ElixirCore.CallerEntity.html#content"><code class="inline">Noizu.ElixirCore.CallerEntity</code></a> module provides a convenience structure for tracking API caller authentication levels. It supports the levels <code class="inline">:internal</code>, <code class="inline">:restricted</code>, <code class="inline">:system</code>, and <code class="inline">:admin</code>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.CallingContext.html" translate="no">Noizu.ElixirCore.CallingContext</a>
+
+  </div>
+
+    <div class="summary-synopsis"><h2 id="callingcontext" class="section-heading">
+  <a href="#callingcontext" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">callingcontext</p>
+  </a>
+  CallingContext
+</h2>
+<p>Context object used to track a caller's state and permissions along
+with unique request identifier for tracking requests as they travel through
+the layers in your application. Useful for log collation, permission checks,
+access auditing.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.Guards.html" translate="no">Noizu.ElixirCore.Guards</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Provides guards for caller context and reference checks.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.OSP.html" translate="no">Noizu.ElixirCore.OSP</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.OptionList.html" translate="no">Noizu.ElixirCore.OptionList</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.OptionSettings.html" translate="no">Noizu.ElixirCore.OptionSettings</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.OptionValue.html" translate="no">Noizu.ElixirCore.OptionValue</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.PartialObjectCheck.html" translate="no">Noizu.ElixirCore.PartialObjectCheck</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.PartialObjectCheck.FieldConstraint.html" translate="no">Noizu.ElixirCore.PartialObjectCheck.FieldConstraint</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.PartialObjectCheck.TypeConstraint.html" translate="no">Noizu.ElixirCore.PartialObjectCheck.TypeConstraint</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.PartialObjectCheck.ValueConstraint.html" translate="no">Noizu.ElixirCore.PartialObjectCheck.ValueConstraint</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.ElixirCore.SlimOptions.html" translate="no">Noizu.ElixirCore.SlimOptions</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.FastGlobal.ChangeSet.html" translate="no">Noizu.FastGlobal.ChangeSet</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>This module contains changesets that are used in updating the FastGlobal related schema.
+The changesets are defined in a way that they can be easily applied or rolled back.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.FastGlobal.Cluster.html" translate="no">Noizu.FastGlobal.Cluster</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>The <a href="Noizu.FastGlobal.Cluster.html#content"><code class="inline">Noizu.FastGlobal.Cluster</code></a> module provides functionality for handling global data in a distributed cluster.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.FastGlobal.Database.html" translate="no">Noizu.FastGlobal.Database</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>The <a href="Noizu.FastGlobal.Database.html#content"><code class="inline">Noizu.FastGlobal.Database</code></a> module defines the schema for the FastGlobal Database.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.FastGlobal.Database.Settings.html" translate="no">Noizu.FastGlobal.Database.Settings</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>This module defines the <code class="inline">Settings</code> table for the <a href="Noizu.FastGlobal.Database.html"><code class="inline">Noizu.FastGlobal.Database</code></a>.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="Noizu.FastGlobal.Record.html" translate="no">Noizu.FastGlobal.Record</a>
+
+  </div>
+
+</div>
+
+    </div>
+  </section>
+
+
+<div class="bottom-actions">
+  <div class="bottom-actions-item">
+
+  </div>
+  <div class="bottom-actions-item">
+
+      <a href="readme.html" class="bottom-actions-button" rel="next">
+        <span class="subheader">
+          Next Page →
+        </span>
+        <span class="title">
+README
+        </span>
+      </a>
+
+  </div>
+</div>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

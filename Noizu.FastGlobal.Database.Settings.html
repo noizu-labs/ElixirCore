@@ -1,0 +1,2921 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>Noizu.FastGlobal.Database.Settings — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" title="View Source" class="view-source" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Noizu.FastGlobal.Database.Settings</span> 
+  <small class="app-vsn" translate="no">(noizu_core v1.0.26)</small>
+
+</h1>
+
+
+  <section id="moduledoc">
+<p>This module defines the <code class="inline">Settings</code> table for the <a href="Noizu.FastGlobal.Database.html"><code class="inline">Noizu.FastGlobal.Database</code></a>.</p><p>The <code class="inline">Settings</code> table has the following structure:</p><ul><li><code class="inline">identifier</code>: a field of any type that serves as the identifier for the setting.</li><li><code class="inline">value</code>: a field of any type that holds the value of the setting.</li></ul><p>The table is of type <code class="inline">:set</code>, which means each entry in the table is unique. There are no indexes defined for this table.</p>
+  </section>
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#t:autoincrement/0" translate="no">autoincrement()</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#t:t/0" translate="no">t()</a>
+
+        </div>
+
+      </div>
+
+  </div>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#__using__/1" translate="no">__using__(opts)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Require the needed modules to use the table effectively.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#add_copy/2" translate="no">add_copy(node, type \\ :disk)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Add a copy of the table on the given node with the given mode.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#add_index/1" translate="no">add_index(attribute)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Add the index in the table for the given attribute.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#at!/1" translate="no">at!(position)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Read a record based on a slot, see <code class="inline">mnesia:dirty_slot</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#attributes/0" translate="no">attributes()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>The in order keyword list of attributes passed when the table was defined.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#bag?/0" translate="no">bag?()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Check if the table is a bag.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#clear/0" translate="no">clear()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Clear the content of the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#copying/2" translate="no">copying(node, to)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Change the copying mode of the table on the given node, see
+<code class="inline">mnesia:change_table_copy_type</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#count/0" translate="no">count()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get the number of records in the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#create!/1" translate="no">create!(copying \\ [])</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#create/1" translate="no">create(copying \\ [])</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Create the table with the given copying mode and inherent definition.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#database/0" translate="no">database()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the database the table belongs to.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#delete!/1" translate="no">delete!(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Delete the record or the given key from the table, see
+<code class="inline">mnesia:dirty_delete</code> and <code class="inline">mnesia:dirty_delete_object</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#delete/1" translate="no">delete(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Delete the record or the given key from the table, see <code class="inline">mnesia:delete</code>
+and <code class="inline">mnesia:delete_object</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#delete/2" translate="no">delete(self, lock)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Delete the record or the given key from the table with the given lock,
+see <code class="inline">mnesia:delete</code> and <code class="inline">mnesia:delete_object</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#delete_copy/1" translate="no">delete_copy(node)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Delete a copy of the table from the given node.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#delete_index/1" translate="no">delete_index(attribute)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Delete the index in the table for the given attribute.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#destroy!/0" translate="no">destroy!()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Destroy the table, raising if an error occurs.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#destroy/0" translate="no">destroy()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Destroy the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#first!/1" translate="no">first!(key \\ false)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the first key or record in the table, see <code class="inline">mnesia:dirty_first</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#first/2" translate="no">first(key \\ false, lock \\ :read)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the first key or record in the table, see <code class="inline">mnesia:first</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#foldl/2" translate="no">foldl(acc, fun)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Fold the whole table from the left, see <code class="inline">mnesia:foldl</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#foldr/2" translate="no">foldr(acc, fun)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Fold the whole table from the right, see <code class="inline">mnesia:foldr</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#force/0" translate="no">force()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Force load the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#hook_read!/2" translate="no">hook_read!(_, _)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#hook_read/2" translate="no">hook_read(_, _)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#hook_write!/1" translate="no">hook_write!(_)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#hook_write/1" translate="no">hook_write(_)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#id/0" translate="no">id()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get the name of the id key.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#info/1" translate="no">info(key)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get information about the table, see <code class="inline">mnesia:table_info</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#key/1" translate="no">key(settings)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the key of the record.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#keys!/0" translate="no">keys!()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return all keys in the table, see <code class="inline">mnesia:dirty_all_keys</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#keys/0" translate="no">keys()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return all the keys in the table, see <code class="inline">mnesia:all_keys</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#last!/1" translate="no">last!(key \\ false)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the last key or record in the table, see <code class="inline">mnesia:dirty_last</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#last/2" translate="no">last(key \\ false, lock \\ :read)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the last key or record in the table, see <code class="inline">mnesia:last</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#lock/1" translate="no">lock(mode)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Lock the table with the given lock.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#majority/1" translate="no">majority(value)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Change the table majority.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#master_nodes/1" translate="no">master_nodes(nodes)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Set master nodes for the table, see <code class="inline">mnesia:set_master_nodes</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#match!/1" translate="no">match!(pattern)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the table using simple don't care values, see
+<code class="inline">mnesia:dirty_match_object</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#match/2" translate="no">match(lock \\ :read, pattern)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the table using simple don't care values, see
+<code class="inline">mnesia:match_object</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#member?/1" translate="no">member?(key)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Check if the key is present in the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#mode/1" translate="no">mode(value)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Change the access of the table, see <code class="inline">mnesia:change_table_access_mode</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#move_copy/2" translate="no">move_copy(from, to)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Move a copy of the table from the given node to another given node.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#next!/1" translate="no">next!(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the next key or record in the table, see <code class="inline">mnesia:dirty_next</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#next/1" translate="no">next(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the next key or record in the table, see <code class="inline">mnesia:next</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#options/0" translate="no">options()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>The options passed when the table was defined.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#ordered_set?/0" translate="no">ordered_set?()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Check if the table is an ordered set.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#prev!/1" translate="no">prev!(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the previous key or record in the table, see <code class="inline">mnesia:dirty_prev</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#prev/1" translate="no">prev(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the previous key or record in the table, see <code class="inline">mnesia:prev</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#priority/1" translate="no">priority(value)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Change the table loading priority.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#properties/0" translate="no">properties()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return properties of the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#read!/1" translate="no">read!(key)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Read a record from the table, see <code class="inline">mnesia:dirty_read</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#read/2" translate="no">read(key, lock \\ :read)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Read a record from the table with the given lock, see <code class="inline">mnesia:read</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#read_at!/2" translate="no">read_at!(key, position)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Read records from the table based on a secondary index given as position,
+see <code class="inline">mnesia:dirty_index_read</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#read_at/2" translate="no">read_at(key, position)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Read records from the table based on a secondary index given as position,
+see <code class="inline">mnesia:index_read</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#select!/1" translate="no">select!(spec)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the table using a match_spec, see
+<code class="inline">mnesia:dirty_select</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#select/1" translate="no">select(spec)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the table using a match_spec, see <code class="inline">mnesia:select</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#select/2" translate="no">select(lock_or_limit, spec)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the given table using a match_spec passing a limit or a
+lock kind, see <code class="inline">mnesia:select</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#select/3" translate="no">select(lock_or_limit, limit_or_lock, spec)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the given table using a match_spec passing a limit and a
+lock kind, see <code class="inline">mnesia:select</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#set?/0" translate="no">set?()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Check if the table is a set.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#stream!/0" translate="no">stream!()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return an iterator to use with the Enum functions using dirty
+operations to retrieve information.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#stream/1" translate="no">stream(lock \\ :read)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return an iterator to use with Enum functions.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#type/1" translate="no">type(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Return the type of the table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#wait/1" translate="no">wait(timeout \\ :infinity)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Wait for the table optionally with a timeout.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#where!/2" translate="no">where!(spec, options \\ [])</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the table using an Exquisite query, see
+<a href="https://hexdocs.pm/exquisite/0.1.8/Exquisite.html#match/2"><code class="inline">Exquisite.match/2</code></a> and <code class="inline">mnesia:dirty_select</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#where/2" translate="no">where(spec, options \\ [])</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Select records in the table using an Exquisite query, see
+<a href="https://hexdocs.pm/exquisite/0.1.8/Exquisite.html#match/2"><code class="inline">Exquisite.match/2</code></a> and <code class="inline">mnesia:select</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#write!/1" translate="no">write!(self)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Write the record to the table, see <code class="inline">mnesia:dirty_write</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#write/2" translate="no">write(self, lock \\ :write)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Write the record to the table, see <code class="inline">mnesia:write</code>.</p></div>
+
+      </div>
+
+  </div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Types
+    </h1>
+    <div class="types-list">
+<section class="detail" id="t:autoincrement/0">
+
+  <div class="detail-header">
+    <a href="#t:autoincrement/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">autoincrement()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> autoincrement() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">non_neg_integer</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">t()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L36" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> t() :: %Noizu.FastGlobal.Database.Settings{identifier: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), value: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Functions
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="__using__/1">
+
+  <div class="detail-header">
+    <a href="#__using__/1" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">__using__(opts)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Require the needed modules to use the table effectively.</p>
+  </section>
+</section>
+<section class="detail" id="add_copy/2">
+
+    <span id="add_copy/1"></span>
+
+  <div class="detail-header">
+    <a href="#add_copy/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">add_copy(node, type \\ :disk)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> add_copy(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>(), <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:cv/0">Amnesia.Table.cv</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Add a copy of the table on the given node with the given mode.</p>
+  </section>
+</section>
+<section class="detail" id="add_index/1">
+
+  <div class="detail-header">
+    <a href="#add_index/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">add_index(attribute)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> add_index(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Add the index in the table for the given attribute.</p>
+  </section>
+</section>
+<section class="detail" id="at!/1">
+
+  <div class="detail-header">
+    <a href="#at!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">at!(position)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> at!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>()) :: <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Read a record based on a slot, see <code class="inline">mnesia:dirty_slot</code>.</p>
+  </section>
+</section>
+<section class="detail" id="attributes/0">
+
+  <div class="detail-header">
+    <a href="#attributes/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">attributes()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> attributes() :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()</pre>
+
+      </div>
+
+<p>The in order keyword list of attributes passed when the table was defined.</p>
+  </section>
+</section>
+<section class="detail" id="bag?/0">
+
+  <div class="detail-header">
+    <a href="#bag?/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">bag?()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> bag?() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
+
+      </div>
+
+<p>Check if the table is a bag.</p>
+  </section>
+</section>
+<section class="detail" id="clear/0">
+
+  <div class="detail-header">
+    <a href="#clear/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">clear()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> clear() :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Clear the content of the table.</p>
+  </section>
+</section>
+<section class="detail" id="copying/2">
+
+  <div class="detail-header">
+    <a href="#copying/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">copying(node, to)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> copying(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>(), <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:cv/0">Amnesia.Table.cv</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Change the copying mode of the table on the given node, see
+<code class="inline">mnesia:change_table_copy_type</code>.</p><h2 id="copying/2-modes" class="section-heading">
+  <a href="#copying/2-modes" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">modes</p>
+  </a>
+  Modes
+</h2>
+<ul><li><code class="inline">:disk</code> sets <code class="inline">:disc_copies</code> mode</li><li><code class="inline">:disk!</code> sets <code class="inline">:disc_only_copies</code> mode</li><li><code class="inline">:memory</code> sets <code class="inline">:ram_copies</code> mode</li></ul>
+  </section>
+</section>
+<section class="detail" id="count/0">
+
+  <div class="detail-header">
+    <a href="#count/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">count()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> count() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">non_neg_integer</a>()</pre>
+
+      </div>
+
+<p>Get the number of records in the table.</p>
+  </section>
+</section>
+<section class="detail" id="create!/1">
+
+    <span id="create!/0"></span>
+
+  <div class="detail-header">
+    <a href="#create!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">create!(copying \\ [])</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> create!(<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:c/0">Amnesia.Table.c</a>()) :: :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="create/1">
+
+    <span id="create/0"></span>
+
+  <div class="detail-header">
+    <a href="#create/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">create(copying \\ [])</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> create(<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:c/0">Amnesia.Table.c</a>()) :: Amnesia.o()</pre>
+
+      </div>
+
+<p>Create the table with the given copying mode and inherent definition.</p>
+  </section>
+</section>
+<section class="detail" id="database/0">
+
+  <div class="detail-header">
+    <a href="#database/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">database()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> database() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">module</a>()</pre>
+
+      </div>
+
+<p>Return the database the table belongs to.</p>
+  </section>
+</section>
+<section class="detail" id="delete!/1">
+
+  <div class="detail-header">
+    <a href="#delete!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">delete!(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> delete!(<a href="#t:t/0">t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Delete the record or the given key from the table, see
+<code class="inline">mnesia:dirty_delete</code> and <code class="inline">mnesia:dirty_delete_object</code>.</p>
+  </section>
+</section>
+<section class="detail" id="delete/1">
+
+  <div class="detail-header">
+    <a href="#delete/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">delete(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> delete(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>()) :: :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Delete the record or the given key from the table, see <code class="inline">mnesia:delete</code>
+and <code class="inline">mnesia:delete_object</code>.</p>
+  </section>
+</section>
+<section class="detail" id="delete/2">
+
+  <div class="detail-header">
+    <a href="#delete/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">delete(self, lock)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> delete(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="#t:t/0">t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Delete the record or the given key from the table with the given lock,
+see <code class="inline">mnesia:delete</code> and <code class="inline">mnesia:delete_object</code>.</p><h2 id="delete/2-locks" class="section-heading">
+  <a href="#delete/2-locks" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">locks</p>
+  </a>
+  Locks
+</h2>
+<ul><li><code class="inline">:write</code> sets a <code class="inline">:write</code> lock</li><li><code class="inline">:write!</code> sets a <code class="inline">:sticky_write</code> lock</li></ul>
+  </section>
+</section>
+<section class="detail" id="delete_copy/1">
+
+  <div class="detail-header">
+    <a href="#delete_copy/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">delete_copy(node)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> delete_copy(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Delete a copy of the table from the given node.</p>
+  </section>
+</section>
+<section class="detail" id="delete_index/1">
+
+  <div class="detail-header">
+    <a href="#delete_index/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">delete_index(attribute)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> delete_index(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Delete the index in the table for the given attribute.</p>
+  </section>
+</section>
+<section class="detail" id="destroy!/0">
+
+  <div class="detail-header">
+    <a href="#destroy!/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">destroy!()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> destroy!() :: :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Destroy the table, raising if an error occurs.</p>
+  </section>
+</section>
+<section class="detail" id="destroy/0">
+
+  <div class="detail-header">
+    <a href="#destroy/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">destroy()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> destroy() :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Destroy the table.</p>
+  </section>
+</section>
+<section class="detail" id="first!/1">
+
+    <span id="first!/0"></span>
+
+  <div class="detail-header">
+    <a href="#first!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">first!(key \\ false)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> first!(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the first key or record in the table, see <code class="inline">mnesia:dirty_first</code>.</p><p>By default it returns the record, if you want only the key pass true as
+first parameter.</p><p>If the table is a bag, it will return a list of records.</p>
+  </section>
+</section>
+<section class="detail" id="first/2">
+
+    <span id="first/0"></span>
+
+    <span id="first/1"></span>
+
+  <div class="detail-header">
+    <a href="#first/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">first(key \\ false, lock \\ :read)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> first(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the first key or record in the table, see <code class="inline">mnesia:first</code>.</p><p>By default it returns the record, if you want only the key pass true as
+first parameter.</p><p>If the table is a bag, it will return a list of records.</p>
+  </section>
+</section>
+<section class="detail" id="foldl/2">
+
+  <div class="detail-header">
+    <a href="#foldl/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">foldl(acc, fun)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> foldl(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), (<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() -&gt; <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>())) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Fold the whole table from the left, see <code class="inline">mnesia:foldl</code>.</p>
+  </section>
+</section>
+<section class="detail" id="foldr/2">
+
+  <div class="detail-header">
+    <a href="#foldr/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">foldr(acc, fun)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> foldr(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), (<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() -&gt; <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>())) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Fold the whole table from the right, see <code class="inline">mnesia:foldr</code>.</p>
+  </section>
+</section>
+<section class="detail" id="force/0">
+
+  <div class="detail-header">
+    <a href="#force/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">force()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> force() :: :yes | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Force load the table.</p>
+  </section>
+</section>
+<section class="detail" id="hook_read!/2">
+
+  <div class="detail-header">
+    <a href="#hook_read!/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">hook_read!(_, _)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="hook_read/2">
+
+  <div class="detail-header">
+    <a href="#hook_read/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">hook_read(_, _)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="hook_write!/1">
+
+  <div class="detail-header">
+    <a href="#hook_write!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">hook_write!(_)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="hook_write/1">
+
+  <div class="detail-header">
+    <a href="#hook_write/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">hook_write(_)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="id/0">
+
+  <div class="detail-header">
+    <a href="#id/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">id()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> id() :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()</pre>
+
+      </div>
+
+<p>Get the name of the id key.</p>
+  </section>
+</section>
+<section class="detail" id="info/1">
+
+  <div class="detail-header">
+    <a href="#info/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">info(key)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> info(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Get information about the table, see <code class="inline">mnesia:table_info</code>.</p>
+  </section>
+</section>
+<section class="detail" id="key/1">
+
+  <div class="detail-header">
+    <a href="#key/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">key(settings)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> key(<a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()</pre>
+
+      </div>
+
+<p>Return the key of the record.</p>
+  </section>
+</section>
+<section class="detail" id="keys!/0">
+
+  <div class="detail-header">
+    <a href="#keys!/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">keys!()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> keys!() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return all keys in the table, see <code class="inline">mnesia:dirty_all_keys</code>.</p>
+  </section>
+</section>
+<section class="detail" id="keys/0">
+
+  <div class="detail-header">
+    <a href="#keys/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">keys()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> keys() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return all the keys in the table, see <code class="inline">mnesia:all_keys</code>.</p>
+  </section>
+</section>
+<section class="detail" id="last!/1">
+
+    <span id="last!/0"></span>
+
+  <div class="detail-header">
+    <a href="#last!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">last!(key \\ false)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> last!(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the last key or record in the table, see <code class="inline">mnesia:dirty_last</code>.</p><p>By default it returns the record, if you want only the key pass true as
+first parameter.</p><p>If the table is a bag, it will return a list of records.</p>
+  </section>
+</section>
+<section class="detail" id="last/2">
+
+    <span id="last/0"></span>
+
+    <span id="last/1"></span>
+
+  <div class="detail-header">
+    <a href="#last/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">last(key \\ false, lock \\ :read)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> last(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the last key or record in the table, see <code class="inline">mnesia:last</code>.</p><p>By default it returns the record, if you want only the key pass true as
+first parameter.</p><p>If the table is a bag, it will return a list of records.</p>
+  </section>
+</section>
+<section class="detail" id="lock/1">
+
+  <div class="detail-header">
+    <a href="#lock/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">lock(mode)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> lock(:write | :write! | :read) :: [<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>()] | :ok | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Lock the table with the given lock.</p><h2 id="lock/1-locks" class="section-heading">
+  <a href="#lock/1-locks" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">locks</p>
+  </a>
+  Locks
+</h2>
+<ul><li><code class="inline">:write</code> sets a <code class="inline">:write</code> lock</li><li><code class="inline">:write!</code> sets a <code class="inline">:sticky_write</code> lock</li><li><code class="inline">:read</code> sets a <code class="inline">:read</code> lock</li></ul>
+  </section>
+</section>
+<section class="detail" id="majority/1">
+
+  <div class="detail-header">
+    <a href="#majority/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">majority(value)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> majority(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Change the table majority.</p>
+  </section>
+</section>
+<section class="detail" id="master_nodes/1">
+
+  <div class="detail-header">
+    <a href="#master_nodes/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">master_nodes(nodes)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> master_nodes([<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>()]) :: :ok | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Set master nodes for the table, see <code class="inline">mnesia:set_master_nodes</code>.</p>
+  </section>
+</section>
+<section class="detail" id="match!/1">
+
+  <div class="detail-header">
+    <a href="#match!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">match!(pattern)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> match!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: [<a href="#t:t/0">t</a>()] | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Select records in the table using simple don't care values, see
+<code class="inline">mnesia:dirty_match_object</code>.</p>
+  </section>
+</section>
+<section class="detail" id="match/2">
+
+    <span id="match/1"></span>
+
+  <div class="detail-header">
+    <a href="#match/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">match(lock \\ :read, pattern)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> match(:read | :write, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: [<a href="#t:t/0">t</a>()] | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Select records in the table using simple don't care values, see
+<code class="inline">mnesia:match_object</code>.</p>
+  </section>
+</section>
+<section class="detail" id="member?/1">
+
+  <div class="detail-header">
+    <a href="#member?/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">member?(key)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> member?(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
+
+      </div>
+
+<p>Check if the key is present in the table.</p>
+  </section>
+</section>
+<section class="detail" id="mode/1">
+
+  <div class="detail-header">
+    <a href="#mode/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">mode(value)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> mode(:both | :read!) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Change the access of the table, see <code class="inline">mnesia:change_table_access_mode</code>.</p><h2 id="mode/1-modes" class="section-heading">
+  <a href="#mode/1-modes" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">modes</p>
+  </a>
+  Modes
+</h2>
+<ul><li><code class="inline">:both</code> sets read and write mode, it's the default.</li><li><code class="inline">:read!</code> sets read-only mode.</li></ul>
+  </section>
+</section>
+<section class="detail" id="move_copy/2">
+
+  <div class="detail-header">
+    <a href="#move_copy/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">move_copy(from, to)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> move_copy(<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">node</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Move a copy of the table from the given node to another given node.</p>
+  </section>
+</section>
+<section class="detail" id="next!/1">
+
+  <div class="detail-header">
+    <a href="#next!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">next!(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> next!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the next key or record in the table, see <code class="inline">mnesia:dirty_next</code>.</p><p>If you're calling this function from an instance of the table (a record
+in it), it will get you the next record, if you're calling it directly
+on the module it will treat the argument as key to start from and
+return you the next key.</p>
+  </section>
+</section>
+<section class="detail" id="next/1">
+
+  <div class="detail-header">
+    <a href="#next/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">next(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> next(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the next key or record in the table, see <code class="inline">mnesia:next</code>.</p><p>If you're calling this function from an instance of the table (a record
+in it), it will get you the next record, if you're calling it directly
+on the module it will treat the argument as key to start from and
+return you the next key.</p>
+  </section>
+</section>
+<section class="detail" id="options/0">
+
+  <div class="detail-header">
+    <a href="#options/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">options()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> options() :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()</pre>
+
+      </div>
+
+<p>The options passed when the table was defined.</p>
+  </section>
+</section>
+<section class="detail" id="ordered_set?/0">
+
+  <div class="detail-header">
+    <a href="#ordered_set?/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">ordered_set?()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> ordered_set?() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
+
+      </div>
+
+<p>Check if the table is an ordered set.</p>
+  </section>
+</section>
+<section class="detail" id="prev!/1">
+
+  <div class="detail-header">
+    <a href="#prev!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">prev!(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> prev!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the previous key or record in the table, see <code class="inline">mnesia:dirty_prev</code>.</p><p>If you're calling this function from an instance of the table (a record
+in it), it will get you the previous record, if you're calling it
+directly on the module it will treat the argument as key to start from
+and return you the previous key.</p>
+  </section>
+</section>
+<section class="detail" id="prev/1">
+
+  <div class="detail-header">
+    <a href="#prev/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">prev(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> prev(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Return the previous key or record in the table, see <code class="inline">mnesia:prev</code>.</p><p>If you're calling this function from an instance of the table (a record
+in it), it will get you the previous record, if you're calling it
+directly on the module it will treat the argument as key to start from
+and return you the previous key.</p>
+  </section>
+</section>
+<section class="detail" id="priority/1">
+
+  <div class="detail-header">
+    <a href="#priority/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">priority(value)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> priority(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>()) :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()</pre>
+
+      </div>
+
+<p>Change the table loading priority.</p>
+  </section>
+</section>
+<section class="detail" id="properties/0">
+
+  <div class="detail-header">
+    <a href="#properties/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">properties()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> properties() :: <a href="https://hexdocs.pm/elixir/Keyword.html#t:t/0">Keyword.t</a>()</pre>
+
+      </div>
+
+<p>Return properties of the table.</p>
+  </section>
+</section>
+<section class="detail" id="read!/1">
+
+  <div class="detail-header">
+    <a href="#read!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">read!(key)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> read!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Read a record from the table, see <code class="inline">mnesia:dirty_read</code>.</p><p>Unlike <code class="inline">mnesia:dirty_read</code> this returns either the record or nil.</p>
+  </section>
+</section>
+<section class="detail" id="read/2">
+
+    <span id="read/1"></span>
+
+  <div class="detail-header">
+    <a href="#read/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">read(key, lock \\ :read)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> read(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), :read | :write | :write!) :: <a href="#t:t/0">t</a>() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Read a record from the table with the given lock, see <code class="inline">mnesia:read</code>.</p><p>Unlike <code class="inline">mnesia:read</code> this returns either the record or nil.</p><h2 id="read/2-locks" class="section-heading">
+  <a href="#read/2-locks" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">locks</p>
+  </a>
+  Locks
+</h2>
+<ul><li><code class="inline">:write</code> sets a <code class="inline">:write</code> lock</li><li><code class="inline">:write!</code> sets a <code class="inline">:sticky_write</code> lock</li><li><code class="inline">:read</code> sets a <code class="inline">:read</code> lock</li></ul>
+  </section>
+</section>
+<section class="detail" id="read_at!/2">
+
+  <div class="detail-header">
+    <a href="#read_at!/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">read_at!(key, position)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> read_at!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: [<a href="#t:t/0">t</a>()] | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Read records from the table based on a secondary index given as position,
+see <code class="inline">mnesia:dirty_index_read</code>.</p>
+  </section>
+</section>
+<section class="detail" id="read_at/2">
+
+  <div class="detail-header">
+    <a href="#read_at/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">read_at(key, position)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> read_at(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: [<a href="#t:t/0">t</a>()] | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Read records from the table based on a secondary index given as position,
+see <code class="inline">mnesia:index_read</code>.</p>
+  </section>
+</section>
+<section class="detail" id="select!/1">
+
+  <div class="detail-header">
+    <a href="#select!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">select!(spec)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> select!(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: Selection.t() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Select records in the table using a match_spec, see
+<code class="inline">mnesia:dirty_select</code>.</p>
+  </section>
+</section>
+<section class="detail" id="select/1">
+
+  <div class="detail-header">
+    <a href="#select/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">select(spec)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> select(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: Amnesia.Table.Selection.t() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Select records in the table using a match_spec, see <code class="inline">mnesia:select</code>.</p>
+  </section>
+</section>
+<section class="detail" id="select/2">
+
+  <div class="detail-header">
+    <a href="#select/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">select(lock_or_limit, spec)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> select(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | :read | :write, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) ::
+  Amnesia.Table.Selection.t() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Select records in the given table using a match_spec passing a limit or a
+lock kind, see <code class="inline">mnesia:select</code>.</p>
+  </section>
+</section>
+<section class="detail" id="select/3">
+
+  <div class="detail-header">
+    <a href="#select/3" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">select(lock_or_limit, limit_or_lock, spec)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> select(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | :read | :write, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | :read | :write, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>()) ::
+  Amnesia.Table.Selection.t() | nil | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Select records in the given table using a match_spec passing a limit and a
+lock kind, see <code class="inline">mnesia:select</code>.</p>
+  </section>
+</section>
+<section class="detail" id="set?/0">
+
+  <div class="detail-header">
+    <a href="#set?/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">set?()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> set?() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
+
+      </div>
+
+<p>Check if the table is a set.</p>
+  </section>
+</section>
+<section class="detail" id="stream!/0">
+
+  <div class="detail-header">
+    <a href="#stream!/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">stream!()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> stream!() :: Amnesia.Table.Stream.t()</pre>
+
+      </div>
+
+<p>Return an iterator to use with the Enum functions using dirty
+operations to retrieve information.</p>
+  </section>
+</section>
+<section class="detail" id="stream/1">
+
+    <span id="stream/0"></span>
+
+  <div class="detail-header">
+    <a href="#stream/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">stream(lock \\ :read)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> stream(:read | :write | :write!) :: Amnesia.Table.Stream.t()</pre>
+
+      </div>
+
+<p>Return an iterator to use with Enum functions.</p>
+  </section>
+</section>
+<section class="detail" id="type/1">
+
+  <div class="detail-header">
+    <a href="#type/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">type(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> type(<a href="#t:t/0">t</a>()) :: :set | :ordered_set | :bag</pre>
+
+      </div>
+
+<p>Return the type of the table.</p>
+  </section>
+</section>
+<section class="detail" id="wait/1">
+
+    <span id="wait/0"></span>
+
+  <div class="detail-header">
+    <a href="#wait/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">wait(timeout \\ :infinity)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> wait(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | :infinity) :: :ok | {:timeout, [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()}</pre>
+
+      </div>
+
+<p>Wait for the table optionally with a timeout.</p>
+  </section>
+</section>
+<section class="detail" id="where!/2">
+
+    <span id="where!/1"></span>
+
+  <div class="detail-header">
+    <a href="#where!/2" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">where!(spec, options \\ [])</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Select records in the table using an Exquisite query, see
+<a href="https://hexdocs.pm/exquisite/0.1.8/Exquisite.html#match/2"><code class="inline">Exquisite.match/2</code></a> and <code class="inline">mnesia:dirty_select</code>.</p><h2 id="where!/2-options" class="section-heading">
+  <a href="#where!/2-options" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">options</p>
+  </a>
+  Options
+</h2>
+<ul><li><code class="inline">select</code> - Exquisite selector spec</li><li><code class="inline">qualified</code> - whether to set a name for the record or not</li></ul>
+  </section>
+</section>
+<section class="detail" id="where/2">
+
+    <span id="where/1"></span>
+
+  <div class="detail-header">
+    <a href="#where/2" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">where(spec, options \\ [])</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Select records in the table using an Exquisite query, see
+<a href="https://hexdocs.pm/exquisite/0.1.8/Exquisite.html#match/2"><code class="inline">Exquisite.match/2</code></a> and <code class="inline">mnesia:select</code>.</p><h2 id="where/2-options" class="section-heading">
+  <a href="#where/2-options" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">options</p>
+  </a>
+  Options
+</h2>
+<ul><li><code class="inline">limit</code> - sets the count of elements to select in every continuation</li><li><code class="inline">lock</code> - sets the kind of lock to use</li><li><code class="inline">select</code> - Exquisite selector spec</li><li><code class="inline">qualified</code> - whether to set a name for the record or not</li></ul>
+  </section>
+</section>
+<section class="detail" id="write!/1">
+
+  <div class="detail-header">
+    <a href="#write!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">write!(self)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> write!(<a href="#t:t/0">t</a>()) :: <a href="#t:t/0">t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">no_return</a>()</pre>
+
+      </div>
+
+<p>Write the record to the table, see <code class="inline">mnesia:dirty_write</code>.</p><p>Missing fields tagged as autoincrement will be incremented with the
+counter if <code class="inline">nil</code>.</p>
+  </section>
+</section>
+<section class="detail" id="write/2">
+
+    <span id="write/1"></span>
+
+  <div class="detail-header">
+    <a href="#write/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">write(self, lock \\ :write)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L25" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Write the record to the table, see <code class="inline">mnesia:write</code>.</p><p>Missing fields tagged as autoincrement will be incremented with the
+counter if <code class="inline">nil</code>.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+                <a href="https://preview.hex.pm/preview/noizu_core/1.0.26/show/lib/elixir_core/fast_global/schema/database.ex">(current file)</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

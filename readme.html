@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>README — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="extras">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/noizu/ElixirCore/blob/master/README.md#L1" title="View Source" class="view-source" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span>README</span>
+</h1>
+
+<blockquote><p><img src="assets/noizu-logo2.png" alt="Noizu Labs" title="Noizu Labs, Inc."/></p></blockquote><h1>Elixir Core <a href="https://dl.circleci.com/status-badge/redirect/gh/noizu/ElixirCore/tree/master"><img src="https://dl.circleci.com/status-badge/img/gh/noizu/ElixirCore/tree/master.svg?style=svg" alt="CircleCI"/></a></h1><p>Common protocols and convenience methods leveraged by other Noizu Labs, Inc. frameworks.</p><h1>Noizu.ERP Protocol</h1><p>The Noizu.ERP protocol allows ref tuples <code class="inline">{:ref, Entity, identifier}</code> to be used in place of nesting full objects in other objects. It also supports encoding/decoding those ref tuples to and from strings for use in RESTful APIs.</p><p>Behind the scenes, the ref tuple <code class="inline">{:ref, Module, identifier}</code> unpacks itself by calling into Module, which must adhere to the protocol and provide local copies of the protocol options.</p><p>Example usage:</p><pre><code class="makeup elixir" translate="no"><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">entity</span><span class="p" data-group-id="4671348673-1">(</span><span class="p" data-group-id="4671348673-2">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">Noizu.ElixirCore.CallerEntity</span><span class="p">,</span><span class="w"> </span><span class="ss">:system</span><span class="p" data-group-id="4671348673-2">}</span><span class="p" data-group-id="4671348673-1">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="4671348673-3">%</span><span class="nc" data-group-id="4671348673-3">Noizu.ElixirCore.CallerEntity</span><span class="p" data-group-id="4671348673-3">{</span><span class="ss">identifier</span><span class="p">:</span><span class="w"> </span><span class="ss">:system</span><span class="p" data-group-id="4671348673-3">}</span><span class="w">
+</span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">ref</span><span class="p" data-group-id="4671348673-4">(</span><span class="p" data-group-id="4671348673-5">%</span><span class="nc" data-group-id="4671348673-5">Noizu.ElixirCore.CallerEntity</span><span class="p" data-group-id="4671348673-5">{</span><span class="ss">identifier</span><span class="p">:</span><span class="w"> </span><span class="ss">:system</span><span class="p" data-group-id="4671348673-5">}</span><span class="p" data-group-id="4671348673-4">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="4671348673-6">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">Noizu.ElixirCore.CallerEntity</span><span class="p">,</span><span class="w"> </span><span class="ss">:system</span><span class="p" data-group-id="4671348673-6">}</span><span class="w">
+</span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">sref</span><span class="p" data-group-id="4671348673-7">(</span><span class="p" data-group-id="4671348673-8">%</span><span class="nc" data-group-id="4671348673-8">Noizu.ElixirCore.CallerEntity</span><span class="p" data-group-id="4671348673-8">{</span><span class="ss">identifier</span><span class="p">:</span><span class="w"> </span><span class="ss">:system</span><span class="p" data-group-id="4671348673-8">}</span><span class="p" data-group-id="4671348673-7">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s">&quot;ref.noizu-caller.system&quot;</span><span class="w">
+</span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">ref</span><span class="p" data-group-id="4671348673-9">(</span><span class="s">&quot;ref.noizu-caller.system&quot;</span><span class="p" data-group-id="4671348673-9">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="p" data-group-id="4671348673-10">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">Noizu.ElixirCore.CallerEntity</span><span class="p">,</span><span class="w"> </span><span class="ss">:system</span><span class="p" data-group-id="4671348673-10">}</span><span class="w">
+</span><span class="nc">Noizu.ERP</span><span class="o">.</span><span class="n">ref</span><span class="p" data-group-id="4671348673-11">(</span><span class="s">&quot;george&quot;</span><span class="p" data-group-id="4671348673-11">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="no">nil</span></code></pre><p>The methods <code class="inline">[id/1, ref/1, sref/1, entity/1,2, entity!/1,2, record/1,2, record!/1,2]</code> may all be used interchangeably on ref strings, tuples, or actual entities without having to know in advance what type of object you are accessing.</p><h2 id="new-additions" class="section-heading">
+  <a href="#new-additions" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">new-additions</p>
+  </a>
+  New Additions
+</h2>
+<p>Recently added <code class="inline">id_ok/1, ref_ok/1, sref_ok/1, entity_ok/1,2, entity_ok!/1,2</code> mirror <code class="inline">id/1, ref/1, sref/1, entity/1,2, entity!/1,2</code> but return <code class="inline">{:ok, value} | {:error, details}</code> in their place for use in <code class="inline">with</code> and other pattern matching scenarios.</p><h1>CallingContext</h1><p>The CallingContext is a context object used to track a caller's state and permissions, along with a unique request identifier for tracking requests as they travel through the layers of your application. It is useful for log collation, permission checks, and access auditing.</p><p>The basic structure of the CallingContext object is as follows:</p><pre><code class="makeup elixir" translate="no"><span class="p" data-group-id="5893070360-1">%</span><span class="nc" data-group-id="5893070360-1">CallingContext</span><span class="p" data-group-id="5893070360-1">{</span><span class="w">
+  </span><span class="ss">caller</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5893070360-2">{</span><span class="ss">:ref</span><span class="p">,</span><span class="w"> </span><span class="nc">User.Entity</span><span class="p">,</span><span class="w"> </span><span class="mi">1234</span><span class="p" data-group-id="5893070360-2">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ajlakjfdowpoewpfjald&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">reason</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;New User Setup&quot;</span><span class="p">,</span><span class="w">
+  </span><span class="ss">auth</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5893070360-3">%{</span><span class="ss">permissions</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5893070360-4">%{</span><span class="ss">admin</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p">,</span><span class="w"> </span><span class="ss">system</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p">,</span><span class="w"> </span><span class="ss">internal</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p">,</span><span class="w"> </span><span class="ss">manage_users</span><span class="p">:</span><span class="w"> </span><span class="no">true</span><span class="p" data-group-id="5893070360-4">}</span><span class="p" data-group-id="5893070360-3">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">options</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5893070360-5">%{</span><span class="p" data-group-id="5893070360-5">}</span><span class="p">,</span><span class="w">
+  </span><span class="ss">time</span><span class="p">:</span><span class="w"> </span><span class="nc">DateTime</span><span class="o">.</span><span class="n">t</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">nil</span><span class="p">,</span><span class="w">
+  </span><span class="ss">outer_context</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="5893070360-6">%</span><span class="nc" data-group-id="5893070360-6">CallingContext</span><span class="p" data-group-id="5893070360-6">{</span><span class="p" data-group-id="5893070360-6">}</span><span class="w">
+</span><span class="p" data-group-id="5893070360-1">}</span></code></pre><h2 id="configuration" class="section-heading">
+  <a href="#configuration" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">configuration</p>
+  </a>
+  Configuration
+</h2>
+<p>If you have custom ACL/Authorization Bearer tokens that you want to extract your caller/permissions from, you can use the following configuration settings:</p><ul><li><p>Request ID Extraction Strategy: <code class="inline">{:module, :function}</code> or <code class="inline">function/2</code> that accepts <code class="inline">(conn, default)</code> and pulls the request ID (<code class="inline">CallingContext.token</code>) from <code class="inline">Plug.Conn</code>.</p><blockquote><p>config :noizu_core, token_strategy: {Noizu.ElixirCore.CallingContext, :extract_token}</p></blockquote></li><li><p>Request Reason Extraction Strategy: <code class="inline">{:module, :function}</code> or <code class="inline">function/2</code> that accepts <code class="inline">(conn, default)</code> and pulls the request reason (<code class="inline">CallingContext.reason</code>) from <code class="inline">Plug.Conn</code>.</p><blockquote><p>config :noizu_core, token_strategy: {Noizu.ElixirCore.CallingContext, :extract_reason}</p></blockquote></li><li><p>Request Caller Extraction Strategy: <code class="inline">{:module, :function}</code> or <code class="inline">function/2</code> that accepts <code class="inline">(conn, default)</code> and pulls the request caller (<code class="inline">CallingContext.caller</code>) from <code class="inline">Plug.Conn</code>.</p><blockquote><p>config :noizu_core, get_plug_caller: {Noizu.ElixirCore.CallingContext, :extract_caller}</p></blockquote></li><li><p>Request Caller's Auth Map Extraction Strategy: <code class="inline">{:module, :function}</code> or <code class="inline">function/2</code> that accepts <code class="inline">(conn, default)</code> and returns the effective permission map (<code class="inline">ContextCaller.auth</code>).</p><blockquote><p>config :noizu_core, acl_strategy: {Noizu.ElixirCore.CallingContext, :default_auth}</p></blockquote></li></ul><p>Alternatively, you can extract the caller and effective permission list map on your own and use the following functions:</p><ul><li><code class="inline">Noizu.ElixirCore.CallingContext.new_conn(your_caller, your_caller_auth_map, %Plug.Conn{}, options)</code></li><li><code class="inline">Noizu.ElixirCore.CallingContext.new(your_caller, your_caller_auth_map, options)</code></li></ul><h2 id="examples" class="section-heading">
+  <a href="#examples" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">examples</p>
+  </a>
+  Examples
+</h2>
+<h3 id="creation" class="section-heading">
+  <a href="#creation" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">creation</p>
+  </a>
+  Creation
+</h3>
+<p>Create a new Calling Context with the default Admin user and permissions.</p><blockquote><p>Noizu.ElixirCore.CallingContext.admin()</p></blockquote><p>Create a new Calling Context with the default System user and permissions.</p><blockquote><p>Noizu.ElixirCore.CallingContext.system()</p></blockquote><p>Create a new Calling Context with the default Internal user and permissions.</p><blockquote><p>Noizu.ElixirCore.CallingContext.internal()</p></blockquote><p>Create a new Calling Context with the default Restricted user and permissions.</p><blockquote><p>Noizu.ElixirCore.CallingContext.restricted()</p></blockquote><p>Create a new context by pulling the request caller, auth map, token, and reason from Plug.Conn using user-provided extract methods.</p><blockquote><p>Noizu.ElixirCore.CallingContext.new_conn(conn, options)</p></blockquote><h3 id="logging" class="section-heading">
+  <a href="#logging" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">logging</p>
+  </a>
+  Logging
+</h3>
+<p>Add context metadata to Logger. Example: <code class="inline">[context_token: context.token, context_time: context.time, context_caller: context.caller] ++ context.options.log_filter</code></p><blockquote><p>Noizu.ElixirCore.CallingContext.meta_update(context)</p></blockquote><p>Strip context metadata from Logger.</p><blockquote><p>Noizu.ElixirCore.CallingContext.meta_strip(context)</p></blockquote><p>Get context metadata to append to Logger.</p><blockquote><p>Logger.info(&quot;Your Log&quot;, Noizu.ElixirCore.CallingContext.metadata(context))</p></blockquote><h3 id="guards-extensions" class="section-heading">
+  <a href="#guards-extensions" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">guards-extensions</p>
+  </a>
+  Guards Extensions
+</h3>
+<p>Check if the context has admin, internal, system, or restricted auth flags, etc.</p><pre><code class="makeup elixir" translate="no"><span class="k">cond</span><span class="w"> </span><span class="k" data-group-id="3277613294-1">do</span><span class="w">
+  </span><span class="n">is_admin_caller</span><span class="p" data-group-id="3277613294-2">(</span><span class="n">context</span><span class="p" data-group-id="3277613294-2">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:admin</span><span class="w">
+  </span><span class="n">is_system_caller</span><span class="p" data-group-id="3277613294-3">(</span><span class="n">context</span><span class="p" data-group-id="3277613294-3">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:system</span><span class="w">
+  </span><span class="n">is_internal_caller</span><span class="p" data-group-id="3277613294-4">(</span><span class="n">context</span><span class="p" data-group-id="3277613294-4">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:internal</span><span class="w">
+  </span><span class="n">is_restricted_caller</span><span class="p" data-group-id="3277613294-5">(</span><span class="n">context</span><span class="p" data-group-id="3277613294-5">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:restricted</span><span class="w">
+  </span><span class="n">permission?</span><span class="p" data-group-id="3277613294-6">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="ss">:manage_users</span><span class="p" data-group-id="3277613294-6">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:caller_can_manage_users</span><span class="w">
+  </span><span class="n">permission?</span><span class="p" data-group-id="3277613294-7">(</span><span class="n">context</span><span class="p">,</span><span class="w"> </span><span class="ss">:security_level</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p" data-group-id="3277613294-7">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:caller_has_level_5_clearance</span><span class="w">
+  </span><span class="n">has_call_reason?</span><span class="p" data-group-id="3277613294-8">(</span><span class="n">context</span><span class="p" data-group-id="3277613294-8">)</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:context_has_call_reason</span><span class="w">
+</span><span class="k" data-group-id="3277613294-1">end</span></code></pre><h1>Custom Guards</h1><p>Some custom guards are provided to make authentication checks and code readability cleaner:</p><table><thead><tr><th style="text-align: left;">Custom Guard</th><th style="text-align: left;">Purpose</th></tr></thead><tbody><tr><td style="text-align: left;">is_caller_context(context)</td><td style="text-align: left;">Check if the variable is a <code class="inline">%CallingContext{}</code> struct</td></tr><tr><td style="text-align: left;">caller_context_with_permissions(context)</td><td style="text-align: left;">Check if the variable is a <code class="inline">%CallingContext{}</code> struct with <code class="inline">context.auth.permissions</code> map</td></tr><tr><td style="text-align: left;">is_system_caller(context)</td><td style="text-align: left;">Check if the context has system-level permission</td></tr><tr><td style="text-align: left;">is_admin_caller(context)</td><td style="text-align: left;">Check if the context has admin-level permission</td></tr><tr><td style="text-align: left;">is_internal_caller(context)</td><td style="text-align: left;">Check if the context has internal-level permission</td></tr><tr><td style="text-align: left;">is_restricted_caller(context)</td><td style="text-align: left;">Check if the context has restricted-level permission</td></tr><tr><td style="text-align: left;">permission?(context, check)</td><td style="text-align: left;">Check if the context has the specified permission with a truthy value</td></tr><tr><td style="text-align: left;">permission?(context, check, value)</td><td style="text-align: left;">Check if the context has the specified permission with a specific value</td></tr><tr><td style="text-align: left;">has_call_reason?(context)</td><td style="text-align: left;">Check if the context's <code class="inline">call_reason</code> is set</td></tr><tr><td style="text-align: left;">is_ref(value)</td><td style="text-align: left;">Check if the object is a <code class="inline">{:ref, entity, id}</code> tuple</td></tr><tr><td style="text-align: left;">is_sref(value)</td><td style="text-align: left;">Check if the object is a &quot;ref.code-name.id&quot; string reference</td></tr><tr><td style="text-align: left;">entity_ref(value)</td><td style="text-align: left;">Check if the object is a ref tuple or struct type with a <code class="inline">vsn</code> field</td></tr></tbody></table><h1>Option Helper</h1><p>Option helpers make it easier to define restricted/optional requirements and default constraints for use in metaprogramming or parameter acceptance. The following test snippet provides a detailed example of how to use option helpers:</p><p><a href="test/lib/option_test.exs">Test code example</a></p><h1>Testing Utility - Partial Object Check</h1><p>Partial Object checks allow you to compare two objects based on specific fields, with the ability to restrict allowed values or specify optional fields. This is useful for creating custom assert methods that only check specific fields of an object. The Partial Object Check scans the whole object and reports all constraint violations at once.</p><p>Here are some code examples of how to use the Partial Object Check utility:</p><p><a href="test/lib/partial_object_check_test.exs">Test code example</a></p><h1>Convenience Structs</h1><p>Noizu.ElixirCore.CallerEntity: Represents a caller entity with an identifier.</p><p>Noizu.ElixirCore.UnauthenticatedCallerEntity: Represents an unauthenticated caller entity.</p><p>Feel free to explore the code and leverage these convenient functionalities in your projects!</p>
+<div class="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="api-reference.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+API Reference
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+  </div>
+</div>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+                <a href="https://preview.hex.pm/preview/noizu_core/1.0.26/show/README.md">(current file)</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

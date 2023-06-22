@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>Noizu.FastGlobal.Database — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" title="View Source" class="view-source" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Noizu.FastGlobal.Database</span> 
+  <small class="app-vsn" translate="no">(noizu_core v1.0.26)</small>
+
+</h1>
+
+
+  <section id="moduledoc">
+<p>The <a href="Noizu.FastGlobal.Database.html#content"><code class="inline">Noizu.FastGlobal.Database</code></a> module defines the schema for the FastGlobal Database.</p><p>This module uses the <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.html"><code class="inline">Amnesia</code></a> library, a simple and powerful library for working with Mnesia, the Erlang's built-in distributed real-time database.</p><h1>Tables</h1><p>The database consists of the following tables:</p><ul><li><code class="inline">Settings</code>: stores the settings for the FastGlobal database.</li></ul><h1>Code Review</h1><p>The code is simple and straightforward, following the conventions of the <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.html"><code class="inline">Amnesia</code></a> library. The schema definition is clear, and the use of the <code class="inline">deftable</code> macro makes it easy to understand the structure of the database tables. The <code class="inline">Settings</code> table is well-defined, with clearly named fields. The use of the <code class="inline">type: :set</code> option indicates that each entry in the table should be unique. However, it should be noted that no indexes are defined for the table, which may impact performance if the table grows large and queries are performed on non-key fields. The <code class="inline">@type</code> specification for the <code class="inline">Settings</code> struct is a good practice, as it provides type checking and documentation benefits.</p>
+  </section>
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#__using__/1" translate="no">__using__(opts)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Alias all the table names in the current scope and require what's
+needed.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#create!/1" translate="no">create!(copying \\ [])</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Create the database, it calls <code class="inline">.create</code> on every defined table, raises
+in case of error.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#create/1" translate="no">create(copying \\ [])</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Create the database, it calls <code class="inline">.create</code> on every defined table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#destroy!/0" translate="no">destroy!()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Destroy the database, it calls <code class="inline">.destroy</code> on every defined table,
+raises in case of error.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#destroy/0" translate="no">destroy()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Destroy the database, it calls <code class="inline">.destroy</code> on every defined table.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#metadata/0" translate="no">metadata()</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#tables/0" translate="no">tables()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>List of atoms of the defined tables in the database.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#wait/1" translate="no">wait(timeout \\ :infinity)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Wait for the database to be loaded.</p></div>
+
+      </div>
+
+  </div>
+
+  </section>
+
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Functions
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="__using__/1">
+
+  <div class="detail-header">
+    <a href="#__using__/1" class="detail-link" title="Link to this macro">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this macro</span>
+    </a>
+    <h1 class="signature" translate="no">__using__(opts)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+      <span class="note">(macro)</span>
+
+  </div>
+
+  <section class="docstring">
+
+<p>Alias all the table names in the current scope and require what's
+needed.</p>
+  </section>
+</section>
+<section class="detail" id="create!/1">
+
+    <span id="create!/0"></span>
+
+  <div class="detail-header">
+    <a href="#create!/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">create!(copying \\ [])</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> create!(<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:c/0">Amnesia.Table.c</a>()) :: [<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()]</pre>
+
+      </div>
+
+<p>Create the database, it calls <code class="inline">.create</code> on every defined table, raises
+in case of error.</p>
+  </section>
+</section>
+<section class="detail" id="create/1">
+
+    <span id="create/0"></span>
+
+  <div class="detail-header">
+    <a href="#create/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">create(copying \\ [])</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> create(<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:c/0">Amnesia.Table.c</a>()) :: [<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()]</pre>
+
+      </div>
+
+<p>Create the database, it calls <code class="inline">.create</code> on every defined table.</p>
+  </section>
+</section>
+<section class="detail" id="destroy!/0">
+
+  <div class="detail-header">
+    <a href="#destroy!/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">destroy!()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> destroy!() :: [<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()]</pre>
+
+      </div>
+
+<p>Destroy the database, it calls <code class="inline">.destroy</code> on every defined table,
+raises in case of error.</p>
+  </section>
+</section>
+<section class="detail" id="destroy/0">
+
+  <div class="detail-header">
+    <a href="#destroy/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">destroy()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> destroy() :: [<a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Table.html#t:o/0">Amnesia.Table.o</a>()]</pre>
+
+      </div>
+
+<p>Destroy the database, it calls <code class="inline">.destroy</code> on every defined table.</p>
+  </section>
+</section>
+<section class="detail" id="metadata/0">
+
+  <div class="detail-header">
+    <a href="#metadata/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">metadata()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> metadata() :: <a href="https://hexdocs.pm/amnesia/0.2.7/Amnesia.Metadata.html#t:t/0">Amnesia.Metadata.t</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="tables/0">
+
+  <div class="detail-header">
+    <a href="#tables/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">tables()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> tables() :: [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()]</pre>
+
+      </div>
+
+<p>List of atoms of the defined tables in the database.</p>
+  </section>
+</section>
+<section class="detail" id="wait/1">
+
+    <span id="wait/0"></span>
+
+  <div class="detail-header">
+    <a href="#wait/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">wait(timeout \\ :infinity)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/database.ex#L8" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@spec</span> wait(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">integer</a>() | :infinity) :: :ok | {:timeout, [<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()]} | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()}</pre>
+
+      </div>
+
+<p>Wait for the database to be loaded.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+                <a href="https://preview.hex.pm/preview/noizu_core/1.0.26/show/lib/elixir_core/fast_global/schema/database.ex">(current file)</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

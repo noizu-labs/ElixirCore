@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>Noizu.ElixirCore.CallingContext — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L6" title="View Source" class="view-source" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Noizu.ElixirCore.CallingContext</span> 
+  <small class="app-vsn" translate="no">(noizu_core v1.0.26)</small>
+
+</h1>
+
+
+  <section id="moduledoc">
+<h2 id="module-callingcontext" class="section-heading">
+  <a href="#module-callingcontext" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">callingcontext</p>
+  </a>
+  CallingContext
+</h2>
+<p>Context object used to track a caller's state and permissions along
+with unique request identifier for tracking requests as they travel through
+the layers in your application. Useful for log collation, permission checks,
+access auditing.</p><h3 id="module-application-config-options-and-defaults" class="section-heading">
+  <a href="#module-application-config-options-and-defaults" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">application-config-options-and-defaults</p>
+  </a>
+  Application Config Options and Defaults
+</h3>
+<ul><li><p>Include Default IO.inspect formatter defimpl for CallingContext
+<code class="inline">config :noizu_core, inspect_calling_context: true</code></p></li><li><p>Request ID Extraction Strategy.
+{m,f}  or function2 that accepts (conn, default) and pulls request id (CallingContext.token) from Plug.Conn.
+<code class="inline">config :noizu_core, token_strategy: {Noizu.ElixirCore.CallingContext, :extract_token} - Request Reason Extraction Strategy. {m,f} or function2 that accepts (conn, default) and pulls request reason (CallingContext.reason) from Plug.Conn.</code>config :noizu_core, token_strategy: {Noizu.ElixirCore.CallingContext, :extract_reason}</p></li><li><p>Request Caller Extraction Strategy.
+{m,f}  or function2 that accepts (conn, default) and pulls request Caller (CallingContext.caller) from Plug.Conn
+<code class="inline">config :noizu_core, get_plug_caller: {Noizu.ElixirCore.CallingContext, :extract_caller} - Request Caller's Auth Map Extraction Strategy. {m,f} or function2 that accepts (conn, default) and returns effective permission map ContextCaller.auth.</code>config :noizu_core, acl_strategy: {Noizu.ElixirCore.CallingContext, :default_auth}</p></li><li><p>Default Blank/Empty Request Reason
+<code class="inline">config :noizu_core, default_request_reason: :none</code></p></li><li><p>Default Restricted User Reference or Object
+<code class="inline">config :noizu_core, default_internal_user: {:ref, Noizu.ElixirCore.CallerEntity, :restricted}</code></p></li><li><p>Default Internal User Reference or Object
+<code class="inline">config :noizu_core, default_internal_user: {:ref, Noizu.ElixirCore.CallerEntity, :internal}</code></p></li><li><p>Default System User Reference or Object
+<code class="inline">config :noizu_core, default_system_user: {:ref, Noizu.ElixirCore.CallerEntity, :system}</code></p></li><li><p>Default Admin User Reference or Object
+<code class="inline">config :noizu_core, default_admin_user: {:ref, Noizu.ElixirCore.CallerEntity, :admin}</code></p></li><li><p>Default Restricted User Auth Map
+<code class="inline">config :noizu_core, default_internal_auth: %{permissions: %{restricted: true}}</code></p></li><li><p>Default Internal User Auth Map
+<code class="inline">config :noizu_core, default_internal_auth: %{permissions: %{internal: true}}</code></p></li><li><p>Default Ssy User Auth Map
+<code class="inline">config :noizu_core, default_system_auth: %{permissions: %{system: true, internal: true}}</code></p></li><li><p>Default Admin User Auth Map
+<code class="inline">config :noizu_core, default_admin_auth: %{permissions: %{admin: true, system: true, internal: true}}</code></p></li></ul>
+  </section>
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#t:t/0" translate="no">t()</a>
+
+        </div>
+
+      </div>
+
+  </div>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#admin/0" translate="no">admin()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Create new calling context with default admin user caller and permissions.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#admin/1" translate="no">admin(this)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#admin/2" translate="no">admin(conn, options)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#default_reason/2" translate="no">default_reason(conn, default)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Default logic for grabbing conn's request reason. Using either config noizu_core, extract_reason: {m,f} or included extract_token method.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#default_token/2" translate="no">default_token(conn, default)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Default logic for grabbing conn's request id. Using either config noizu_core, token_strategy: {m,f} or included extract_token method.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#extract_caller/2" translate="no">extract_caller(conn, default)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Extract caller permission level from Plug.Conn. (Currently only depends on default value)</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#extract_reason/2" translate="no">extract_reason(conn, default)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Extract Request Reason from Plug.Conn.
+  Useful for logging purposes/exception handling messaging/tracing on backend.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#extract_token/2" translate="no">extract_token(conn, default)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Extract Request Id Token from Plug.Conn or Generate UUID if non found.
+  Attached to CallingContext to include in log output for log collation.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#get_auth/2" translate="no">get_auth(caller, options)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get caller effective authentication map.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#get_caller/2" translate="no">get_caller(conn, default \\ :unauthenticated)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get caller from Plug.Conn</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#get_reason/2" translate="no">get_reason(conn, default \\ nil)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get call reason from Plug.Conn</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#get_token/2" translate="no">get_token(conn, default \\ :generate)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Get call request id from Plug.Conn</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#internal/0" translate="no">internal()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Create new calling context with default internal user caller and permissions.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#internal/1" translate="no">internal(this)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#internal/2" translate="no">internal(conn, options)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#meta_strip/1" translate="no">meta_strip(context)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Strip CallingContext meta data from Logger.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#meta_update/1" translate="no">meta_update(context)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Update Logger with CallingContext meta data.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#metadata/1" translate="no">metadata(context)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Extract CallingContext meta data for Logger</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#new/3" translate="no">new(caller, auth, options)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Generate new Context.Caller by passing in Caller, Auth and options.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#new_conn/2" translate="no">new_conn(conn, options \\ %{logger_init: true})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Prepare Context object with for given conn. Sets Process meta data by default.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#new_conn/4" translate="no">new_conn(caller, auth, conn, options \\ %{logger_init: true})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Prepare Context object with given caller/auth and conn request details. Sets Process meta data by default.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#restricted/0" translate="no">restricted()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Create new calling context with default restricted user caller and permissions.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#restricted/1" translate="no">restricted(this)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#restricted/2" translate="no">restricted(conn, options)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#system/0" translate="no">system()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>  Create new calling context with default system user caller and permissions.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#system/1" translate="no">system(this)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#system/2" translate="no">system(conn, options)</a>
+
+        </div>
+
+      </div>
+
+  </div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Types
+    </h1>
+    <div class="types-list">
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">t()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L79" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> t() :: %Noizu.ElixirCore.CallingContext{
+  auth: Any,
+  caller: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">tuple</a>(),
+  options: Map.t(),
+  outer_context: CalingContext.t(),
+  reason: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(),
+  time: <a href="https://hexdocs.pm/elixir/DateTime.html#t:t/0">DateTime.t</a>() | nil,
+  token: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>(),
+  vsn: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">float</a>()
+}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Functions
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="admin/0">
+
+  <div class="detail-header">
+    <a href="#admin/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">admin()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L306" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Create new calling context with default admin user caller and permissions.</p>
+  </section>
+</section>
+<section class="detail" id="admin/1">
+
+  <div class="detail-header">
+    <a href="#admin/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">admin(this)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L307" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="admin/2">
+
+  <div class="detail-header">
+    <a href="#admin/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">admin(conn, options)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L310" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="default_reason/2">
+
+  <div class="detail-header">
+    <a href="#default_reason/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">default_reason(conn, default)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L134" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Default logic for grabbing conn's request reason. Using either config noizu_core, extract_reason: {m,f} or included extract_token method.</p>
+  </section>
+</section>
+<section class="detail" id="default_token/2">
+
+  <div class="detail-header">
+    <a href="#default_token/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">default_token(conn, default)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L108" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Default logic for grabbing conn's request id. Using either config noizu_core, token_strategy: {m,f} or included extract_token method.</p>
+  </section>
+</section>
+<section class="detail" id="extract_caller/2">
+
+  <div class="detail-header">
+    <a href="#extract_caller/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">extract_caller(conn, default)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L157" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Extract caller permission level from Plug.Conn. (Currently only depends on default value)</p>
+  </section>
+</section>
+<section class="detail" id="extract_reason/2">
+
+  <div class="detail-header">
+    <a href="#extract_reason/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">extract_reason(conn, default)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L146" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Extract Request Reason from Plug.Conn.
+  Useful for logging purposes/exception handling messaging/tracing on backend.</p>
+  </section>
+</section>
+<section class="detail" id="extract_token/2">
+
+  <div class="detail-header">
+    <a href="#extract_token/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">extract_token(conn, default)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L120" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Extract Request Id Token from Plug.Conn or Generate UUID if non found.
+  Attached to CallingContext to include in log output for log collation.</p>
+  </section>
+</section>
+<section class="detail" id="get_auth/2">
+
+  <div class="detail-header">
+    <a href="#get_auth/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get_auth(caller, options)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L209" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Get caller effective authentication map.</p>
+  </section>
+</section>
+<section class="detail" id="get_caller/2">
+
+    <span id="get_caller/1"></span>
+
+  <div class="detail-header">
+    <a href="#get_caller/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get_caller(conn, default \\ :unauthenticated)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L198" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Get caller from Plug.Conn</p>
+  </section>
+</section>
+<section class="detail" id="get_reason/2">
+
+    <span id="get_reason/1"></span>
+
+  <div class="detail-header">
+    <a href="#get_reason/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get_reason(conn, default \\ nil)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L191" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Get call reason from Plug.Conn</p>
+  </section>
+</section>
+<section class="detail" id="get_token/2">
+
+    <span id="get_token/1"></span>
+
+  <div class="detail-header">
+    <a href="#get_token/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">get_token(conn, default \\ :generate)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L184" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Get call request id from Plug.Conn</p>
+  </section>
+</section>
+<section class="detail" id="internal/0">
+
+  <div class="detail-header">
+    <a href="#internal/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">internal()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L266" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Create new calling context with default internal user caller and permissions.</p>
+  </section>
+</section>
+<section class="detail" id="internal/1">
+
+  <div class="detail-header">
+    <a href="#internal/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">internal(this)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L267" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="internal/2">
+
+  <div class="detail-header">
+    <a href="#internal/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">internal(conn, options)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L270" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="meta_strip/1">
+
+  <div class="detail-header">
+    <a href="#meta_strip/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">meta_strip(context)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L329" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Strip CallingContext meta data from Logger.</p>
+  </section>
+</section>
+<section class="detail" id="meta_update/1">
+
+  <div class="detail-header">
+    <a href="#meta_update/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">meta_update(context)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L337" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Update Logger with CallingContext meta data.</p>
+  </section>
+</section>
+<section class="detail" id="metadata/1">
+
+  <div class="detail-header">
+    <a href="#metadata/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">metadata(context)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L315" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Extract CallingContext meta data for Logger</p>
+  </section>
+</section>
+<section class="detail" id="new/3">
+
+  <div class="detail-header">
+    <a href="#new/3" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">new(caller, auth, options)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L252" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Generate new Context.Caller by passing in Caller, Auth and options.</p>
+  </section>
+</section>
+<section class="detail" id="new_conn/2">
+
+    <span id="new_conn/1"></span>
+
+  <div class="detail-header">
+    <a href="#new_conn/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">new_conn(conn, options \\ %{logger_init: true})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L235" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Prepare Context object with for given conn. Sets Process meta data by default.</p>
+  </section>
+</section>
+<section class="detail" id="new_conn/4">
+
+    <span id="new_conn/3"></span>
+
+  <div class="detail-header">
+    <a href="#new_conn/4" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">new_conn(caller, auth, conn, options \\ %{logger_init: true})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L220" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Prepare Context object with given caller/auth and conn request details. Sets Process meta data by default.</p>
+  </section>
+</section>
+<section class="detail" id="restricted/0">
+
+  <div class="detail-header">
+    <a href="#restricted/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">restricted()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L294" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Create new calling context with default restricted user caller and permissions.</p>
+  </section>
+</section>
+<section class="detail" id="restricted/1">
+
+  <div class="detail-header">
+    <a href="#restricted/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">restricted(this)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L295" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="restricted/2">
+
+  <div class="detail-header">
+    <a href="#restricted/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">restricted(conn, options)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L298" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="system/0">
+
+  <div class="detail-header">
+    <a href="#system/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">system()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L280" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>  Create new calling context with default system user caller and permissions.</p>
+  </section>
+</section>
+<section class="detail" id="system/1">
+
+  <div class="detail-header">
+    <a href="#system/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">system(this)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L281" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="system/2">
+
+  <div class="detail-header">
+    <a href="#system/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">system(conn, options)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/context/calling_context.ex#L284" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+                <a href="https://preview.hex.pm/preview/noizu_core/1.0.26/show/lib/elixir_core/context/calling_context.ex">(current file)</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

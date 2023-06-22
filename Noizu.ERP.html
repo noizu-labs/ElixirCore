@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>Noizu.ERP — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L6" title="View Source" class="view-source" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Noizu.ERP</span> <small>protocol</small>
+  <small class="app-vsn" translate="no">(noizu_core v1.0.26)</small>
+
+</h1>
+
+
+  <section id="moduledoc">
+<p>The Entity Reference Protocol (ERP) is a key component in the Noizu framework, used for handling references to
+entities in a uniform and flexible manner. The protocol defines a standard set of functions that must be implemented by
+any type that adheres to the protocol. This allows for a consistent way to interact with different types of entities
+(e.g., database records, structs, etc.) without having to know their specific implementation details.</p><h2 id="module-purpose" class="section-heading">
+  <a href="#module-purpose" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">purpose</p>
+  </a>
+  Purpose
+</h2>
+<p>The purpose of the ERP is to provide a consistent interface for working with references to entities. This allows a
+table to reference various other entity types in a generic way. It also provides a straight forward mechanism for
+handling references without knowing in advance if they have been expanded or their exact type.</p><h2 id="module-usage" class="section-heading">
+  <a href="#module-usage" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">usage</p>
+  </a>
+  Usage:
+</h2>
+<p>The ERP protocol is used whenever there is a need to reference an entity. This can be in the form of a ERP reference,
+a string reference, or the actual object. The protocol provides functions to convert between these different
+forms (i.e., <code class="inline">ref</code>, <code class="inline">sref</code>, <code class="inline">entity</code>, and <code class="inline">record</code>).
+This makes it easy to work with different types of references without having to know the specific
+details of the entity being referenced.</p><p>The protocol also includes functions that return either just the value (<code class="inline">id</code>, <code class="inline">ref</code>, <code class="inline">sref</code>, <code class="inline">entity</code>, <code class="inline">record</code>)
+or the same but wrapped in an <code class="inline">{:ok, term}</code> or <code class="inline">{:error, details}</code> tuple
+for matching (<code class="inline">id_ok</code>, <code class="inline">ref_ok</code>, <code class="inline">sref_ok</code>, <code class="inline">entity_ok</code>, <code class="inline">entity_ok!</code>).</p><p>This provides flexibility in handling both the normal and error cases.</p><h2 id="module-why" class="section-heading">
+  <a href="#module-why" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">why</p>
+  </a>
+  Why
+</h2>
+<p>The ERP protocol is useful because it abstracts away the details of the entities being referenced. Making embedding,
+linking, urls, and other cases easy to implement in a generic way. Users can write code that doesn't care if it's being
+passed ref  tuples, ref strings, actual entities, ecto records etc. but can simply call the protocol to cast to the desired
+format and handle as needed for querying, processing, returning, linking, etc.</p><h2 id="module-protocol" class="section-heading">
+  <a href="#module-protocol" class="hover-link"><i class="ri-link-m" aria-hidden="true"></i>
+  <p class="sr-only">protocol</p>
+  </a>
+  Protocol
+</h2>
+<p>It defines the following functions:</p><ul><li><a href="#id/1"><code class="inline">id/1</code></a>: Retrieves the underlying id for a given ERP.</li><li><a href="#id_ok/1"><code class="inline">id_ok/1</code></a>: Similar to <a href="#id/1"><code class="inline">id/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</li><li><a href="#ref/1"><code class="inline">ref/1</code></a>: Casts the given argument to a ERP reference.</li><li><a href="#ref_ok/1"><code class="inline">ref_ok/1</code></a>: Similar to <a href="#ref/1"><code class="inline">ref/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</li><li><a href="#sref/1"><code class="inline">sref/1</code></a>: Casts the given argument to a ERP string reference.</li><li><a href="#sref_ok/1"><code class="inline">sref_ok/1</code></a>: Similar to <a href="#sref/1"><code class="inline">sref/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</li><li><a href="#record/1"><code class="inline">record/1</code></a>: Converts the given argument to a persistence object. Options may be passed to coordinate actions like expanding embedded references.</li><li><a href="#record!/1"><code class="inline">record!/1</code></a>: Similar to <a href="#record/1"><code class="inline">record/1</code></a> but with a transaction wrapper if required.</li><li><a href="#entity/1"><code class="inline">entity/1</code></a>: Converts the given argument to a scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.</li><li><a href="#entity_ok/1"><code class="inline">entity_ok/1</code></a>: Similar to <a href="#entity/1"><code class="inline">entity/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</li><li><a href="#entity!/1"><code class="inline">entity!/1</code></a>: Similar to <a href="#entity/1"><code class="inline">entity/1</code></a> but with a transaction wrapper if required.</li><li><a href="#entity_ok!/1"><code class="inline">entity_ok!/1</code></a>: Similar to <a href="#entity_ok/1"><code class="inline">entity_ok/1</code></a> but with a transaction wrapper if required.</li></ul><p>The protocol is designed with the <code class="inline">@fallback_to_any true</code> directive,
+which means it will fall back to the <code class="inline">Any</code> implementation if no specific
+implementation for the provided data type is found.</p>
+  </section>
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#t:t/0" translate="no">t()</a>
+
+        </div>
+
+      </div>
+
+  </div>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#entity!/2" translate="no">entity!(erp_sref_ref_or_object, options \\ %{})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#entity/1"><code class="inline">entity/1</code></a> but will execute mnesia functions immediately with out using an outer transaction wrapper</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#entity/2" translate="no">entity(erp_sref_ref_or_object, options \\ %{})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Convert the given argument to a scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#entity_ok!/2" translate="no">entity_ok!(erp_sref_ref_or_object, options \\ %{})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#entity_ok/1"><code class="inline">entity_ok/1</code></a> but with a transaction wrapper if required.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#entity_ok/2" translate="no">entity_ok(erp_sref_ref_or_object, options \\ %{})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#entity/1"><code class="inline">entity/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#id/1" translate="no">id(erp_sref_ref_or_object)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Retrieves the underlying id for a given ERP reference.
+The argument can be a ERP reference, a string reference, or the actual object.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#id_ok/1" translate="no">id_ok(erp_sref_ref_or_object)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#id/1"><code class="inline">id/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#record!/2" translate="no">record!(erp_sref_ref_or_object, options \\ %{})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#record/1"><code class="inline">record/1</code></a> but will execute mnesia functions immediately with out using an outer transaction wrapper.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#record/2" translate="no">record(erp_sref_ref_or_object, options \\ %{})</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Convert the given argument to a persistence object. Options may be passed to coordinate actions like expanding embedded references.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#ref/1" translate="no">ref(erp_sref_ref_or_object)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Casts the given argument to a ERP reference.
+The argument can be a ERP reference, a string reference, or the actual object.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#ref_ok/1" translate="no">ref_ok(erp_sref_ref_or_object)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#ref/1"><code class="inline">ref/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#sref/1" translate="no">sref(erp_sref_ref_or_object)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Casts the given argument to a ERP string reference.
+The argument can be a ERP reference, a string reference, or the actual object.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#sref_ok/1" translate="no">sref_ok(erp_sref_ref_or_object)</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Similar to <a href="#sref/1"><code class="inline">sref/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p></div>
+
+      </div>
+
+  </div>
+
+  </section>
+
+
+  <section id="types" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#types">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Types
+    </h1>
+    <div class="types-list">
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature" translate="no">t()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L6" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <div class="specs">
+
+          <pre translate="no"><span class="attribute">@type</span> t() :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>()</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+    </div>
+  </section>
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Functions
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="entity!/2">
+
+    <span id="entity!/1"></span>
+
+  <div class="detail-header">
+    <a href="#entity!/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">entity!(erp_sref_ref_or_object, options \\ %{})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L148" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#entity/1"><code class="inline">entity/1</code></a> but will execute mnesia functions immediately with out using an outer transaction wrapper</p>
+  </section>
+</section>
+<section class="detail" id="entity/2">
+
+    <span id="entity/1"></span>
+
+  <div class="detail-header">
+    <a href="#entity/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">entity(erp_sref_ref_or_object, options \\ %{})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L132" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Convert the given argument to a scaffolding.struct object. Options may be passed to coordinate actions like expanding embedded references.</p>
+  </section>
+</section>
+<section class="detail" id="entity_ok!/2">
+
+    <span id="entity_ok!/1"></span>
+
+  <div class="detail-header">
+    <a href="#entity_ok!/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">entity_ok!(erp_sref_ref_or_object, options \\ %{})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L156" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#entity_ok/1"><code class="inline">entity_ok/1</code></a> but with a transaction wrapper if required.</p>
+  </section>
+</section>
+<section class="detail" id="entity_ok/2">
+
+    <span id="entity_ok/1"></span>
+
+  <div class="detail-header">
+    <a href="#entity_ok/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">entity_ok(erp_sref_ref_or_object, options \\ %{})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L140" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#entity/1"><code class="inline">entity/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p>
+  </section>
+</section>
+<section class="detail" id="id/1">
+
+  <div class="detail-header">
+    <a href="#id/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">id(erp_sref_ref_or_object)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L66" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Retrieves the underlying id for a given ERP reference.
+The argument can be a ERP reference, a string reference, or the actual object.</p>
+  </section>
+</section>
+<section class="detail" id="id_ok/1">
+
+  <div class="detail-header">
+    <a href="#id_ok/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">id_ok(erp_sref_ref_or_object)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L74" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#id/1"><code class="inline">id/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p>
+  </section>
+</section>
+<section class="detail" id="record!/2">
+
+    <span id="record!/1"></span>
+
+  <div class="detail-header">
+    <a href="#record!/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">record!(erp_sref_ref_or_object, options \\ %{})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L124" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#record/1"><code class="inline">record/1</code></a> but will execute mnesia functions immediately with out using an outer transaction wrapper.</p>
+  </section>
+</section>
+<section class="detail" id="record/2">
+
+    <span id="record/1"></span>
+
+  <div class="detail-header">
+    <a href="#record/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">record(erp_sref_ref_or_object, options \\ %{})</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L116" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Convert the given argument to a persistence object. Options may be passed to coordinate actions like expanding embedded references.</p>
+  </section>
+</section>
+<section class="detail" id="ref/1">
+
+  <div class="detail-header">
+    <a href="#ref/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">ref(erp_sref_ref_or_object)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L83" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Casts the given argument to a ERP reference.
+The argument can be a ERP reference, a string reference, or the actual object.</p>
+  </section>
+</section>
+<section class="detail" id="ref_ok/1">
+
+  <div class="detail-header">
+    <a href="#ref_ok/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">ref_ok(erp_sref_ref_or_object)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L91" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#ref/1"><code class="inline">ref/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p>
+  </section>
+</section>
+<section class="detail" id="sref/1">
+
+  <div class="detail-header">
+    <a href="#sref/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">sref(erp_sref_ref_or_object)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L100" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Casts the given argument to a ERP string reference.
+The argument can be a ERP reference, a string reference, or the actual object.</p>
+  </section>
+</section>
+<section class="detail" id="sref_ok/1">
+
+  <div class="detail-header">
+    <a href="#sref_ok/1" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">sref_ok(erp_sref_ref_or_object)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/erp/entity_reference_protocol.ex#L108" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Similar to <a href="#sref/1"><code class="inline">sref/1</code></a> but returns the result in the form of <code class="inline">{:ok, value}</code> or <code class="inline">{:error, error}</code>.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+                <a href="https://preview.hex.pm/preview/noizu_core/1.0.26/show/lib/elixir_core/erp/entity_reference_protocol.ex">(current file)</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>

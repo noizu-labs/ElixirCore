@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.28.3">
+    <meta name="project" content="noizu_core v1.0.26">
+
+    <title>Noizu.FastGlobal.ChangeSet — noizu_core v1.0.26</title>
+    <link rel="stylesheet" href="dist/elixir-d5ff82e6b0f5651c0ac0.css" />
+
+    <script src="dist/sidebar_items-b715f71429.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-a088a6cc33ae3464193e.js"></script>
+
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        var settings = JSON.parse(localStorage.getItem('ex_doc:settings') || '{}');
+
+        if (settings.theme === 'dark' ||
+           ((settings.theme === 'system' || settings.theme == null) &&
+             window.matchMedia('(prefers-color-scheme: dark)').matches)
+           ) {
+          document.body.classList.add('dark')
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+
+<section class="sidebar">
+  <button class="sidebar-button sidebar-toggle" aria-label="toggle sidebar">
+    <i class="ri-menu-line ri-lg" title="Collapse/expand sidebar"></i>
+  </button>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <i class="ri-search-2-line" aria-hidden="true" title="Submit search"></i>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <i class="ri-close-line ri-lg" aria-hidden="true" title="Cancel search"></i>
+    </button>
+    <label class="search-label">
+      <p class="sr-only">Search</p>
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+
+    <div class="sidebar-projectDetails">
+      <a href="api-reference.html" class="sidebar-projectName" translate="no">
+noizu_core
+      </a>
+      <strong class="sidebar-projectVersion" translate="no">
+        v1.0.26
+      </strong>
+    </div>
+    <ul class="sidebar-listNav">
+      <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+        <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+    </ul>
+  </div>
+
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>
+<button class="settings display-settings">
+  <i class="ri-settings-3-line"></i>
+  <span class="sr-only">Settings</span>
+</button>
+
+
+    <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/changeset.ex#L6" title="View Source" class="view-source" rel="help">
+      <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+      <span class="sr-only">View Source</span>
+    </a>
+
+  <span translate="no">Noizu.FastGlobal.ChangeSet</span> 
+  <small class="app-vsn" translate="no">(noizu_core v1.0.26)</small>
+
+</h1>
+
+
+  <section id="moduledoc">
+<p>This module contains changesets that are used in updating the FastGlobal related schema.
+The changesets are defined in a way that they can be easily applied or rolled back.</p><p>The FastGlobal changeset updates or rolls back changes related to Noizu.FastGlobal.Database.Settings.</p><h1>Usage</h1><p>Call the <a href="#change_sets/0"><code class="inline">change_sets/0</code></a> function to get the list of changesets. Each changeset is a map that contains
+the following keys:</p><ul><li><code class="inline">:changeset</code>: A string that describes the changeset.</li><li><code class="inline">:author</code>: The author of the changeset.</li><li><code class="inline">:note</code>: A note about the changeset.</li><li><code class="inline">:environments</code>: The environments where the changeset is applicable. It can be set to <code class="inline">:all</code> for all environments.</li><li><code class="inline">:update</code>: A function that, when called, will apply the changeset.</li><li><code class="inline">:rollback</code>: A function that, when called, will roll back the changeset.</li></ul><h1>Code Review</h1><p>The code in this module is well-organized and follows standard Elixir conventions. The <a href="#change_sets/0"><code class="inline">change_sets/0</code></a> function is a good example of how to define changesets in a way that makes it easy to apply and roll back changes. The use of anonymous functions for the <code class="inline">:update</code> and <code class="inline">:rollback</code> keys provides a clear and concise way to define the actions to be taken for each changeset. The <a href="#neighbors/0"><code class="inline">neighbors/0</code></a> function is a nice utility function that abstracts away the details of retrieving the list of nodes in the topology. Overall, the code in this module is clean, efficient, and easy to understand.</p>
+  </section>
+
+
+  <section id="summary" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#summary">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+      Summary
+    </h1>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#change_sets/0" translate="no">change_sets()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Returns a list of changesets for updating the FastGlobal related schema. Each changeset is a map that contains
+keys for the changeset description, author, note, applicable environments, an update function, and a rollback function.</p></div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#create_table/2" translate="no">create_table(tab, dist \\ :auto)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#destroy_table/2" translate="no">destroy_table(tab, timeout \\ 60000)</a>
+
+        </div>
+
+      </div>
+
+      <div class="summary-row">
+        <div class="summary-signature">
+          <a href="#neighbors/0" translate="no">neighbors()</a>
+
+        </div>
+
+          <div class="summary-synopsis"><p>Retrieves the list of nodes in the topology. The topology provider is retrieved from the application environment
+with the key <code class="inline">:noizu_mnesia_versioning</code>. The nodes are retrieved from the topology provider with the
+<code class="inline">mnesia_nodes/0</code> function. The function returns <code class="inline">{:ok, nodes}</code> where <code class="inline">nodes</code> is the list of nodes.</p></div>
+
+      </div>
+
+  </div>
+
+  </section>
+
+
+  <section id="functions" class="details-list">
+    <h1 class="section-heading">
+      <a class="hover-link" href="#functions">
+        <i class="ri-link-m" aria-hidden="true"></i>
+        <span class="sr-only">Link to this section</span>
+      </a>
+Functions
+    </h1>
+    <div class="functions-list">
+<section class="detail" id="change_sets/0">
+
+  <div class="detail-header">
+    <a href="#change_sets/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">change_sets()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/changeset.ex#L53" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Returns a list of changesets for updating the FastGlobal related schema. Each changeset is a map that contains
+keys for the changeset description, author, note, applicable environments, an update function, and a rollback function.</p>
+  </section>
+</section>
+<section class="detail" id="create_table/2">
+
+    <span id="create_table/1"></span>
+
+  <div class="detail-header">
+    <a href="#create_table/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">create_table(tab, dist \\ :auto)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/changeset.ex#L30" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="destroy_table/2">
+
+    <span id="destroy_table/1"></span>
+
+  <div class="detail-header">
+    <a href="#destroy_table/2" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">destroy_table(tab, timeout \\ 60000)</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/changeset.ex#L30" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+
+  </section>
+</section>
+<section class="detail" id="neighbors/0">
+
+  <div class="detail-header">
+    <a href="#neighbors/0" class="detail-link" title="Link to this function">
+      <i class="ri-link-m" aria-hidden="true"></i>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature" translate="no">neighbors()</h1>
+
+      <a href="https://github.com/noizu/ElixirCore/blob/master/lib/elixir_core/fast_global/schema/changeset.ex#L41" class="view-source" rel="help" title="View Source">
+       <i class="ri-code-s-slash-line" aria-hidden="true"></i>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+<p>Retrieves the list of nodes in the topology. The topology provider is retrieved from the application environment
+with the key <code class="inline">:noizu_mnesia_versioning</code>. The nodes are retrieved from the topology provider with the
+<code class="inline">mnesia_nodes/0</code> function. The function returns <code class="inline">{:ok, nodes}</code> where <code class="inline">nodes</code> is the list of nodes.</p>
+  </section>
+</section>
+
+    </div>
+  </section>
+
+      <footer class="footer">
+
+          <p>
+            On Hex.pm:
+
+            <span class="line">
+              <a href="https://hex.pm/packages/noizu_core/1.0.26" class="line footer-hex-package">Package</a>
+              <a href="https://preview.hex.pm/preview/noizu_core/1.0.26" class="line">Preview</a>
+
+                <a href="https://preview.hex.pm/preview/noizu_core/1.0.26/show/lib/elixir_core/fast_global/schema/changeset.ex">(current file)</a>
+
+            </span>
+
+            <button class="line footer-button display-quick-switch">
+              Search
+            </button>
+          </p>
+
+        <p>
+          Built using
+          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener" translate="no">ExDoc</a> (v0.28.3) for the
+          <a href="https://elixir-lang.org" title="Elixir" target="_blank" translate="no">Elixir programming language</a>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+
+  </body>
+</html>
