@@ -83,7 +83,7 @@ defmodule Noizu.ElixirCore.CallingContext do
                auth: Any,
                options: Map.t,
                time: DateTime.t | nil,
-               outer_context: CalingContext.t,
+               outer_context: CallingContext.t,
                vsn: float
              }
 
