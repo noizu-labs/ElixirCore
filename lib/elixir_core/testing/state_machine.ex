@@ -10,14 +10,24 @@ defmodule Noizu.StateMachine.Module do
   require Noizu.StateMachine.Records
   import Noizu.StateMachine.Records
 
+  def expand_scenario_setup(docs, scenario, block) do
+    quote do
+      @docs unquote(docs)
+      def scenario(unquote(scenario)) do
+        unquote(block)
+      end
+    end
+  end
+
   defmacro __before_compile__(env) do
     m = env.module
-    quote bind_quoted: [] do
+    quote  do
 
 
       states = Enum.group_by(@__nsm__states || [], & elem(&1, 0) |> elem(1) )
 
       initial_states = Enum.group_by(@__nsm__initial_state || [], & elem(&1, 0))
+                       |> IO.inspect()
 
       for {module, entries} <- states do
         case module do
@@ -31,22 +41,39 @@ defmodule Noizu.StateMachine.Module do
             end
 
             m_initial_states = get_in(initial_states, [Access.key(m, [])])
-            for {_, scenario, docs, block } <- m_initial_states do
-              @docs unquote(docs)
-              def unquote(scenario) do
-                unquote(block)
+              for {_, scenario, docs, block} <- m_initial_states do
+                {:def, [], [{:scenario, [], [scenario]}, [do: block]]}
+                |> Macro.expand(__ENV__)
+                |> Macro.to_string()
+                |> Code.string_to_quoted!()
+                |> Code.compile_quoted()
               end
+
+            d = for {_, scenario, docs, block} <- m_initial_states do
+              if docs do
+                """
+                \# :#{scenario}
+                #{docs}
+                """
+              end
+            end |> Enum.reject(&is_nil/1) |> Enum.join("\n\n")
+
+            @doc """
+            #{unless d == "", do: d, else: "Default Empty State"}
+            """
+            def scenario(scenario) do
+              %{}
             end
 
           m when is_list(m) ->
-            m = Module.concat([__MODULE__| m])
+            mod = Module.concat([__MODULE__| m])
             entries = Enum.reverse(entries)
 
             m_initial_states = get_in(initial_states, [Access.key(m, [])])
 
 
-            @__nsm__modules m
-            defmodule m do
+            @__nsm__modules mod
+            defmodule mod do
               for {_, {name, arity, q}} <- entries do
                 q
                 |> Macro.expand(__ENV__)
@@ -56,11 +83,27 @@ defmodule Noizu.StateMachine.Module do
               end
 
 
-              for {_, scenario, docs, block } <- m_initial_states do
-                @docs unquote(docs)
-                def unquote(scenario) do
-                  unquote(block)
-                end
+              for {_, scenario, docs, block} <- m_initial_states do
+                {:def, [], [{:scenario, [], [scenario]}, [do: block]]}
+                |> Macro.expand(__ENV__)
+                |> Macro.to_string()
+                |> Code.string_to_quoted!()
+                |> Code.compile_quoted()
+              end
+
+              d = for {_, scenario, docs, block} <- m_initial_states do
+                    if docs do
+                      """
+                      \# :#{scenario}
+                      #{docs}
+                      """
+                    end
+                  end |> Enum.reject(&is_nil/1) |> Enum.join("\n\n")
+              @doc """
+              #{unless d == "", do: d, else: "Default Empty State"}
+              """
+              def scenario(scenario) do
+                %{}
               end
 
               @methods (for {_, {name, arity, q}} <- entries do
@@ -594,8 +637,8 @@ defmodule Noizu.StateMachine.Module do
   defmacro scenario_initial_state(scenario, do: body) do
     quote do
       is = @__nsm_module_queue || []
-      d = Module.get_attribute(__MODULE__, :scenariodocs, false)
-      Module.delete_attribute(__MODULE__, :scenariodocs, false)
+      d = Module.get_attribute(__MODULE__, :scenariodoc, false)
+      Module.delete_attribute(__MODULE__, :scenariodoc)
       @__nsm__initial_state {is, unquote(scenario), d, unquote(Macro.escape(body))}
     end
   end
@@ -708,9 +751,7 @@ defmodule Noizu.StateMachine do
         Agent.update(handle, fn(_) -> update end)
       end
 
-      def scenario(scenario) do
-        %{}
-      end
+
 
     end
   end

@@ -3,6 +3,32 @@ defmodule Noizu.TestSM do
   use Noizu.StateMachine
 
   @apple 5
+
+  @scenariodoc """
+  Alternative Scenario - One
+  """
+  scenario_initial_state :scenario_one do
+    %{flag_2: :first_wrapper_inner_wrapper, foo: 1, bop: :fiz, flag_3: 0xF00}
+  end
+
+  @scenariodoc """
+  Alternative Scenario - Default
+  """
+  scenario_initial_state :default do
+    %{flag_2: :first_wrapper_inner_wrapper, foo: 1, bop: :bop, flag_3: 0xF00}
+  end
+
+  defsm_module Foo do
+    @scenariodoc """
+    Alternative Scenario (FOO) - Default
+    """
+    scenario_initial_state :default do
+      %{flag_2: :local, foo: 1, bop: :bop, flag_3: 0xF00}
+    end
+  end
+
+
+
   defsm well(a,b,c,d \\ 7)
   defsm well(a,b,:first_c_arg_guard, _) when a in [:first_a_when_guard] and b == :first_b_when_guard do
     :ok_1
