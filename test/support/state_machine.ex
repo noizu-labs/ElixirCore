@@ -4,7 +4,7 @@ defmodule Noizu.TestSM do
 
   @apple 5
   defsm well(a,b,c,d \\ 7)
-  defsm well(a,b,:first_c_arg_guard, d) when a in [:first_a_when_guard] and b == :first_b_when_guard do
+  defsm well(a,b,:first_c_arg_guard, _) when a in [:first_a_when_guard] and b == :first_b_when_guard do
     :ok_1
   end
 
@@ -12,39 +12,45 @@ defmodule Noizu.TestSM do
 
   #defsm state_behaviour(nsm(local: %{flag: :first_wrapper})) when (global.foo in [@apple, 1,2,3] or global.flag == true) do
 
-    defsm well(a,b,c, d) when a in [999] do
+    defsm well(a,_b, _c, _d) when a in [999] do
       {:ok_2, self(), a}
     end
 
 
     for_state "state 2.1" ~> nsm(global: %{flag_2: :first_wrapper_inner_wrapper}) when global.bop in [:fiz, :biz, :bop] and local.bop == :boop do
     #defsm state_behaviour(nsm(global: %{flag_2: :first_wrapper_inner_wrapper})) when global.bop in [:fiz, :biz, :bop] and local.bop == :boop do
-      defsm well(a,b,:second_c_arg_guard, d) when a in [:second_a_when_guard,:alt_second_a_when_guard] and b == :second_b_when_guard do
+      defsm well(a,b,:second_c_arg_guard, _d) when a in [:second_a_when_guard,:alt_second_a_when_guard] and b == :second_b_when_guard do
         :ok_2_1
       end
 
-      defsm well(a,b,:c_alternative, d) do
+      defsm well(_a,_b,:c_alternative, _d) do
         :ok_2_1_b
       end
 
+      defsm_module Foo do
+        defsm well(_a,_b,:c_alternative, _d) do
+          :ok_module_2_1_b
+        end
+      end
+
       for_state "state 2.1.1.1", nsm(global: %{flag_5: :sentinel}) when global.flag_3 == 0xF00 and local.flag_3 == 31337 do
-        defsm well(a,b,c,d) when a in [1,2,3,4,5] do
+        defsm well(a,_b,_c,_d) when a in [1,2,3,4,5] do
           {:ok_2_1_1x, self(), a}
         end
       end
 
       for_state "state 2.1.1.2" when global.flag_3 == 0xF00 and local.flag_3 == 31337 do
-        defsm well(a,b,c,d) when a in [1,2,3,4,5] do
+        defsm well(a,_b,_c,_d) when a in [1,2,3,4,5] do
           {:ok_2_1_1, self(), a}
         end
       end
 
-      defsm well(a,b,c, d) do
+      defsm well(a,_b,_c, _d) do
         {:ok_2_1_catch_all, self(), a}
       end
     end
 
-    defsm well(a,b,c, d) do
+    defsm well(a,_b,_c,_d) do
       {:ok_2_catch_all, self(), a}
     end
 
@@ -54,8 +60,14 @@ defmodule Noizu.TestSM do
   # TODO it would be cleaner to be able to place this below the initial declaration
   # And push entries outside of a state behavior to the bottom of the defs
   # Further inside of a state behavior push non nested defsm to bottom
-  defsm well(a,b,c,d) do
+  defsm well(_a,_b,_c,_d) do
     :catch_all
+  end
+
+  defsm_module Foo do
+    defsm well(_a,_b,_c,_d) do
+      :module_catch_all
+    end
   end
 
 end

@@ -1,40 +1,241 @@
 
 
-defmodule Noizu.StateMachine.Module do
+defmodule Noizu.StateMachine.Records do
   require Record
-  Record.defrecord(:nsm, [global: nil, local: nil, other: nil, smother: 5])
-  import Macro
+  Record.defrecord(:nsm, [global: nil, module: nil, scenario: nil, modules: %{}, local: nil, other: nil, handle: nil, state: :not_loaded])
+end
 
-  defmacro defsm_module(name, [do: block]) do
+defmodule Noizu.StateMachine.Module do
+  import Macro
+  require Noizu.StateMachine.Records
+  import Noizu.StateMachine.Records
+
+  defmacro __before_compile__(env) do
+    m = env.module
+    quote bind_quoted: [] do
+
+
+      states = Enum.group_by(@__nsm__states || [], & elem(&1, 0) |> elem(1) )
+
+
+
+      for {module, entries} <- states do
+        case module do
+          [] ->
+            for {_, {name, arity, q}} <- Enum.reverse(entries) do
+              q = q
+                  |> Macro.expand(__ENV__)
+                  |> Macro.to_string()
+                  |> Code.string_to_quoted!()
+                  |> Code.compile_quoted()
+            end
+
+          m when is_list(m) ->
+            m = Module.concat([__MODULE__| m])
+            entries = Enum.reverse(entries)
+            @__nsm__modules m
+            defmodule m do
+              for {_, {name, arity, q}} <- entries do
+                q
+                |> Macro.expand(__ENV__)
+                |> Macro.to_string()
+                |> Code.string_to_quoted!()
+                |> Code.compile_quoted()
+              end
+
+              @methods (for {_, {name, arity, q}} <- entries do
+                {name, arity}
+              end)
+
+              def __nsm_info__(:methods) do
+                @methods
+              end
+
+              def bind(Elixir.Mock) do
+                # Construct List of method overrides
+                # in mark format
+                #{:ok, current} = Process.get({__MODULE__, scenario}, {:error, :not_initialized})
+                #handle = nsm(current, :handle)
+                #{module, [:passthrough], [
+                #method(construct_args) -> __nsm_def__method(nsm, construct_args)
+                #])
+                []
+              end
+
+              def scenario(scenario) do
+                %{}
+              end
+            end
+        end
+      end
+
+      def __nsm_info__(:modules) do
+        @__nsm__modules
+      end
+      def __nsm_info__(:macros) do
+        @__nsm__states
+      end
+    end
+  end
+
+
+  def __nsm_load__(nsm(handle: handle, module: module, state: :not_loaded) = nsm) do
+    nsm(modules: modules) = state = Agent.get(handle, &(&1))
+    nsm(state, local: modules[module] || %{}, state: :loaded)
+  end
+
+  def __nsm_init_module_state__(nsm(handle: handle, module: module), module_state) do
+    Agent.get_and_update(handle, fn(nsm(modules: modules) = state) ->
+      modules = put_in(modules, [module], module_state)
+      state = nsm(state, modules: modules)
+      {state, state}
+    end)
+  end
+
+
+  defmacro nsm_set_global_state(path, value) do
+    quote do
+      case var!(nsm) do
+        nsm(handle: handle) ->
+          Agent.get_and_update(handle,
+            fn(state = nsm(global: global)) ->
+              global = put_in(global, unquote(path), unquote(value))
+              state = nsm(state, global: global)
+              {state, state}
+            end
+          )
+      end
+    end
+  end
+
+  defmacro nsm_set_local_state(path, value) do
+    quote do
+      case var!(nsm) do
+        nsm(module: module, handle: handle) ->
+          Agent.get_and_update(handle,
+            fn(state = nsm(modules: modules)) ->
+              modules = put_in(modules, [Access.key(module) | unquote(path)], unquote(value))
+              state = nsm(state, modules: modules)
+              {state, state}
+            end
+          )
+      end
+    end
+  end
+
+
+  defmacro nsm_set_module_state(module, path, value) do
+    quote do
+      case var!(nsm) do
+        nsm(handle: handle) ->
+          Agent.get_and_update(handle,
+            fn(state = nsm(modules: modules)) ->
+              modules = put_in(modules, [Access.key(unquote(module)) | unquote(path)], unquote(value))
+              state = nsm(state, modules: modules)
+              {state, state}
+            end
+          )
+      end
+    end
+  end
+
+
+  defmacro nsm_local_state() do
+    quote do
+      case var!(nsm) do
+        nsm(handle: handle, module: module) ->
+          Agent.get(handle, fn(state) ->
+            nsm(state, :global)[module]
+          end)
+#        nsm(handle: handle, module: module, state: :not_loaded) ->
+#          state = Agent.get(handle, &(&1))
+#          nsm(modules: modules) = state
+#          modules[module] || %{}
+#        nsm(handle: handle, module: module, modules: modules, state: :loaded) ->
+#          nsm(modules: modules) = state
+#          modules[module] || %{}
+        _ -> throw "nsm var not set"
+      end
+    end
+  end
+
+  defmacro nsm_global_state() do
+    quote do
+      case var!(nsm) do
+        nsm(handle: handle) ->
+         Agent.get(handle, fn(state) ->
+          nsm(state, :global)
+         end)
+#        nsm(handle: handle, state: :not_loaded) ->
+#          state = Agent.get(handle, &(&1))
+#          #Process.put({:nsm, __MODULE__}, state)
+#          nsm(global: global) = state
+#          global
+#        nsm(handle: handle, state: state) ->
+#          #Process.put({:nsm, __MODULE__}, state)
+#          nsm(global: global) = state
+#          global
+#        _ -> throw "nsm var not set"
+      end
+#
+#      case Process.get({:nsm, __MODULE__}, :__nsm_not_set__) do
+#        :__nsm_not_set__ ->
+#          case var!(nsm) do
+#            nsm(handle: handle, state: :not_loaded) ->
+#              state = Agent.get(handle, &(&1))
+#              Process.put({:nsm, __MODULE__}, state)
+#              nsm(global: global) = state
+#              global
+#            nsm(handle: handle, state: state) ->
+#              Process.put({:nsm, __MODULE__}, state)
+#              nsm(global: global) = state
+#              global
+#              _ -> throw "nsm var not set"
+#          end
+#        nsm(handle: handle, state: :not_loaded) ->
+#          state = Agent.get(handle, &(&1))
+#          Process.put({:nsm, __MODULE__}, state)
+#          nsm(global: global) = state
+#          global
+#        nsm(state: state) ->
+#          Process.put({:nsm, __MODULE__}, state)
+#          nsm(global: global) = state
+#          global
+#      end
+    end
+  end
+
+
+  defmacro unpackme(name, args, guards, block) do
+    unless guards == [] do
+      quote do
+        unquote({:def, [], [{:when, [], [{name, [], args}, guards]}, [do: block]]})
+      end
+    else
+      quote do
+        unquote({:def, [], [{name, [], args}, [do: block]]})
+      end
+    end
+  end
+
+  defmacro unpackme(block) do
+    block
+  end
+
+
+  defmacro defsm_module(name, do: block) do
     quote do
       m = Module.get_attribute(__MODULE__, :__sm_ms, [])
-      @__sm_ms [unquote(name), m]
-      IO.puts "ENTER MODULE| #{inspect @__sm_ms}"
+      @__sm_ms [unquote(name) | m]
       unquote(block)
       @__sm_ms Enum.slice(@__sm_ms, 1..-1)
     end
   end
 
-#  defmacro defsm({:when, _, [{:state_behavior, meta, args} = signature | guards]}, do: body) do
-#  #defmacro state_behavior(yabba, [do: block]) do
-#    IO.puts "ENTERING FOR_STATE: #{inspect signature}"
-#  end
-
-  #    args_list = Enum.map(args, fn
-  #      {{:., _, [:&, _]}, _, [arg]} -> arg
-  #      arg -> arg
-  #    end)
-  #
-  #    quote do
-  #      def unquote(name)(unquote_splicing(args_list)) when unquote(guards) do
-  #        unquote(body)
-  #      end
-  #    end
   def check_header(name, args) do
     IO.puts "HAS #{name}/#{length(args)} been pushed already?"
     :ok
   end
-
 
   defmacro blowitup(name, meta, prefix, args, guards, block) do
     gg = case guards do
@@ -43,7 +244,6 @@ defmodule Noizu.StateMachine.Module do
     end
 
     quote do
-      IO.puts "\n\n-------- #{unquote name} ------\n"
       q = Macro.expand(unquote(prefix),__ENV__)
       args = unquote(Macro.escape(args))
 
@@ -70,10 +270,6 @@ defmodule Noizu.StateMachine.Module do
             end)
 
       unless g_pre = effective_guards do
-#        def unquote(name)(nsm = (quote do: unquote(q)), unquote_splicing(args)) when unquote(gg) do
-#          unquote(block)
-#        end
-
         name = unquote(name)
         [qq] = q
         {qq2,_} = qq
@@ -92,19 +288,19 @@ defmodule Noizu.StateMachine.Module do
 
         iargs = [{:=, [], [{:nsm, [], nil}, qq2]}| unquote(Macro.escape(args))]
                 |> Macro.expand(__ENV__)
-        #|> IO.inspect(label: "IARAGS")
         block = unquote(Macro.escape(block))
 
-        unless unquote(Macro.escape(gg)) == [] do
-          q = {:def, [], [{:when, [], [{unquote(name), [], (quote do: unquote(iargs))}, unquote(Macro.escape(gg))]}, [do: block]]}
+        q = unless unquote(Macro.escape(gg)) == [] do
+          {:def, [], [{:when, [], [{:"__nsm_def__#{unquote(name)}", [], (quote do: unquote(iargs))}, unquote(Macro.escape(gg))]}, [do: block]]}
               |> Macro.to_string()
               |> Code.string_to_quoted!()
         else
-          q = {:def, [], [{unquote(name), [], (quote do: unquote(iargs))}, [do: block]]}
+          {:def, [], [{:"__nsm_def__#{unquote(name)}", [], (quote do: unquote(iargs))}, [do: block]]}
               |> Macro.to_string()
               |> Code.string_to_quoted!()
         end
-
+        sm_ms = @__sm_ms || []
+        @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs) - 1, q}}
 
 
 
@@ -127,30 +323,19 @@ defmodule Noizu.StateMachine.Module do
 
         iargs = [{:=, [], [{:nsm, [], nil}, qq2]}| unquote(Macro.escape(args))]
                 |> Macro.expand(__ENV__)
-        #|> IO.inspect(label: "IARAGS")
         block = unquote(Macro.escape(block))
 
-        unless g_pre == [] do
-          q = {:def, [], [{:when, [], [{unquote(name), [], (quote do: unquote(iargs))}, g_pre]}, [do: block]]}
+        q = unless g_pre == [] do
+           {:def, [], [{:when, [], [{:"__nsm_def__#{unquote(name)}", [], (quote do: unquote(iargs))}, g_pre]}, [do: block]]}
               |> Macro.to_string()
               |> Code.string_to_quoted!()
         else
-          q = {:def, [], [{unquote(name), [], (quote do: unquote(iargs))}, [do: block]]}
+          {:def, [], [{:"__nsm_def__#{unquote(name)}", [], (quote do: unquote(iargs))}, [do: block]]}
               |> Macro.to_string()
               |> Code.string_to_quoted!()
         end
-
-
-        #{:def, [], [{:when, [], [{name, [], iargs}, g_pre]}, do: block]}
-        #unquote(h)
-        #        q = quote do
-        #          def unquote(name)(unquote_splicing(iargs)) do
-        #            unquote(block)
-        #          end
-        #        end
-        #            |> IO.inspect
-        #            |> Macro.expand(__ENV__)
-
+        sm_ms = @__sm_ms || []
+        @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs) - 1, q}}
       end
 
 
@@ -221,9 +406,7 @@ defmodule Noizu.StateMachine.Module do
     end) |> Enum.reject(&is_nil/1)
     keys = (inner_keys ++ outer_keys)
            |> Enum.uniq()
-           #|> IO.inspect(label: "MERGE KEYS")
     merged = Enum.map(keys, & {&1, merge_nsm_ast(inner[&1], outer[&1])})
-            # |> IO.inspect(label: "MERGED ")
     [merged]
   end
 
@@ -238,19 +421,14 @@ defmodule Noizu.StateMachine.Module do
              (ast = {:nsm, m, args}, nil) ->
                {ast, args}
              ({:nsm, m, args}, acc) ->
-               #args |> IO.inspect(label: "INNER AST")
-               #acc |> IO.inspect(label: "OUTER AST")
                args = merge_nsm(args, acc)
-               {{:nsm, m, args}, args} #|> IO.inspect(label: Merged)
+               {{:nsm, m, args}, args}
              (ast, acc) ->
-               #IO.inspect(ast)
                {ast, acc}
            end
          )
       |> elem(0)
-       #|> IO.inspect(label: "args1")
       |> List.last()
-       #|> IO.inspect(label: "args2")
        ) || [unquote(qq)]
     end
   end
@@ -325,9 +503,11 @@ defmodule Noizu.StateMachine.Module do
       a = Module.get_attribute(__MODULE__, :__sm_withargs, [])
       g = Module.get_attribute(__MODULE__, :__sm_withguards, [])
       @__sm_withargs [unquote(p_args)  | a]
-      @__sm_withguards [unquote(guards) | g] |> IO.inspect(label: "ON ENTER")
+      @__sm_withguards [unquote(guards) | g]
+
+
       unquote(body)
-      @__sm_withguards Enum.slice(@__sm_withguards, 1..-1) |> IO.inspect(label: "ON EXIT")
+      @__sm_withguards Enum.slice(@__sm_withguards, 1..-1)
       @__sm_withargs Enum.slice(@__sm_withargs, 1..-1)
     end
   end
@@ -351,7 +531,7 @@ defmodule Noizu.StateMachine.Module do
         unquote(args),
         unquote(guards),
         unquote(block)
-      ) #|> IO.inspect(label: :inner)
+      )
       |> Macro.expand(__ENV__)
       |> Code.compile_quoted()
     end
@@ -377,7 +557,7 @@ defmodule Noizu.StateMachine.Module do
             unquote(args),
             unquote(guards),
             unquote(block)
-          ) #|> IO.inspect(label: :inner)
+          )
           |> Macro.expand(__ENV__)
           |> Code.compile_quoted()
     end
@@ -457,7 +637,50 @@ defmodule Noizu.StateMachine do
     quote do
       require Noizu.StateMachine.Module
       import Noizu.StateMachine.Module
+      require Noizu.StateMachine.Records
+      import Noizu.StateMachine.Records
+      Module.register_attribute(__MODULE__, :__sm_ms, [accumulate: false])
+      Module.register_attribute(__MODULE__, :__nsm__states, accumulate: true)
+      Module.register_attribute(__MODULE__, :__nsm__modules, accumulate: true)
 
+      @before_compile Noizu.StateMachine.Module
+
+      def initialize(scenario) do
+        global = scenario(scenario)
+        modules = Enum.map(__nsm_info__(:modules), &({&1, apply(&1, :scenario, [scenario])}))
+                  |> Map.new()
+        handle = {:global, {scenario, __MODULE__, :os.system_time(:millisecond)}}
+        initial_state = nsm(handle: handle, global: global, scenario: scenario, modules: modules, state: :loaded)
+        Agent.start_link(fn() -> initial_state  end)
+        Process.put({:__nsm__, __MODULE__, scenario}, {:ok, initial_state})
+        Process.put({:__nsm__, __MODULE__, {:active, :scenario}}, {:ok, scenario})
+        handle
+      end
+
+      def reset(scenario) do
+        global = scenario(scenario)
+        modules = Enum.map(__nsm_info__(:modules), &({&1, apply(&1, :scenario, [scenario])}))
+                  |> Map.new()
+        {:ok, scenario} = Process.get({:__nsm__, __MODULE__, {:active, :scenario}}, {:error, :not_initialized})
+        {:ok, current} = Process.get({:__nsm__, __MODULE__, scenario}, {:error, :not_initialized})
+        handle = nsm(current, :handle)
+        update = nsm(current, handle: handle, global: global, scenario: scenario, modules: modules, state: :loaded)
+        Agent.update(handle, fn(_) -> update end)
+      end
+
+      def reset(scenario) do
+        global = scenario(scenario)
+        modules = Enum.map(__nsm_info__(:modules), &({&1, apply(&1, :scenario, [scenario])}))
+                  |> Map.new()
+        {:ok, current} = Process.get({:__nsm__, __MODULE__, scenario}, {:error, :not_initialized})
+        handle = nsm(current, :handle)
+        update = nsm(current, handle: handle, global: global, scenario: scenario, modules: modules, state: :loaded)
+        Agent.update(handle, fn(_) -> update end)
+      end
+
+      def scenario(scenario) do
+        %{}
+      end
 
     end
   end
