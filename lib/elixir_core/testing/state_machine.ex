@@ -10,14 +10,6 @@ defmodule Noizu.StateMachine.Module do
   require Noizu.StateMachine.Records
   import Noizu.StateMachine.Records
 
-  def expand_scenario_setup(docs, scenario, block) do
-    quote do
-      @docs unquote(docs)
-      def scenario(unquote(scenario)) do
-        unquote(block)
-      end
-    end
-  end
 
   defmacro __before_compile__(env) do
     m = env.module
@@ -61,9 +53,10 @@ defmodule Noizu.StateMachine.Module do
             @doc """
             #{unless d == "", do: d, else: "Default Empty State"}
             """
-            def scenario(scenario) do
-              %{}
+            def scenario(scenario) when scenario !== :default do
+              scenario(:default)
             end
+            def scenario(_), do: %{}
 
           m when is_list(m) ->
             mod = Module.concat([__MODULE__| m])
@@ -102,9 +95,10 @@ defmodule Noizu.StateMachine.Module do
               @doc """
               #{unless d == "", do: d, else: "Default Empty State"}
               """
-              def scenario(scenario) do
-                %{}
+              def scenario(scenario) when scenario !== :default do
+                scenario(:default)
               end
+              def scenario(_), do: %{}
 
               @methods (for {_, {name, arity, q}} <- entries do
                 {name, arity}

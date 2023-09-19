@@ -11,6 +11,31 @@ defmodule Noizu.StateMachineTest do
 
   @moduletag :wip_sm
 
+  describe "Meta Methods" do
+    test "acceptance" do
+      assert Noizu.TestSM.__nsm_info__(:modules) == [Noizu.TestSM.Foo,Noizu.TestSM.Boo]
+    end
+  end
+
+  describe "Scenario Support" do
+    test "fall through logic" do
+      assert Noizu.TestSM.scenario(:other) == %{bop: :bop, flag_2: :first_wrapper_inner_wrapper, flag_3: 3840, foo: 1}
+      assert Noizu.TestSM.scenario(:default) == %{bop: :bop, flag_2: :first_wrapper_inner_wrapper, flag_3: 3840, foo: 1}
+      assert Noizu.TestSM.scenario(:scenario_one) == %{bop: :fiz, flag_2: :first_wrapper_inner_wrapper, flag_3: 3840, foo: 1}
+
+      assert Noizu.TestSM.Foo.scenario(:other) == %{bop: :bop, flag_2: :local, flag_3: 3840, foo: 1}
+      assert Noizu.TestSM.Foo.scenario(:default) == %{bop: :bop, flag_2: :local, flag_3: 3840, foo: 1}
+      assert Noizu.TestSM.Foo.scenario(:scenario_two) == %{bop: :fizzy_time, flag_2: :local, flag_3: 3840, foo: 1}
+
+      assert Noizu.TestSM.Boo.scenario(:other) == %{}
+      assert Noizu.TestSM.Boo.scenario(:default) == %{}
+      assert Noizu.TestSM.Boo.scenario(:scenario_two) == %{bop: :fizzy_time, flag_2: :local, flag_3: 3840, foo: 1}
+      assert Noizu.TestSM.Boo.scenario(:scenario_three) == %{bop: :fizzy_time, flag_2: :local, flag_3: 3840, foo: 1}
+
+
+    end
+  end
+
   describe "verify Module nesting" do
     test "acceptance pass" do
 

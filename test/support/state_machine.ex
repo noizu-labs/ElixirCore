@@ -20,14 +20,39 @@ defmodule Noizu.TestSM do
 
   defsm_module Foo do
     @scenariodoc """
-    Alternative Scenario (FOO) - Default
+    Default Scenario (FOO) - Default
     """
     scenario_initial_state :default do
       %{flag_2: :local, foo: 1, bop: :bop, flag_3: 0xF00}
     end
+
+
+    @scenariodoc """
+    Alternative Scenario (FOO) - Two
+    """
+    scenario_initial_state :scenario_two do
+      %{flag_2: :local, foo: 1, bop: :fizzy_time, flag_3: 0xF00}
+    end
+
   end
 
+  defsm_module Boo do
 
+    @scenariodoc """
+    Alternative Scenario (FOO) - Two - NO DEFAULT
+    """
+    scenario_initial_state :scenario_two do
+      %{flag_2: :local, foo: 1, bop: :fizzy_time, flag_3: 0xF00}
+    end
+
+
+    @scenariodoc """
+    Alternative Scenario (FOO) - Three
+    """
+    scenario_initial_state :scenario_three do
+      scenario(:scenario_two)
+    end
+  end
 
   defsm well(a,b,c,d \\ 7)
   defsm well(a,b,:first_c_arg_guard, _) when a in [:first_a_when_guard] and b == :first_b_when_guard do
@@ -91,6 +116,13 @@ defmodule Noizu.TestSM do
   end
 
   defsm_module Foo do
+    defsm well(_a,_b,_c,_d) do
+      :module_catch_all
+    end
+  end
+
+
+  defsm_module Boo do
     defsm well(_a,_b,_c,_d) do
       :module_catch_all
     end
