@@ -10,7 +10,8 @@ defmodule Noizu.ElixirCore.Mixfile do
     [app: :noizu_core,
      version: "1.0.26",
      elixir: ">= 1.13.1",
-     package: package(),
+      elixirc_paths: elixirc_paths(Mix.env),
+      package: package(),
      deps: deps(),
      description: "Request Context Helper",
      docs: docs(),
@@ -23,6 +24,10 @@ defmodule Noizu.ElixirCore.Mixfile do
       ]
    ]
   end
+
+  # Specifies which paths to compile per environment.
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_),     do: ["lib"]
 
   defp package do
     [
