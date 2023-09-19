@@ -11,6 +11,28 @@ defmodule Noizu.StateMachineTest do
 
   @moduletag :wip_sm
 
+  describe "State" do
+    test "acceptance" do
+      h = Noizu.TestSM.initialize(:default)
+      nsm(modules: m, global: g) = Agent.get(h, &(&1))
+      assert g == Noizu.TestSM.scenario(:default)
+      assert m[Noizu.TestSM.Foo] == Noizu.TestSM.Foo.scenario(:default)
+      assert m[Noizu.TestSM.Boo] == Noizu.TestSM.Boo.scenario(:default)
+    end
+
+    test "e2e" do
+      h = Noizu.TestSM.StateTest.initialize(:default)
+      nsm = nsm(handle: h)
+      assert Noizu.TestSM.StateTest.test(nsm, :next) == {:one, :next}
+      Noizu.TestSM.StateTest.Alpha.test(nsm, :next) == {:local, {:one, :one, :next}}
+      Noizu.TestSM.StateTest.Alpha.test(nsm, :keep) == {:local, {:one, :two, :next}}
+      Noizu.TestSM.StateTest.Alpha.test(nsm, :next_global) == {:local, {:one, :two, :next}}
+      Noizu.TestSM.StateTest.Alpha.test(nsm, :next) == {:local, {:two, :two, :next}}
+      Noizu.TestSM.StateTest.Alpha.test(nsm, :keep) == {:local, {:two, :one, :next}}
+    end
+
+  end
+
   describe "Meta Methods" do
     test "acceptance" do
       assert Noizu.TestSM.__nsm_info__(:modules) == [Noizu.TestSM.Foo,Noizu.TestSM.Boo]

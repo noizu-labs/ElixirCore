@@ -19,7 +19,7 @@ defmodule Noizu.StateMachine.Module do
       states = Enum.group_by(@__nsm__states || [], & elem(&1, 0) |> elem(1) )
 
       initial_states = Enum.group_by(@__nsm__initial_state || [], & elem(&1, 0))
-                       |> IO.inspect()
+
 
       for {module, entries} <- states do
         case module do
@@ -31,6 +31,37 @@ defmodule Noizu.StateMachine.Module do
                   |> Code.string_to_quoted!()
                   |> Code.compile_quoted()
             end
+
+            wrappers = for {_, {name, arity, _}} <- Enum.reverse(entries) do
+              {name, arity, :"__nsm_def__#{name}"}
+            end
+            |> Enum.uniq()
+
+
+
+            for {name, arity, call} <- wrappers do
+              call_args = Macro.generate_arguments(arity, __MODULE__)
+
+              mod = __MODULE__
+              invoke = quote do
+                apply(__MODULE__, unquote(name), unquote(call_args))
+              end
+              quote do
+                def unquote(name)(unquote_splicing(call_args)) do
+                  # TODO LOAD STATE THEN CALL
+                  state = unquote(List.first(call_args))
+                  state = nsm(state, module: __MODULE__)
+                  state = Noizu.StateMachine.Module.__nsm_load__(state)
+                  apply(__MODULE__, unquote(call), [state| unquote(Enum.slice(call_args, 1..-1))])
+                end
+              end
+              |> Macro.expand(__ENV__)
+              |> Macro.to_string()
+              |> Code.string_to_quoted!()
+              |> Code.compile_quoted()
+
+            end
+
 
             m_initial_states = get_in(initial_states, [Access.key(m, [])])
               for {_, scenario, docs, block} <- m_initial_states do
@@ -73,6 +104,33 @@ defmodule Noizu.StateMachine.Module do
                 |> Macro.to_string()
                 |> Code.string_to_quoted!()
                 |> Code.compile_quoted()
+              end
+
+              wrappers = for {_, {name, arity, _}} <- Enum.reverse(entries) do
+                           {name, arity, :"__nsm_def__#{name}"}
+                         end
+                         |> Enum.uniq()
+
+
+
+              for {name, arity, call} <- wrappers do
+                call_args = Macro.generate_arguments(arity, mod)
+
+                quote do
+                  def unquote(name)(unquote_splicing(call_args)) do
+                    # TODO LOAD STATE THEN CALL
+                    state = unquote(List.first(call_args))
+                    state = nsm(state, module: __MODULE__)
+                    state = Noizu.StateMachine.Module.__nsm_load__(state)
+                    #IO.puts "LOAD STATE THEN CALL"
+                    apply(__MODULE__, unquote(call), [state| unquote(Enum.slice(call_args, 1..-1))])
+                  end
+                end
+                |> Macro.expand(__ENV__)
+                |> Macro.to_string()
+                |> Code.string_to_quoted!()
+                |> Code.compile_quoted()
+
               end
 
 
@@ -137,8 +195,8 @@ defmodule Noizu.StateMachine.Module do
 
 
   def __nsm_load__(nsm(handle: handle, module: module, state: :not_loaded) = nsm) do
-    nsm(modules: modules) = state = Agent.get(handle, &(&1))
-    nsm(state, local: modules[module] || %{}, state: :loaded)
+    nsm(modules: modules, global: global) = state = Agent.get(handle, &(&1))
+    nsm(state, module: module, local: modules[module] || %{}, state: :loaded)
   end
 
   def __nsm_init_module_state__(nsm(handle: handle, module: module), module_state) do
@@ -357,7 +415,7 @@ defmodule Noizu.StateMachine.Module do
               |> Code.string_to_quoted!()
         end
         sm_ms = @__nsm_module_queue || []
-        @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs) - 1, q}}
+        @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs), q}}
 
 
 
@@ -392,7 +450,7 @@ defmodule Noizu.StateMachine.Module do
               |> Code.string_to_quoted!()
         end
         sm_ms = @__nsm_module_queue || []
-        @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs) - 1, q}}
+        @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs), q}}
       end
 
 
@@ -716,9 +774,9 @@ defmodule Noizu.StateMachine do
         global = scenario(scenario)
         modules = Enum.map(__nsm_info__(:modules), &({&1, apply(&1, :scenario, [scenario])}))
                   |> Map.new()
-        handle = {:global, {scenario, __MODULE__, :os.system_time(:millisecond)}}
+        handle = {:global, {__MODULE__, scenario, :os.system_time(:millisecond)}}
         initial_state = nsm(handle: handle, global: global, scenario: scenario, modules: modules, state: :loaded)
-        Agent.start_link(fn() -> initial_state  end)
+        Agent.start_link(fn() -> initial_state  end, name: handle)
         Process.put({:__nsm__, __MODULE__, scenario}, {:ok, initial_state})
         Process.put({:__nsm__, __MODULE__, {:active, :scenario}}, {:ok, scenario})
         handle
