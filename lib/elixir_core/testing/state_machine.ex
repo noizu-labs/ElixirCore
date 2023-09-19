@@ -17,11 +17,11 @@ defmodule Noizu.StateMachine.Module do
 
       states = Enum.group_by(@__nsm__states || [], & elem(&1, 0) |> elem(1) )
 
-
+      initial_states = Enum.group_by(@__nsm__initial_state || [], & elem(&1, 0))
 
       for {module, entries} <- states do
         case module do
-          [] ->
+          m = [] ->
             for {_, {name, arity, q}} <- Enum.reverse(entries) do
               q = q
                   |> Macro.expand(__ENV__)
@@ -30,9 +30,21 @@ defmodule Noizu.StateMachine.Module do
                   |> Code.compile_quoted()
             end
 
+            m_initial_states = get_in(initial_states, [Access.key(m, [])])
+            for {_, scenario, docs, block } <- m_initial_states do
+              @docs unquote(docs)
+              def unquote(scenario) do
+                unquote(block)
+              end
+            end
+
           m when is_list(m) ->
             m = Module.concat([__MODULE__| m])
             entries = Enum.reverse(entries)
+
+            m_initial_states = get_in(initial_states, [Access.key(m, [])])
+
+
             @__nsm__modules m
             defmodule m do
               for {_, {name, arity, q}} <- entries do
@@ -41,6 +53,14 @@ defmodule Noizu.StateMachine.Module do
                 |> Macro.to_string()
                 |> Code.string_to_quoted!()
                 |> Code.compile_quoted()
+              end
+
+
+              for {_, scenario, docs, block } <- m_initial_states do
+                @docs unquote(docs)
+                def unquote(scenario) do
+                  unquote(block)
+                end
               end
 
               @methods (for {_, {name, arity, q}} <- entries do
@@ -225,10 +245,10 @@ defmodule Noizu.StateMachine.Module do
 
   defmacro defsm_module(name, do: block) do
     quote do
-      m = Module.get_attribute(__MODULE__, :__sm_ms, [])
-      @__sm_ms [unquote(name) | m]
+      m = Module.get_attribute(__MODULE__, :__nsm_module_queue, [])
+      @__nsm_module_queue [unquote(name) | m]
       unquote(block)
-      @__sm_ms Enum.slice(@__sm_ms, 1..-1)
+      @__nsm_module_queue Enum.slice(@__nsm_module_queue, 1..-1)
     end
   end
 
@@ -299,7 +319,7 @@ defmodule Noizu.StateMachine.Module do
               |> Macro.to_string()
               |> Code.string_to_quoted!()
         end
-        sm_ms = @__sm_ms || []
+        sm_ms = @__nsm_module_queue || []
         @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs) - 1, q}}
 
 
@@ -334,7 +354,7 @@ defmodule Noizu.StateMachine.Module do
               |> Macro.to_string()
               |> Code.string_to_quoted!()
         end
-        sm_ms = @__sm_ms || []
+        sm_ms = @__nsm_module_queue || []
         @__nsm__states {{:context, sm_ms}, {unquote(name), length(iargs) - 1, q}}
       end
 
@@ -571,6 +591,15 @@ defmodule Noizu.StateMachine.Module do
   end
 
 
+  defmacro scenario_initial_state(scenario, do: body) do
+    quote do
+      is = @__nsm_module_queue || []
+      d = Module.get_attribute(__MODULE__, :scenariodocs, false)
+      Module.delete_attribute(__MODULE__, :scenariodocs, false)
+      @__nsm__initial_state {is, unquote(scenario), d, unquote(Macro.escape(body))}
+    end
+  end
+
   defmacro for_state({:when, m, [{:~>, meta, [name, signature]} | guards]}, do: body) do
     guards = [{:and, m, [{:==, [], [name, name]} | guards]}]
     q = quote do
@@ -639,7 +668,8 @@ defmodule Noizu.StateMachine do
       import Noizu.StateMachine.Module
       require Noizu.StateMachine.Records
       import Noizu.StateMachine.Records
-      Module.register_attribute(__MODULE__, :__sm_ms, [accumulate: false])
+      Module.register_attribute(__MODULE__, :__nsm_module_queue, [accumulate: false])
+      Module.register_attribute(__MODULE__, :__nsm__initial_state, accumulate: true)
       Module.register_attribute(__MODULE__, :__nsm__states, accumulate: true)
       Module.register_attribute(__MODULE__, :__nsm__modules, accumulate: true)
 
