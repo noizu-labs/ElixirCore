@@ -216,6 +216,7 @@ defmodule Noizu.StateMachine.Module do
     prefix_arg =
       quote do
         Module.get_attribute(__MODULE__, :__sm_withargs, [])
+        |> IO.inspect(label: :arg_statements)
         |> List.first()
       end
 
