@@ -9,33 +9,32 @@ defmodule Noizu.FastGlobal.Cluster do
   require Logger
 
   def get_settings() do
-    get(:fast_global_settings,
-      fn() ->
-        try do
+    with :load <- :persistent_term.get({:fast_global, :settings}, :load) do
+      if Semaphore.acquire({:fast_global, :cache_settings}, 1) do
+        spawn fn ->
           with :ok <- Noizu.FastGlobal.Database.Settings.wait(100) do
             case Noizu.FastGlobal.Database.Settings.read!(:fast_global_settings) do
-              %Noizu.FastGlobal.Database.Settings{value: v} -> v
+              %Noizu.FastGlobal.Database.Settings{value: v} -> :persistent_term.put({:fast_global, :settings}, v)
               _ ->
-                Logger.warn("""
+                Logger.warning("""
                 [Noizu.FastGlobal.Cluster]: setting value not set or readable. Try
                 ```Elixir
                  %Noizu.FastGlobal.Database.Settings{identifier: :fast_global_settings, value: %{}}
                  |> Noizu.FastGlobal.Database.Settings.write!()
                 ```
                 """)
-                {:fast_global, :no_cache, %{}}
             end
           else
             error ->
-              Logger.warn("[Noizu.FastGlobal.Cluster]: Not Loaded #{inspect error}")
-              {:fast_global, :no_cache, %{}}
+              Logger.warning("[Noizu.FastGlobal.Cluster]: Not Loaded #{inspect(error)}")
           end
-        rescue _e -> {:fast_global, :no_cache, %{}}
-        catch _e -> {:fast_global, :no_cache, %{}}
+          Semaphore.release({:fast_global, :cache_settings})
         end
       end
-    )
+      %{}
+    end
   end
+
 
   #-------------------
   # sync_record__write
