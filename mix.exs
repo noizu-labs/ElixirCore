@@ -33,7 +33,9 @@ defmodule Noizu.ElixirCore.Mixfile do
   end
 
   def application do
-    [ applications: [:logger, :crypto] ]
+    [ 
+     applications: [:logger, :crypto, :semaphore] 
+    ]
   end
 
   defp deps do
